@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: PilotApiJava
+  datasource:
+    url: ${DB_URL:jdbc:sqlserver://local_mssql:1433;databaseName=NorthWind;encrypt=true;trustServerCertificate=true;connectTimeout=30}
+    username: ${DB_USERNAME:DevUser}
+    password: ${DB_PASSWORD:Hjm$435yVt7a}
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+  jpa:
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        default_schema: ${DB_SCHEMA:dbo}
+        format_sql: true
+    open-in-view: false
+  flyway:
+    enabled: false
+    default-schema: ${DB_SCHEMA:dbo}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+app:
+  metadata:
+    name: PilotApiJava
+    build-version: ${APP_BUILD_VERSION:0.0.1-SNAPSHOT}
+    deploy-date: ${APP_DEPLOY_DATE:unknown}

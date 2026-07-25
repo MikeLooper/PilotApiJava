@@ -1,0 +1,2 @@
+-- Baseline migration placeholder.
+-- Add concrete DDL aligned with your SQL Server schema before first production deployment.
