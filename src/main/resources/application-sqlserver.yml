@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+  jpa:
+    properties:
+      hibernate:
+        default_schema: ${DB_SCHEMA:dbo}
+  flyway:
+    default-schema: ${DB_SCHEMA:dbo}

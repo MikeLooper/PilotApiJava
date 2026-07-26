@@ -64,12 +64,16 @@ Do not make any changes to the database."
 
 "add a Maven wrapper-friendly alias in README for this exact command so it is copy-paste discoverable for my team."
 
+10.
+"Update the application port from 8080 to 56661."
+"Add the ability for the application port to be overridden from an environment variable."
+	> The port now reads from the SERVER_PORT environment variable, falling back to 56661 if it's not set.
+"Update the README to include instructions on how to override the application port."
+
+"Add a second database connection for PostgreSQL, while keeping the ability to connect to SQL Server.  Include the ability to switch back and forth based upon a configuration setting.  Update the README with instructions on how to switch between the two databases."
 
 
 ToDo:
 
-- Validate database connection works - Bruno tests.
-- Add second database connection for PostgreSQL, while keeping the ability to connect to SQL Server.  Include ability to switch back and forth based upon a configuration setting.
-- Validate database connection works for both databases - Bruno tests.
 - Create Docker deploy instructions for two Java APIs - one SQL Server and one PostgreSQL.
 - Update Angular app to allow connecting to all 4 API options.
