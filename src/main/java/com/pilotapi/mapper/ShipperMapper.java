@@ -27,6 +27,6 @@ public class ShipperMapper implements EntityDtoMapper<Shipper, ShippersDto> {
     public void updateEntityFromDto(ShippersDto dto, Shipper entity) {
         entity.setCompanyName(dto.getCompanyName());
         entity.setPhone(dto.getPhone());
-        entity.setShipperID(dto.getShipperID());
+        // entity.setShipperID(dto.getShipperID());
     }
 }

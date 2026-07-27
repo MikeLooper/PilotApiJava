@@ -45,6 +45,6 @@ public class SupplierMapper implements EntityDtoMapper<Supplier, SuppliersDto> {
         entity.setPhone(dto.getPhone());
         entity.setPostalCode(dto.getPostalCode());
         entity.setRegion(dto.getRegion());
-        entity.setSupplierID(dto.getSupplierID());
+        // entity.setSupplierID(dto.getSupplierID());
     }
 }

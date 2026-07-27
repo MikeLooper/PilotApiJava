@@ -5,6 +5,6 @@ spring:
   jpa:
     properties:
       hibernate:
-        default_schema: ${DB_SCHEMA:public}
+        default_schema: ${DB_SCHEMA:pilot}
   flyway:
-    default-schema: ${DB_SCHEMA:public}
+    default-schema: ${DB_SCHEMA:pilot}

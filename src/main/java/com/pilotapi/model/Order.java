@@ -1,11 +1,13 @@
 package com.pilotapi.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "Orders")
@@ -21,14 +23,15 @@ public class Order {
     private Double freight;
 
     @Column(name = "OrderDate")
-    private OffsetDateTime orderDate;
+    private LocalDateTime orderDate;
 
     @Id
     @Column(name = "OrderID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer orderID;
 
     @Column(name = "RequiredDate")
-    private OffsetDateTime requiredDate;
+    private LocalDateTime requiredDate;
 
     @Column(name = "ShipAddress")
     private String shipAddress;
@@ -43,7 +46,7 @@ public class Order {
     private String shipName;
 
     @Column(name = "ShippedDate")
-    private OffsetDateTime shippedDate;
+    private LocalDateTime shippedDate;
 
     @Column(name = "ShipPostalCode")
     private String shipPostalCode;
@@ -78,11 +81,11 @@ public class Order {
         this.freight = freight;
     }
 
-    public OffsetDateTime getOrderDate() {
+    public LocalDateTime getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(OffsetDateTime orderDate) {
+    public void setOrderDate(LocalDateTime orderDate) {
         this.orderDate = orderDate;
     }
 
@@ -94,11 +97,11 @@ public class Order {
         this.orderID = orderID;
     }
 
-    public OffsetDateTime getRequiredDate() {
+    public LocalDateTime getRequiredDate() {
         return requiredDate;
     }
 
-    public void setRequiredDate(OffsetDateTime requiredDate) {
+    public void setRequiredDate(LocalDateTime requiredDate) {
         this.requiredDate = requiredDate;
     }
 
@@ -134,11 +137,11 @@ public class Order {
         this.shipName = shipName;
     }
 
-    public OffsetDateTime getShippedDate() {
+    public LocalDateTime getShippedDate() {
         return shippedDate;
     }
 
-    public void setShippedDate(OffsetDateTime shippedDate) {
+    public void setShippedDate(LocalDateTime shippedDate) {
         this.shippedDate = shippedDate;
     }
 

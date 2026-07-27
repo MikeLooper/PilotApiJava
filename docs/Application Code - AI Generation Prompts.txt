@@ -75,5 +75,6 @@ Do not make any changes to the database."
 
 ToDo:
 
+- Validate Bruno test against both databses are successful.
 - Create Docker deploy instructions for two Java APIs - one SQL Server and one PostgreSQL.
 - Update Angular app to allow connecting to all 4 API options.

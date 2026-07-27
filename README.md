@@ -2,9 +2,19 @@
 
 A proof of concept API to explore best-practices and new ideas (Java/Spring Boot)
 
-## Local Northwind Run Alias
+# Execute
 
-Use this command to run the API with the `northwind-localhost` Spring profile:
+To execute the API, a run command (shown below) would be executed with the desired profile name.
+
+The available profiles are:
+- northwind-localhost
+    - Run with the default setting with the SQL Server database.
+- application-postgresql
+    - Run with the PostgreSQL database.
+- application-sqlserver
+    - Run with the SQL Server database.
+
+Two options for executing the API are: Powershell or within Visual Studio Code.
 
 ### Powershell
 
@@ -14,10 +24,10 @@ Open PowerShell in the project folder:
 C:/Working/Storage/Dev/GitHub/PilotApiJava
 ```
 
-Run the API with the local profile:
+Run the API with the desired profile:
 
 ```
-mvn spring-boot:run "-Dspring-boot.run.profiles=northwind-localhost"
+mvn spring-boot:run "-Dspring-boot.run.profiles=<profile name>"
 ```
 
 Wait for startup confirmation in logs:
@@ -36,10 +46,10 @@ C:/Working/Storage/Dev/GitHub/PilotApiJava
 
 Open the integrated terminal: Terminal > New Terminal
 
-Run the API with the local Northwind profile (PowerShell-safe):
+Run the API with the desired profile (PowerShell-safe):
 
 ```
-mvn spring-boot:run "-Dspring-boot.run.profiles=northwind-localhost"
+mvn spring-boot:run "-Dspring-boot.run.profiles=<profile name>"
 
 ```
 
