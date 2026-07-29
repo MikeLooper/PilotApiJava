@@ -10,6 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -38,7 +39,7 @@ class OrderDetailsControllerWebMvcTest {
         dto.setOrderID(10);
         dto.setDiscount(0.1f);
         dto.setQuantity(3);
-        dto.setUnitPrice(5.25);
+        dto.setUnitPrice(BigDecimal.valueOf(5.25));
         when(orderDetailService.getAll()).thenReturn(List.of(dto));
 
         mockMvc.perform(get("/order-details/get-all").header("ApiVersion", "1"))
@@ -53,7 +54,7 @@ class OrderDetailsControllerWebMvcTest {
         dto.setOrderID(10);
         dto.setDiscount(0.1f);
         dto.setQuantity(3);
-        dto.setUnitPrice(5.25);
+        dto.setUnitPrice(BigDecimal.valueOf(5.25));
         when(orderDetailService.getById(1, 10)).thenReturn(dto);
 
         mockMvc.perform(get("/order-details/get/product/1/order/10").header("ApiVersion", "1"))
@@ -74,14 +75,14 @@ class OrderDetailsControllerWebMvcTest {
     }
 
     @Test
-    void OrderDetailsControllerWebMvcTest_update_returns_ok_Test() throws Exception {
+    void OrderDetailsControllerWebMvcTest_update_returns_no_content_Test() throws Exception {
         doNothing().when(orderDetailService).update(any(OrderDetailsDto.class));
 
         mockMvc.perform(put("/order-details/update")
                 .header("ApiVersion", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"productID\":1,\"orderID\":10,\"discount\":0.1,\"quantity\":3,\"unitPrice\":5.25}"))
-            .andExpect(status().isOk());
+            .andExpect(status().isNoContent());
     }
 
     @Test

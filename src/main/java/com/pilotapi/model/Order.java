@@ -6,7 +6,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.Type;
 
+import com.pilotapi.converters.MoneyUserType;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -19,8 +23,9 @@ public class Order {
     @Column(name = "EmployeeID")
     private Integer employeeID;
 
+    @Type(MoneyUserType.class)
     @Column(name = "Freight")
-    private Double freight;
+    private BigDecimal freight;
 
     @Column(name = "OrderDate")
     private LocalDateTime orderDate;
@@ -73,11 +78,11 @@ public class Order {
         this.employeeID = employeeID;
     }
 
-    public Double getFreight() {
+    public BigDecimal getFreight() {
         return freight;
     }
 
-    public void setFreight(Double freight) {
+    public void setFreight(BigDecimal freight) {
         this.freight = freight;
     }
 

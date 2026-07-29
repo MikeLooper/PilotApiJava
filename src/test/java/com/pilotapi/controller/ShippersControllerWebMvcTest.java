@@ -68,14 +68,14 @@ class ShippersControllerWebMvcTest {
     }
 
     @Test
-    void ShippersControllerWebMvcTest_update_returns_ok_Test() throws Exception {
+    void ShippersControllerWebMvcTest_update_returns_no_content_Test() throws Exception {
         doNothing().when(shipperService).update(any(ShippersDto.class));
 
         mockMvc.perform(put("/shippers/update")
                 .header("ApiVersion", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"shipperID\":1,\"companyName\":\"Speedy Express\"}"))
-            .andExpect(status().isOk());
+            .andExpect(status().isNoContent());
     }
 
     @Test

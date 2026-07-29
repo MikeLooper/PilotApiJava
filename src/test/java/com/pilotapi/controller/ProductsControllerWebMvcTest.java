@@ -74,14 +74,14 @@ class ProductsControllerWebMvcTest {
     }
 
     @Test
-    void ProductsControllerWebMvcTest_update_returns_ok_Test() throws Exception {
+    void ProductsControllerWebMvcTest_update_returns_no_content_Test() throws Exception {
         doNothing().when(productService).update(any(ProductsDto.class));
 
         mockMvc.perform(put("/products/update")
                 .header("ApiVersion", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"productID\":1,\"productName\":\"Chai\",\"reorderLevel\":1,\"unitsInStock\":10,\"unitsOnOrder\":0}"))
-            .andExpect(status().isOk());
+            .andExpect(status().isNoContent());
     }
 
     @Test

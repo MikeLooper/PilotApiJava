@@ -2,13 +2,14 @@ package com.pilotapi.dto;
 
 import jakarta.validation.constraints.NotNull;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class OrdersDto {
 
     private String customerID;
     private Integer employeeID;
-    private Double freight;
+    private BigDecimal freight;
     private LocalDateTime orderDate;
 
     @NotNull
@@ -40,11 +41,11 @@ public class OrdersDto {
         this.employeeID = employeeID;
     }
 
-    public Double getFreight() {
+    public BigDecimal getFreight() {
         return freight;
     }
 
-    public void setFreight(Double freight) {
+    public void setFreight(BigDecimal freight) {
         this.freight = freight;
     }
 

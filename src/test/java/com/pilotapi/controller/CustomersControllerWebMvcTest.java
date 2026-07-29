@@ -68,14 +68,14 @@ class CustomersControllerWebMvcTest {
     }
 
     @Test
-    void CustomersControllerWebMvcTest_update_returns_ok_Test() throws Exception {
+    void CustomersControllerWebMvcTest_update_returns_no_content_Test() throws Exception {
         doNothing().when(customerService).update(any(CustomersDto.class));
 
         mockMvc.perform(put("/customers/update")
                 .header("ApiVersion", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"customerID\":\"ALFKI\",\"companyName\":\"Alfreds\"}"))
-            .andExpect(status().isOk());
+            .andExpect(status().isNoContent());
     }
 
     @Test

@@ -2,11 +2,14 @@ package com.pilotapi.model;
 
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+
+import java.math.BigDecimal;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "[Order Details]")
+@Table(name = "${app.table.order-details}")
 public class OrderDetail {
 
     @EmbeddedId
@@ -19,7 +22,7 @@ public class OrderDetail {
     private Integer quantity;
 
     @Column(name = "UnitPrice")
-    private Double unitPrice;
+    private BigDecimal unitPrice;
 
     public OrderDetailId getId() {
         return id;
@@ -45,11 +48,11 @@ public class OrderDetail {
         this.quantity = quantity;
     }
 
-    public Double getUnitPrice() {
+    public BigDecimal getUnitPrice() {
         return unitPrice;
     }
 
-    public void setUnitPrice(Double unitPrice) {
+    public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
     }
 }

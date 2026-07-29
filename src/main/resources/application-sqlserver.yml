@@ -1,3 +1,7 @@
+app:
+  table:
+    order-details: "[Order Details]"
+
 spring:
   datasource:
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver

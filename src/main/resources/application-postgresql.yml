@@ -1,8 +1,15 @@
+app:
+  table:
+    order-details: orderdetails
+
 spring:
   datasource:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/northwind}
+    username: ${DB_USERNAME:DevUser}
+    password: ${DB_PASSWORD:Pwo_698UVtra}
     driver-class-name: org.postgresql.Driver
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     properties:
       hibernate:
         default_schema: ${DB_SCHEMA:pilot}

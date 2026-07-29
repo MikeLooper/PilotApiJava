@@ -9,9 +9,9 @@ To execute the API, a run command (shown below) would be executed with the desir
 The available profiles are:
 - northwind-localhost
     - Run with the default setting with the SQL Server database.
-- application-postgresql
+- postgresql
     - Run with the PostgreSQL database.
-- application-sqlserver
+- sqlserver
     - Run with the SQL Server database.
 
 Two options for executing the API are: Powershell or within Visual Studio Code.

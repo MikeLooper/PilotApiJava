@@ -1,12 +1,20 @@
 info:
   name: HealthCheck
   type: http
-  seq: 1
+  seq: 3
 
 http:
   method: GET
   url: "{{Host}}healthcheck"
   auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("should return success", function () {
+          expect(res.getStatus()).to.equal(200);
+        });
 
 settings:
   encodeUrl: true
