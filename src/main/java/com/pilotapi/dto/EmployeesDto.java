@@ -1,18 +1,16 @@
 package com.pilotapi.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 
 public class EmployeesDto {
 
     private String address;
-    private OffsetDateTime birthDate;
+    private LocalDateTime birthDate;
     private String city;
     private String country;
 
-    @NotNull
     private Integer employeeID;
 
     private String extension;
@@ -20,7 +18,7 @@ public class EmployeesDto {
     @NotBlank
     private String firstName;
 
-    private OffsetDateTime hireDate;
+    private LocalDateTime hireDate;
     private String homePhone;
 
     @NotBlank
@@ -43,11 +41,11 @@ public class EmployeesDto {
         this.address = address;
     }
 
-    public OffsetDateTime getBirthDate() {
+    public LocalDateTime getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(OffsetDateTime birthDate) {
+    public void setBirthDate(LocalDateTime birthDate) {
         this.birthDate = birthDate;
     }
 
@@ -91,11 +89,11 @@ public class EmployeesDto {
         this.firstName = firstName;
     }
 
-    public OffsetDateTime getHireDate() {
+    public LocalDateTime getHireDate() {
         return hireDate;
     }
 
-    public void setHireDate(OffsetDateTime hireDate) {
+    public void setHireDate(LocalDateTime hireDate) {
         this.hireDate = hireDate;
     }
 

@@ -1,6 +1,8 @@
 package com.pilotapi.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
@@ -11,6 +13,7 @@ public class Category {
 
     @Id
     @Column(name = "CategoryID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer categoryID;
 
     @Column(name = "CategoryName")

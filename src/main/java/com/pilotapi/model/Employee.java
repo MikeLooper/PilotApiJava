@@ -1,11 +1,13 @@
 package com.pilotapi.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "Employees")
@@ -15,7 +17,7 @@ public class Employee {
     private String address;
 
     @Column(name = "BirthDate")
-    private OffsetDateTime birthDate;
+    private LocalDateTime birthDate;
 
     @Column(name = "City")
     private String city;
@@ -25,6 +27,7 @@ public class Employee {
 
     @Id
     @Column(name = "EmployeeID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer employeeID;
 
     @Column(name = "Extension")
@@ -34,7 +37,7 @@ public class Employee {
     private String firstName;
 
     @Column(name = "HireDate")
-    private OffsetDateTime hireDate;
+    private LocalDateTime hireDate;
 
     @Column(name = "HomePhone")
     private String homePhone;
@@ -74,11 +77,11 @@ public class Employee {
         this.address = address;
     }
 
-    public OffsetDateTime getBirthDate() {
+    public LocalDateTime getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(OffsetDateTime birthDate) {
+    public void setBirthDate(LocalDateTime birthDate) {
         this.birthDate = birthDate;
     }
 
@@ -122,11 +125,11 @@ public class Employee {
         this.firstName = firstName;
     }
 
-    public OffsetDateTime getHireDate() {
+    public LocalDateTime getHireDate() {
         return hireDate;
     }
 
-    public void setHireDate(OffsetDateTime hireDate) {
+    public void setHireDate(LocalDateTime hireDate) {
         this.hireDate = hireDate;
     }
 

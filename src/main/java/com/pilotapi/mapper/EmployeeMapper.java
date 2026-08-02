@@ -17,7 +17,7 @@ public class EmployeeMapper implements EntityDtoMapper<Employee, EmployeesDto> {
         dto.setBirthDate(entity.getBirthDate());
         dto.setCity(entity.getCity());
         dto.setCountry(entity.getCountry());
-        dto.setEmployeeID(entity.getEmployeeID());
+        // dto.setEmployeeID(entity.getEmployeeID());
         dto.setExtension(entity.getExtension());
         dto.setFirstName(entity.getFirstName());
         dto.setHireDate(entity.getHireDate());
@@ -47,7 +47,6 @@ public class EmployeeMapper implements EntityDtoMapper<Employee, EmployeesDto> {
         entity.setBirthDate(dto.getBirthDate());
         entity.setCity(dto.getCity());
         entity.setCountry(dto.getCountry());
-        entity.setEmployeeID(dto.getEmployeeID());
         entity.setExtension(dto.getExtension());
         entity.setFirstName(dto.getFirstName());
         entity.setHireDate(dto.getHireDate());

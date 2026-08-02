@@ -1,3 +1,6 @@
+server:
+  port: ${SERVER_PORT:56661}
+
 spring:
   application:
     name: PilotApiJava
@@ -5,8 +8,8 @@ spring:
     url: ${DB_URL:jdbc:sqlserver://local_mssql:1433;databaseName=NorthWind;encrypt=true;trustServerCertificate=true;connectTimeout=30}
     username: ${DB_USERNAME:DevUser}
     password: ${DB_PASSWORD:Hjm$435yVt7a}
-    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
   jpa:
+    database-platform: ${DB_DIALECT:org.hibernate.dialect.SQLServerDialect}
     hibernate:
       ddl-auto: none
       naming:

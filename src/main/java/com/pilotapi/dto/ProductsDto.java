@@ -1,5 +1,7 @@
 package com.pilotapi.dto;
 
+import java.math.BigDecimal;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -20,7 +22,7 @@ public class ProductsDto {
     private Integer reorderLevel;
 
     private Integer supplierID;
-    private Double unitPrice;
+    private BigDecimal unitPrice;
 
     @NotNull
     private Integer unitsInStock;
@@ -84,11 +86,11 @@ public class ProductsDto {
         this.supplierID = supplierID;
     }
 
-    public Double getUnitPrice() {
+    public BigDecimal getUnitPrice() {
         return unitPrice;
     }
 
-    public void setUnitPrice(Double unitPrice) {
+    public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
     }
 

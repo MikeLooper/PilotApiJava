@@ -66,14 +66,14 @@ class OrdersControllerWebMvcTest {
     }
 
     @Test
-    void OrdersControllerWebMvcTest_update_returns_ok_Test() throws Exception {
+    void OrdersControllerWebMvcTest_update_returns_no_content_Test() throws Exception {
         doNothing().when(orderService).update(any(OrdersDto.class));
 
         mockMvc.perform(put("/orders/update")
                 .header("ApiVersion", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"orderID\":10}"))
-            .andExpect(status().isOk());
+            .andExpect(status().isNoContent());
     }
 
     @Test

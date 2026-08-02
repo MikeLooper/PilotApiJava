@@ -40,7 +40,7 @@ public class OrderMapper implements EntityDtoMapper<Order, OrdersDto> {
         entity.setEmployeeID(dto.getEmployeeID());
         entity.setFreight(dto.getFreight());
         entity.setOrderDate(dto.getOrderDate());
-        entity.setOrderID(dto.getOrderID());
+        // entity.setOrderID(dto.getOrderID());
         entity.setRequiredDate(dto.getRequiredDate());
         entity.setShipAddress(dto.getShipAddress());
         entity.setShipCity(dto.getShipCity());

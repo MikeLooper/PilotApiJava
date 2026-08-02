@@ -68,14 +68,14 @@ class SuppliersControllerWebMvcTest {
     }
 
     @Test
-    void SuppliersControllerWebMvcTest_update_returns_ok_Test() throws Exception {
+    void SuppliersControllerWebMvcTest_update_returns_no_content_Test() throws Exception {
         doNothing().when(supplierService).update(any(SuppliersDto.class));
 
         mockMvc.perform(put("/suppliers/update")
                 .header("ApiVersion", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"supplierID\":1,\"companyName\":\"Exotic Liquids\"}"))
-            .andExpect(status().isOk());
+            .andExpect(status().isNoContent());
     }
 
     @Test

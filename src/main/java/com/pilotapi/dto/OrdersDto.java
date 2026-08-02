@@ -2,24 +2,25 @@ package com.pilotapi.dto;
 
 import jakarta.validation.constraints.NotNull;
 
-import java.time.OffsetDateTime;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 public class OrdersDto {
 
     private String customerID;
     private Integer employeeID;
-    private Double freight;
-    private OffsetDateTime orderDate;
+    private BigDecimal freight;
+    private LocalDateTime orderDate;
 
     @NotNull
     private Integer orderID;
 
-    private OffsetDateTime requiredDate;
+    private LocalDateTime requiredDate;
     private String shipAddress;
     private String shipCity;
     private String shipCountry;
     private String shipName;
-    private OffsetDateTime shippedDate;
+    private LocalDateTime shippedDate;
     private String shipPostalCode;
     private String shipRegion;
     private Integer shipVia;
@@ -40,19 +41,19 @@ public class OrdersDto {
         this.employeeID = employeeID;
     }
 
-    public Double getFreight() {
+    public BigDecimal getFreight() {
         return freight;
     }
 
-    public void setFreight(Double freight) {
+    public void setFreight(BigDecimal freight) {
         this.freight = freight;
     }
 
-    public OffsetDateTime getOrderDate() {
+    public LocalDateTime getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(OffsetDateTime orderDate) {
+    public void setOrderDate(LocalDateTime orderDate) {
         this.orderDate = orderDate;
     }
 
@@ -64,11 +65,11 @@ public class OrdersDto {
         this.orderID = orderID;
     }
 
-    public OffsetDateTime getRequiredDate() {
+    public LocalDateTime getRequiredDate() {
         return requiredDate;
     }
 
-    public void setRequiredDate(OffsetDateTime requiredDate) {
+    public void setRequiredDate(LocalDateTime requiredDate) {
         this.requiredDate = requiredDate;
     }
 
@@ -104,11 +105,11 @@ public class OrdersDto {
         this.shipName = shipName;
     }
 
-    public OffsetDateTime getShippedDate() {
+    public LocalDateTime getShippedDate() {
         return shippedDate;
     }
 
-    public void setShippedDate(OffsetDateTime shippedDate) {
+    public void setShippedDate(LocalDateTime shippedDate) {
         this.shippedDate = shippedDate;
     }
 

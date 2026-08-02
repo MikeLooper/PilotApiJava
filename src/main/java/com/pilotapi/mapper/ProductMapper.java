@@ -34,7 +34,7 @@ public class ProductMapper implements EntityDtoMapper<Product, ProductsDto> {
     public void updateEntityFromDto(ProductsDto dto, Product entity) {
         entity.setCategoryID(dto.getCategoryID());
         entity.setDiscontinued(dto.isDiscontinued());
-        entity.setProductID(dto.getProductID());
+        // entity.setProductID(dto.getProductID());
         entity.setProductName(dto.getProductName());
         entity.setQuantityPerUnit(dto.getQuantityPerUnit());
         entity.setReorderLevel(dto.getReorderLevel());

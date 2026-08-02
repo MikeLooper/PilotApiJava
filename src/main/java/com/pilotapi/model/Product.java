@@ -1,7 +1,12 @@
 package com.pilotapi.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
+import java.math.BigDecimal;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
 
@@ -17,6 +22,7 @@ public class Product {
 
     @Id
     @Column(name = "ProductID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer productID;
 
     @Column(name = "ProductName")
@@ -32,7 +38,7 @@ public class Product {
     private Integer supplierID;
 
     @Column(name = "UnitPrice")
-    private Double unitPrice;
+    private BigDecimal unitPrice;
 
     @Column(name = "UnitsInStock")
     private Integer unitsInStock;
@@ -96,11 +102,11 @@ public class Product {
         this.supplierID = supplierID;
     }
 
-    public Double getUnitPrice() {
+    public BigDecimal getUnitPrice() {
         return unitPrice;
     }
 
-    public void setUnitPrice(Double unitPrice) {
+    public void setUnitPrice(BigDecimal unitPrice) {
         this.unitPrice = unitPrice;
     }
 

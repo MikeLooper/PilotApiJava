@@ -1,0 +1,4 @@
+name: Docker
+variables:
+  - name: Host
+    value: http://localhost:56661/

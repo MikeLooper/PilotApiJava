@@ -54,7 +54,7 @@ public class CustomersController {
         @RequestHeader(name = "ApiVersion", required = false) String apiVersion
     ) {
         service.update(request);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/delete/{customerId}")
