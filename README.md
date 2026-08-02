@@ -128,7 +128,7 @@ Default connection (overridable via environment variables):
 
 | Variable      | Default                                  |
 |---------------|------------------------------------------|
-| `DB_URL`      | `jdbc:postgresql://localhost:5432/northwind` |
+| `DB_URL`      | `jdbc:postgresql://local_postgres:5432/northwind` |
 | `DB_USERNAME` | `DevUser`                                |
 | `DB_PASSWORD` | *(see application.yml)*                  |
 | `DB_SCHEMA`   | `public`                                 |
@@ -138,7 +138,7 @@ Default connection (overridable via environment variables):
 Set any of the environment variables before running to point to a different host, port, or database:
 
 ```powershell
-$env:DB_URL      = "jdbc:postgresql://myhost:5432/mydb"
+$env:DB_URL      = "jdbc:postgresql://local_postgres:5432/mydb"
 $env:DB_USERNAME = "myuser"
 $env:DB_PASSWORD = "mypassword"
 $env:DB_SCHEMA   = "myschema"

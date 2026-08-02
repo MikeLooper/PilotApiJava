@@ -9,6 +9,7 @@ spring:
     username: ${DB_USERNAME:DevUser}
     password: ${DB_PASSWORD:Hjm$435yVt7a}
   jpa:
+    database-platform: ${DB_DIALECT:org.hibernate.dialect.SQLServerDialect}
     hibernate:
       ddl-auto: none
       naming:
