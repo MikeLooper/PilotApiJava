@@ -72,9 +72,11 @@ Do not make any changes to the database."
 
 "Add a second database connection for PostgreSQL, while keeping the ability to connect to SQL Server.  Include the ability to switch back and forth based upon a configuration setting.  Update the README with instructions on how to switch between the two databases."
 
+11.
+Include the `https://github.com/MikeLooper/PilotSharedSource` repository in this workspace as a SubModule.  Ensure the latest copy of the repository is retrieved and ready for use.
+Update the README to describe how the SubModule can be retrieved and updated when there is a change in the SubModule.  Place the SharedModule under a `shared` directory.
+
 
 ToDo:
 
 - Validate Bruno test against both databses are successful.
-- Create Docker deploy instructions for two Java APIs - one SQL Server and one PostgreSQL.
-- Update Angular app to allow connecting to all 4 API options.
