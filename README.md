@@ -7,7 +7,7 @@ A proof of concept API to explore best-practices and new ideas (Java/Spring Boot
 To execute the API, a run command (shown below) would be executed with the desired profile name.
 
 The available profiles are:
-- northwind-localhost
+- application-local-sqlserver
     - Run with the default setting with the SQL Server database.
 - postgresql
     - Run with the PostgreSQL database.
@@ -81,54 +81,56 @@ The application runs on port `56661` by default. Override it with the `SERVER_PO
 
 ```powershell
 $env:SERVER_PORT = "8081"
-mvn spring-boot:run "-Dspring-boot.run.profiles=northwind-localhost"
+mvn spring-boot:run "-Dspring-boot.run.profiles=local-sqlserver"
 ```
 
 Or pass it as a JVM argument without setting an environment variable:
 
 ```powershell
-mvn spring-boot:run "-Dspring-boot.run.profiles=northwind-localhost" "-Dserver.port=8081"
+mvn spring-boot:run "-Dspring-boot.run.profiles=local-sqlserver" "-Dserver.port=8081"
 ```
 
-## Database Configuration
+## Database Profiles
 
-The application supports **SQL Server** and **PostgreSQL**. The active database is selected by including a database Spring profile alongside any environment profile.
+The application supports **SQL Server** and **PostgreSQL**. The active database is selected by referencing a Spring environment profile.
 
-| Database   | Profile to add |
-|------------|----------------|
-| SQL Server | `sqlserver`    |
-| PostgreSQL | `postgresql`   |
+| Database   | Environment | Profile to use ---|
+|------------|-------------|-------------------|
+| SQL Server | development | `local-sqlserver` |
+| PostgreSQL | development | `local-postgres`  |
+| SQL Server | production  | `prod-sqlserver`  |
+| PostgreSQL | production  | `prod-postgres`   |
 
 ### Switching to SQL Server
 
-Append `sqlserver` to the active profiles:
+Use `sqlserver` for the active profile (development environment shown here):
 
 ```
-mvn spring-boot:run "-Dspring-boot.run.profiles=northwind-localhost,sqlserver"
+mvn spring-boot:run "-Dspring-boot.run.profiles=local-sqlserver"
 ```
 
 Default connection (overridable via environment variables):
 
 | Variable      | Default                                                                                                  |
 |---------------|----------------------------------------------------------------------------------------------------------|
-| `DB_URL`      | `jdbc:sqlserver://local_mssql:1433;databaseName=NorthWind;encrypt=true;trustServerCertificate=true;connectTimeout=30` |
+| `DB_URL`      | `jdbc:sqlserver://localhost:1433;databaseName=NorthWind;encrypt=true;trustServerCertificate=true;connectTimeout=30` |
 | `DB_USERNAME` | `DevUser`                                                                                                |
 | `DB_PASSWORD` | *(see application.yml)*                                                                                  |
 | `DB_SCHEMA`   | `dbo`                                                                                                    |
 
 ### Switching to PostgreSQL
 
-Append `postgresql` to the active profiles:
+Use `postgresql` for the active profile (development environment shown here):
 
 ```
-mvn spring-boot:run "-Dspring-boot.run.profiles=northwind-localhost,postgresql"
+mvn spring-boot:run "-Dspring-boot.run.profiles=local-postgres"
 ```
 
 Default connection (overridable via environment variables):
 
 | Variable      | Default                                  |
 |---------------|------------------------------------------|
-| `DB_URL`      | `jdbc:postgresql://local_postgres:5432/northwind` |
+| `DB_URL`      | `jdbc:postgresql://localhost:5432/northwind` |
 | `DB_USERNAME` | `DevUser`                                |
 | `DB_PASSWORD` | *(see application.yml)*                  |
 | `DB_SCHEMA`   | `public`                                 |
@@ -138,11 +140,11 @@ Default connection (overridable via environment variables):
 Set any of the environment variables before running to point to a different host, port, or database:
 
 ```powershell
-$env:DB_URL      = "jdbc:postgresql://local_postgres:5432/mydb"
+$env:DB_URL      = "jdbc:postgresql://localhost:5432/mydb"
 $env:DB_USERNAME = "myuser"
 $env:DB_PASSWORD = "mypassword"
 $env:DB_SCHEMA   = "myschema"
-mvn spring-boot:run "-Dspring-boot.run.profiles=northwind-localhost,postgresql"
+mvn spring-boot:run "-Dspring-boot.run.profiles=local-postgres"
 ```
 
 ## Shared Source Submodule

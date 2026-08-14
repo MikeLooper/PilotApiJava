@@ -1,0 +1,19 @@
+server:
+  port: ${SERVER_PORT:59999}
+
+app:
+  table:
+    order-details: orderdetails
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/northwind
+    username: DevUser
+    password: Pwo_698UVtra
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate:
+        default_schema: pilot
+  flyway:
+    default-schema: pilot
