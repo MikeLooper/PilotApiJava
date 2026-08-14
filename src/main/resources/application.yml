@@ -16,12 +16,12 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
       hibernate:
-        default_schema: ${DB_SCHEMA:<schema>}
+        default_schema: ${DB_SCHEMA:}
         format_sql: true
     open-in-view: false
   flyway:
     enabled: false
-    default-schema: ${DB_SCHEMA:<schema>}
+    default-schema: ${DB_SCHEMA:}
 
 management:
   endpoints:
