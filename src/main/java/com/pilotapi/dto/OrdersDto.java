@@ -1,9 +1,9 @@
 package com.pilotapi.dto;
 
-import jakarta.validation.constraints.NotNull;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
+import io.micrometer.common.lang.Nullable;
 
 public class OrdersDto {
 
@@ -12,7 +12,7 @@ public class OrdersDto {
     private BigDecimal freight;
     private LocalDateTime orderDate;
 
-    @NotNull
+    @Nullable
     private Integer orderID;
 
     private LocalDateTime requiredDate;

@@ -6,6 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
+import io.micrometer.common.lang.Nullable;
 
 import java.time.LocalDateTime;
 
@@ -28,6 +29,7 @@ public class Employee {
     @Id
     @Column(name = "EmployeeID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Nullable
     private Integer employeeID;
 
     @Column(name = "Extension")

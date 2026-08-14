@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDateTime;
 
+import io.micrometer.common.lang.Nullable;
+
 public class EmployeesDto {
 
     private String address;
@@ -11,6 +13,7 @@ public class EmployeesDto {
     private String city;
     private String country;
 
+    @Nullable
     private Integer employeeID;
 
     private String extension;

@@ -1,3 +1,6 @@
+server:
+  port: ${SERVER_PORT:59999}
+
 app:
   table:
     order-details: "[Order Details]"

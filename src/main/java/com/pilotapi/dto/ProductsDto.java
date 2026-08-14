@@ -4,13 +4,14 @@ import java.math.BigDecimal;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import io.micrometer.common.lang.Nullable;
 
 public class ProductsDto {
 
     private Integer categoryID;
     private boolean discontinued;
 
-    @NotNull
+    @Nullable
     private Integer productID;
 
     @NotBlank

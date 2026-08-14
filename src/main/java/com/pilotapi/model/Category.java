@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import io.micrometer.common.lang.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
 
@@ -14,6 +15,7 @@ public class Category {
     @Id
     @Column(name = "CategoryID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Nullable
     private Integer categoryID;
 
     @Column(name = "CategoryName")

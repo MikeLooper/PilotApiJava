@@ -12,6 +12,7 @@ import com.pilotapi.converters.MoneyUserType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import io.micrometer.common.lang.Nullable;
 
 @Entity
 @Table(name = "Orders")
@@ -33,6 +34,7 @@ public class Order {
     @Id
     @Column(name = "OrderID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Nullable
     private Integer orderID;
 
     @Column(name = "RequiredDate")
