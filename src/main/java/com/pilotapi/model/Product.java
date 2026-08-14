@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
+import io.micrometer.common.lang.Nullable;
 
 @Entity
 @Table(name = "Products")
@@ -23,6 +24,7 @@ public class Product {
     @Id
     @Column(name = "ProductID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Nullable
     private Integer productID;
 
     @Column(name = "ProductName")

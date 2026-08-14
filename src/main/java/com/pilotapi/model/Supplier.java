@@ -6,6 +6,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Column;
 import jakarta.persistence.Table;
+import io.micrometer.common.lang.Nullable;
 
 @Entity
 @Table(name = "Suppliers")
@@ -47,6 +48,7 @@ public class Supplier {
     @Id
     @Column(name = "SupplierID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Nullable
     private Integer supplierID;
 
     public String getAddress() {

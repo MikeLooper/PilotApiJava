@@ -7,7 +7,7 @@ spring:
   datasource:
     url: ${DB_URL:jdbc:sqlserver://local_mssql:1433;databaseName=NorthWind;encrypt=true;trustServerCertificate=true;connectTimeout=30}
     username: ${DB_USERNAME:DevUser}
-    password: ${DB_PASSWORD:Hjm$435yVt7a}
+    password: ${DB_PASSWORD:<user-password>}
   jpa:
     database-platform: ${DB_DIALECT:org.hibernate.dialect.SQLServerDialect}
     hibernate:
@@ -16,12 +16,12 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
       hibernate:
-        default_schema: ${DB_SCHEMA:dbo}
+        default_schema: ${DB_SCHEMA:<schema>}
         format_sql: true
     open-in-view: false
   flyway:
     enabled: false
-    default-schema: ${DB_SCHEMA:dbo}
+    default-schema: ${DB_SCHEMA:<schema>}
 
 management:
   endpoints:
@@ -42,5 +42,5 @@ springdoc:
 app:
   metadata:
     name: PilotApiJava
-    build-version: ${APP_BUILD_VERSION:0.0.1-SNAPSHOT}
+    build-version: ${APP_BUILD_VERSION:0.2.0}
     deploy-date: ${APP_DEPLOY_DATE:unknown}

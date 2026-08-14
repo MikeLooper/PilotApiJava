@@ -1,10 +1,11 @@
 package com.pilotapi.dto;
 
+import io.micrometer.common.lang.Nullable;
 import jakarta.validation.constraints.NotNull;
 
 public class CategoriesDto {
 
-    @NotNull
+    @Nullable
     private Integer categoryID;
 
     @NotNull

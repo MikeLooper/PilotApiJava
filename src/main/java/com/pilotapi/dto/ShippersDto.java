@@ -1,7 +1,7 @@
 package com.pilotapi.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import io.micrometer.common.lang.Nullable;
 
 public class ShippersDto {
 
@@ -10,7 +10,7 @@ public class ShippersDto {
 
     private String phone;
 
-    @NotNull
+    @Nullable
     private Integer shipperID;
 
     public String getCompanyName() {

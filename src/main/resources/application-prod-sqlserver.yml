@@ -4,7 +4,7 @@ app:
 
 spring:
   datasource:
-    url: jdbc:sqlserver://localhost:1433;databaseName=NorthWind;encrypt=true;trustServerCertificate=true;connectTimeout=30
+    url: jdbc:sqlserver://local-mssql:1433;databaseName=NorthWind;encrypt=true;trustServerCertificate=true;connectTimeout=30
     username: ${DB_USERNAME:DevUser}
     password: ${DB_PASSWORD:Hjm$435yVt7a}
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver

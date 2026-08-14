@@ -1,7 +1,7 @@
 package com.pilotapi.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import io.micrometer.common.lang.Nullable;
 
 public class SuppliersDto {
 
@@ -20,7 +20,7 @@ public class SuppliersDto {
     private String postalCode;
     private String region;
 
-    @NotNull
+    @Nullable
     private Integer supplierID;
 
     public String getAddress() {
