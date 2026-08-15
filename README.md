@@ -6,13 +6,7 @@ A proof of concept API to explore best-practices and new ideas (Java/Spring Boot
 
 To execute the API, a run command (shown below) would be executed with the desired profile name.
 
-The available profiles are:
-- application-local-sqlserver
-    - Run with the default setting with the SQL Server database.
-- postgresql
-    - Run with the PostgreSQL database.
-- sqlserver
-    - Run with the SQL Server database.
+The available profiles can be found in the *Database Profiles* section.
 
 Two options for executing the API are: Powershell or within Visual Studio Code.
 
@@ -94,7 +88,7 @@ mvn spring-boot:run "-Dspring-boot.run.profiles=local-sqlserver" "-Dserver.port=
 
 The application supports **SQL Server** and **PostgreSQL**. The active database is selected by referencing a Spring environment profile.
 
-| Database   | Environment | Profile to use ---|
+| Database   | Environment | Profile to use    |
 |------------|-------------|-------------------|
 | SQL Server | development | `local-sqlserver` |
 | PostgreSQL | development | `local-postgres`  |

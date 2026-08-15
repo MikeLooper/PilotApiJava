@@ -6,7 +6,7 @@ spring:
   datasource:
     url: ${DB_URL:jdbc:postgresql://local-postgres:5432/northwind}
     username: ${DB_USERNAME:DevUser}
-    password: ${DB_PASSWORD:Pwo_698UVtra}
+    password: ${DB_PASSWORD:}
     driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
