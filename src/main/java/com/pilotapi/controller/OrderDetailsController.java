@@ -56,23 +56,25 @@ public class OrderDetailsController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Map<String, String>> update(
+    public ResponseEntity<Void> update(
         @Valid @RequestBody OrderDetailsDto request,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
         @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
     ) {
-        service.update(request);
-        return ResponseEntity.ok(Map.of("message", "Order detail updated"));
+        return service.update(request)
+            ? ResponseEntity.noContent().build()
+            : ResponseEntity.badRequest().build();
     }
 
     @DeleteMapping("/delete/product/{productId}/order/{orderId}")
-    public ResponseEntity<Map<String, String>> delete(
+    public ResponseEntity<Void> delete(
         @PathVariable Integer productId,
         @PathVariable Integer orderId,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
         @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
     ) {
-        service.delete(productId, orderId);
-        return ResponseEntity.ok(Map.of("message", "Order detail deleted"));
+        return service.delete(productId, orderId)
+            ? ResponseEntity.noContent().build()
+            : ResponseEntity.badRequest().build();
     }
 }

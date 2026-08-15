@@ -55,22 +55,24 @@ public class CategoriesController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Map<String, String>> update(
+    public ResponseEntity<Void> update(
         @Valid @RequestBody CategoriesDto request,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
         @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
     ) {
-        service.update(request);
-        return ResponseEntity.ok(Map.of("message", "Category updated"));
+        return service.update(request)
+            ? ResponseEntity.noContent().build()
+            : ResponseEntity.badRequest().build();
     }
 
     @DeleteMapping("/delete/{categoryId}")
-    public ResponseEntity<Map<String, String>> delete(
+    public ResponseEntity<Void> delete(
         @PathVariable Integer categoryId,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
         @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
     ) {
-        service.delete(categoryId);
-        return ResponseEntity.ok(Map.of("message", "Category deleted"));
+        return service.delete(categoryId)
+            ? ResponseEntity.noContent().build()
+            : ResponseEntity.badRequest().build();
     }
 }

@@ -55,22 +55,24 @@ public class SuppliersController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Map<String, String>> update(
+    public ResponseEntity<Void> update(
         @Valid @RequestBody SuppliersDto request,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
         @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
     ) {
-        service.update(request);
-        return ResponseEntity.ok(Map.of("message", "Supplier updated"));
+        return service.update(request)
+            ? ResponseEntity.noContent().build()
+            : ResponseEntity.badRequest().build();
     }
 
     @DeleteMapping("/delete/{supplierId}")
-    public ResponseEntity<Map<String, String>> delete(
+    public ResponseEntity<Void> delete(
         @PathVariable Integer supplierId,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
         @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
     ) {
-        service.delete(supplierId);
-        return ResponseEntity.ok(Map.of("message", "Supplier deleted"));
+        return service.delete(supplierId)
+            ? ResponseEntity.noContent().build()
+            : ResponseEntity.badRequest().build();
     }
 }

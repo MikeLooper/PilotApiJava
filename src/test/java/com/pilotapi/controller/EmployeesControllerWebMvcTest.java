@@ -20,6 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(EmployeesController.class)
@@ -71,22 +72,20 @@ class EmployeesControllerWebMvcTest {
 
     @Test
     void EmployeesControllerWebMvcTest_update_returns_json_object_Test() throws Exception {
-        doNothing().when(employeeService).update(any(EmployeesDto.class));
+        when(employeeService.update(any(EmployeesDto.class))).thenReturn(true);
 
         mockMvc.perform(put("/employees/update")
                 .header("ApiVersion", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"employeeID\":1,\"firstName\":\"Nancy\",\"lastName\":\"Davolio\"}"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.message").value("Employee updated"));
+            .andExpect(status().isNoContent());
     }
 
     @Test
     void EmployeesControllerWebMvcTest_delete_returns_json_object_Test() throws Exception {
-        doNothing().when(employeeService).delete(1);
+        when(employeeService.delete(1)).thenReturn(true);
 
         mockMvc.perform(delete("/employees/delete/1").header("ApiVersion", "1"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.message").value("Employee deleted"));
+            .andExpect(status().isNoContent());
     }
 }

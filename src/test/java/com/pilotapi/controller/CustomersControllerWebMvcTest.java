@@ -20,6 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CustomersController.class)
@@ -69,22 +70,20 @@ class CustomersControllerWebMvcTest {
 
     @Test
     void CustomersControllerWebMvcTest_update_returns_json_object_Test() throws Exception {
-        doNothing().when(customerService).update(any(CustomersDto.class));
+        when(customerService.update(any(CustomersDto.class))).thenReturn(true);
 
         mockMvc.perform(put("/customers/update")
                 .header("ApiVersion", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"customerID\":\"ALFKI\",\"companyName\":\"Alfreds\"}"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.message").value("Customer updated"));
+            .andExpect(status().isNoContent());
     }
 
     @Test
     void CustomersControllerWebMvcTest_delete_returns_json_object_Test() throws Exception {
-        doNothing().when(customerService).delete("ALFKI");
+        when(customerService.delete("ALFKI")).thenReturn(true);
 
         mockMvc.perform(delete("/customers/delete/ALFKI").header("ApiVersion", "1"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.message").value("Customer deleted"));
+            .andExpect(status().isNoContent());
     }
 }

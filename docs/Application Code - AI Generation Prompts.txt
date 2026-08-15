@@ -87,3 +87,14 @@ Update every endoint to include the following:
 	ApiVersion:		<the current API version>
 
 Update every endpoint to return a JSON object.
+
+<Correct changes that AI made without being told to:>
+Update every controller as follows:
+- A Delete endpoint should return a 204 for a successfull call and return the value from the service.
+- An Update endpoint should return a 204 for a successfull call and return the value from the service.
+The Update and Delete endpoints should not return Void.  They should return the number of records that were changed by the database commands.
+
+For the Delete and Update endpoints, change the service logic so that:
+- If the count of updated rows is positive, a true is returned to the controller; aelse a false is returned.
+- If the value returned to the controller is true, a status 204 is returned.
+- If the value returned to the controller is false, a status 400 is returned.

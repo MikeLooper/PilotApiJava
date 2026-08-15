@@ -20,6 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CategoriesController.class)
@@ -69,22 +70,20 @@ class CategoriesControllerWebMvcTest {
 
     @Test
     void CategoriesControllerWebMvcTest_update_returns_json_object_Test() throws Exception {
-        doNothing().when(categoryService).update(any(CategoriesDto.class));
+        when(categoryService.update(any(CategoriesDto.class))).thenReturn(true);
 
         mockMvc.perform(put("/categories/update")
                 .header("ApiVersion", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"categoryID\":1,\"categoryName\":\"Beverages\"}"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.message").value("Category updated"));
+            .andExpect(status().isNoContent());
     }
 
     @Test
     void CategoriesControllerWebMvcTest_delete_returns_json_object_Test() throws Exception {
-        doNothing().when(categoryService).delete(1);
+        when(categoryService.delete(1)).thenReturn(true);
 
         mockMvc.perform(delete("/categories/delete/1").header("ApiVersion", "1"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.message").value("Category deleted"));
+            .andExpect(status().isNoContent());
     }
 }

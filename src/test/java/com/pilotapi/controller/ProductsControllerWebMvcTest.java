@@ -20,6 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProductsController.class)
@@ -75,23 +76,21 @@ class ProductsControllerWebMvcTest {
 
     @Test
     void ProductsControllerWebMvcTest_update_returns_json_object_Test() throws Exception {
-        doNothing().when(productService).update(any(ProductsDto.class));
+        when(productService.update(any(ProductsDto.class))).thenReturn(true);
 
         mockMvc.perform(put("/products/update")
                 .header("ApiVersion", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"productID\":1,\"productName\":\"Chai\",\"reorderLevel\":1,\"unitsInStock\":10,\"unitsOnOrder\":0}"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.message").value("Product updated"));
+            .andExpect(status().isNoContent());
     }
 
     @Test
     void ProductsControllerWebMvcTest_delete_returns_json_object_Test() throws Exception {
-        doNothing().when(productService).delete(1);
+        when(productService.delete(1)).thenReturn(true);
 
         mockMvc.perform(delete("/products/delete/1").header("ApiVersion", "1"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.message").value("Product deleted"));
+            .andExpect(status().isNoContent());
     }
 
     @Test

@@ -20,6 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(OrdersController.class)
@@ -67,22 +68,20 @@ class OrdersControllerWebMvcTest {
 
     @Test
     void OrdersControllerWebMvcTest_update_returns_json_object_Test() throws Exception {
-        doNothing().when(orderService).update(any(OrdersDto.class));
+        when(orderService.update(any(OrdersDto.class))).thenReturn(true);
 
         mockMvc.perform(put("/orders/update")
                 .header("ApiVersion", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"orderID\":10}"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.message").value("Order updated"));
+            .andExpect(status().isNoContent());
     }
 
     @Test
     void OrdersControllerWebMvcTest_delete_returns_json_object_Test() throws Exception {
-        doNothing().when(orderService).delete(10);
+        when(orderService.delete(10)).thenReturn(true);
 
         mockMvc.perform(delete("/orders/delete/10").header("ApiVersion", "1"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.message").value("Order deleted"));
+            .andExpect(status().isNoContent());
     }
 }
