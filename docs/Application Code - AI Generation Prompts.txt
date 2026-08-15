@@ -76,7 +76,14 @@ Do not make any changes to the database."
 Include the `https://github.com/MikeLooper/PilotSharedSource` repository in this workspace as a SubModule.  Ensure the latest copy of the repository is retrieved and ready for use.
 Update the README to describe how the SubModule can be retrieved and updated when there is a change in the SubModule.  Place the SharedModule under a `shared` directory.
 
+12.
+Update every endoint to include the following:
+- Request headers:
+	Accept:		"application/json"
+	ApiVersion:	<default to the current API version>
+- Response headers:
+	Content-Type:	"application/json"
+	Date:			<the curent date and time>
+	ApiVersion:		<the current API version>
 
-ToDo:
-
-- Validate Bruno test against both databses are successful.
+Update every endpoint to return a JSON object.

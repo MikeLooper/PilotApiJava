@@ -68,21 +68,23 @@ class SuppliersControllerWebMvcTest {
     }
 
     @Test
-    void SuppliersControllerWebMvcTest_update_returns_no_content_Test() throws Exception {
+    void SuppliersControllerWebMvcTest_update_returns_json_object_Test() throws Exception {
         doNothing().when(supplierService).update(any(SuppliersDto.class));
 
         mockMvc.perform(put("/suppliers/update")
                 .header("ApiVersion", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"supplierID\":1,\"companyName\":\"Exotic Liquids\"}"))
-            .andExpect(status().isNoContent());
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.message").value("Supplier updated"));
     }
 
     @Test
-    void SuppliersControllerWebMvcTest_delete_returns_no_content_Test() throws Exception {
+    void SuppliersControllerWebMvcTest_delete_returns_json_object_Test() throws Exception {
         doNothing().when(supplierService).delete(1);
 
         mockMvc.perform(delete("/suppliers/delete/1").header("ApiVersion", "1"))
-            .andExpect(status().isNoContent());
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.message").value("Supplier deleted"));
     }
 }

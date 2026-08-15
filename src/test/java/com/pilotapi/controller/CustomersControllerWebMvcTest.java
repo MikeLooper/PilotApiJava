@@ -68,21 +68,23 @@ class CustomersControllerWebMvcTest {
     }
 
     @Test
-    void CustomersControllerWebMvcTest_update_returns_no_content_Test() throws Exception {
+    void CustomersControllerWebMvcTest_update_returns_json_object_Test() throws Exception {
         doNothing().when(customerService).update(any(CustomersDto.class));
 
         mockMvc.perform(put("/customers/update")
                 .header("ApiVersion", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"customerID\":\"ALFKI\",\"companyName\":\"Alfreds\"}"))
-            .andExpect(status().isNoContent());
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.message").value("Customer updated"));
     }
 
     @Test
-    void CustomersControllerWebMvcTest_delete_returns_no_content_Test() throws Exception {
+    void CustomersControllerWebMvcTest_delete_returns_json_object_Test() throws Exception {
         doNothing().when(customerService).delete("ALFKI");
 
         mockMvc.perform(delete("/customers/delete/ALFKI").header("ApiVersion", "1"))
-            .andExpect(status().isNoContent());
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.message").value("Customer deleted"));
     }
 }

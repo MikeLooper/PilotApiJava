@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/employees")
@@ -28,14 +29,18 @@ public class EmployeesController {
     }
 
     @GetMapping("/get-all")
-    public List<EmployeesDto> getAll(@RequestHeader(name = "ApiVersion", required = false) String apiVersion) {
+    public List<EmployeesDto> getAll(
+        @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
+        @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
+    ) {
         return service.getAll();
     }
 
     @GetMapping("/get/{employeeId}")
     public EmployeesDto getById(
         @PathVariable Integer employeeId,
-        @RequestHeader(name = "ApiVersion", required = false) String apiVersion
+        @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
+        @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
     ) {
         return service.getById(employeeId);
     }
@@ -43,26 +48,29 @@ public class EmployeesController {
     @PostMapping("/add")
     public AddResponseIntDto add(
         @Valid @RequestBody EmployeesDto request,
-        @RequestHeader(name = "ApiVersion", required = false) String apiVersion
+        @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
+        @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
     ) {
         return service.add(request);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Void> update(
+    public ResponseEntity<Map<String, String>> update(
         @Valid @RequestBody EmployeesDto request,
-        @RequestHeader(name = "ApiVersion", required = false) String apiVersion
+        @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
+        @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
     ) {
         service.update(request);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(Map.of("message", "Employee updated"));
     }
 
     @DeleteMapping("/delete/{employeeId}")
-    public ResponseEntity<Void> delete(
+    public ResponseEntity<Map<String, String>> delete(
         @PathVariable Integer employeeId,
-        @RequestHeader(name = "ApiVersion", required = false) String apiVersion
+        @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
+        @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
     ) {
         service.delete(employeeId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(Map.of("message", "Employee deleted"));
     }
 }

@@ -75,21 +75,23 @@ class OrderDetailsControllerWebMvcTest {
     }
 
     @Test
-    void OrderDetailsControllerWebMvcTest_update_returns_no_content_Test() throws Exception {
+    void OrderDetailsControllerWebMvcTest_update_returns_json_object_Test() throws Exception {
         doNothing().when(orderDetailService).update(any(OrderDetailsDto.class));
 
         mockMvc.perform(put("/order-details/update")
                 .header("ApiVersion", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"productID\":1,\"orderID\":10,\"discount\":0.1,\"quantity\":3,\"unitPrice\":5.25}"))
-            .andExpect(status().isNoContent());
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.message").value("Order detail updated"));
     }
 
     @Test
-    void OrderDetailsControllerWebMvcTest_delete_returns_no_content_Test() throws Exception {
+    void OrderDetailsControllerWebMvcTest_delete_returns_json_object_Test() throws Exception {
         doNothing().when(orderDetailService).delete(1, 10);
 
         mockMvc.perform(delete("/order-details/delete/product/1/order/10").header("ApiVersion", "1"))
-            .andExpect(status().isNoContent());
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.message").value("Order detail deleted"));
     }
 }

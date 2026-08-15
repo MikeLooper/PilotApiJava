@@ -68,21 +68,23 @@ class CategoriesControllerWebMvcTest {
     }
 
     @Test
-    void CategoriesControllerWebMvcTest_update_returns_no_content_Test() throws Exception {
+    void CategoriesControllerWebMvcTest_update_returns_json_object_Test() throws Exception {
         doNothing().when(categoryService).update(any(CategoriesDto.class));
 
         mockMvc.perform(put("/categories/update")
                 .header("ApiVersion", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"categoryID\":1,\"categoryName\":\"Beverages\"}"))
-            .andExpect(status().isNoContent());
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.message").value("Category updated"));
     }
 
     @Test
-    void CategoriesControllerWebMvcTest_delete_returns_no_content_Test() throws Exception {
+    void CategoriesControllerWebMvcTest_delete_returns_json_object_Test() throws Exception {
         doNothing().when(categoryService).delete(1);
 
         mockMvc.perform(delete("/categories/delete/1").header("ApiVersion", "1"))
-            .andExpect(status().isNoContent());
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.message").value("Category deleted"));
     }
 }

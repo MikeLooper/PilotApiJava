@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/categories")
@@ -28,14 +29,18 @@ public class CategoriesController {
     }
 
     @GetMapping("/get-all")
-    public List<CategoriesDto> getAll(@RequestHeader(name = "ApiVersion", required = false) String apiVersion) {
+    public List<CategoriesDto> getAll(
+        @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
+        @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
+    ) {
         return service.getAll();
     }
 
     @GetMapping("/get/{categoryId}")
     public CategoriesDto getById(
         @PathVariable Integer categoryId,
-        @RequestHeader(name = "ApiVersion", required = false) String apiVersion
+        @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
+        @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
     ) {
         return service.getById(categoryId);
     }
@@ -43,26 +48,29 @@ public class CategoriesController {
     @PostMapping("/add")
     public AddResponseIntDto add(
         @Valid @RequestBody CategoriesDto request,
-        @RequestHeader(name = "ApiVersion", required = false) String apiVersion
+        @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
+        @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
     ) {
         return service.add(request);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Void> update(
+    public ResponseEntity<Map<String, String>> update(
         @Valid @RequestBody CategoriesDto request,
-        @RequestHeader(name = "ApiVersion", required = false) String apiVersion
+        @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
+        @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
     ) {
         service.update(request);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(Map.of("message", "Category updated"));
     }
 
     @DeleteMapping("/delete/{categoryId}")
-    public ResponseEntity<Void> delete(
+    public ResponseEntity<Map<String, String>> delete(
         @PathVariable Integer categoryId,
-        @RequestHeader(name = "ApiVersion", required = false) String apiVersion
+        @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
+        @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
     ) {
         service.delete(categoryId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(Map.of("message", "Category deleted"));
     }
 }
