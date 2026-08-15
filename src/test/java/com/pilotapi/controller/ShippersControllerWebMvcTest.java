@@ -20,6 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ShippersController.class)
@@ -68,8 +69,8 @@ class ShippersControllerWebMvcTest {
     }
 
     @Test
-    void ShippersControllerWebMvcTest_update_returns_no_content_Test() throws Exception {
-        doNothing().when(shipperService).update(any(ShippersDto.class));
+    void ShippersControllerWebMvcTest_update_returns_json_object_Test() throws Exception {
+        when(shipperService.update(any(ShippersDto.class))).thenReturn(true);
 
         mockMvc.perform(put("/shippers/update")
                 .header("ApiVersion", "1")
@@ -79,8 +80,8 @@ class ShippersControllerWebMvcTest {
     }
 
     @Test
-    void ShippersControllerWebMvcTest_delete_returns_no_content_Test() throws Exception {
-        doNothing().when(shipperService).delete(1);
+    void ShippersControllerWebMvcTest_delete_returns_json_object_Test() throws Exception {
+        when(shipperService.delete(1)).thenReturn(true);
 
         mockMvc.perform(delete("/shippers/delete/1").header("ApiVersion", "1"))
             .andExpect(status().isNoContent());

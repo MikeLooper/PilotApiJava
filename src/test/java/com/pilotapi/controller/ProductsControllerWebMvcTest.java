@@ -20,6 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProductsController.class)
@@ -74,8 +75,8 @@ class ProductsControllerWebMvcTest {
     }
 
     @Test
-    void ProductsControllerWebMvcTest_update_returns_no_content_Test() throws Exception {
-        doNothing().when(productService).update(any(ProductsDto.class));
+    void ProductsControllerWebMvcTest_update_returns_json_object_Test() throws Exception {
+        when(productService.update(any(ProductsDto.class))).thenReturn(true);
 
         mockMvc.perform(put("/products/update")
                 .header("ApiVersion", "1")
@@ -85,8 +86,8 @@ class ProductsControllerWebMvcTest {
     }
 
     @Test
-    void ProductsControllerWebMvcTest_delete_returns_no_content_Test() throws Exception {
-        doNothing().when(productService).delete(1);
+    void ProductsControllerWebMvcTest_delete_returns_json_object_Test() throws Exception {
+        when(productService.delete(1)).thenReturn(true);
 
         mockMvc.perform(delete("/products/delete/1").header("ApiVersion", "1"))
             .andExpect(status().isNoContent());

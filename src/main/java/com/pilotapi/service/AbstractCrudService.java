@@ -49,7 +49,7 @@ public abstract class AbstractCrudService<E, D, ID> implements CrudService<D, ID
     }
 
     @Override
-    public void update(D dto) {
+    public boolean update(D dto) {
         ID id = dtoIdExtractor.apply(dto);
         if (id == null) {
             throw new IllegalArgumentException("Request payload id is required");
@@ -59,14 +59,16 @@ public abstract class AbstractCrudService<E, D, ID> implements CrudService<D, ID
             .orElseThrow(() -> new ResourceNotFoundException(resourceName + " not found"));
         mapper.updateEntityFromDto(dto, entity);
         repository.save(entity);
+        return true;
     }
 
     @Override
-    public void delete(ID id) {
+    public boolean delete(ID id) {
         if (!repository.existsById(id)) {
             throw new ResourceNotFoundException(resourceName + " not found");
         }
         repository.deleteById(id);
+        return true;
     }
 
     private long toLong(Object value) {

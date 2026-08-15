@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/order-details")
@@ -28,7 +29,10 @@ public class OrderDetailsController {
     }
 
     @GetMapping("/get-all")
-    public List<OrderDetailsDto> getAll(@RequestHeader(name = "ApiVersion", required = false) String apiVersion) {
+    public List<OrderDetailsDto> getAll(
+        @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
+        @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
+    ) {
         return service.getAll();
     }
 
@@ -36,7 +40,8 @@ public class OrderDetailsController {
     public OrderDetailsDto getById(
         @PathVariable Integer productId,
         @PathVariable Integer orderId,
-        @RequestHeader(name = "ApiVersion", required = false) String apiVersion
+        @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
+        @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
     ) {
         return service.getById(productId, orderId);
     }
@@ -44,7 +49,8 @@ public class OrderDetailsController {
     @PostMapping("/add")
     public AddResponseIntDto add(
         @Valid @RequestBody OrderDetailsDto request,
-        @RequestHeader(name = "ApiVersion", required = false) String apiVersion
+        @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
+        @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
     ) {
         return service.add(request);
     }
@@ -52,19 +58,23 @@ public class OrderDetailsController {
     @PutMapping("/update")
     public ResponseEntity<Void> update(
         @Valid @RequestBody OrderDetailsDto request,
-        @RequestHeader(name = "ApiVersion", required = false) String apiVersion
+        @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
+        @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
     ) {
-        service.update(request);
-        return ResponseEntity.noContent().build();
+        return service.update(request)
+            ? ResponseEntity.noContent().build()
+            : ResponseEntity.badRequest().build();
     }
 
     @DeleteMapping("/delete/product/{productId}/order/{orderId}")
     public ResponseEntity<Void> delete(
         @PathVariable Integer productId,
         @PathVariable Integer orderId,
-        @RequestHeader(name = "ApiVersion", required = false) String apiVersion
+        @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
+        @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
     ) {
-        service.delete(productId, orderId);
-        return ResponseEntity.noContent().build();
+        return service.delete(productId, orderId)
+            ? ResponseEntity.noContent().build()
+            : ResponseEntity.badRequest().build();
     }
 }

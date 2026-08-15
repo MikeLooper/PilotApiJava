@@ -36,19 +36,21 @@ public class OrderDetailService {
         return new AddResponseIntDto(saved.getId().getOrderID().longValue());
     }
 
-    public void update(OrderDetailsDto dto) {
+    public boolean update(OrderDetailsDto dto) {
         OrderDetailId id = new OrderDetailId(dto.getProductID(), dto.getOrderID());
         OrderDetail entity = repository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Order detail not found"));
         mapper.updateEntityFromDto(dto, entity);
         repository.save(entity);
+        return true;
     }
 
-    public void delete(Integer productId, Integer orderId) {
+    public boolean delete(Integer productId, Integer orderId) {
         OrderDetailId id = new OrderDetailId(productId, orderId);
         if (!repository.existsById(id)) {
             throw new ResourceNotFoundException("Order detail not found");
         }
         repository.deleteById(id);
+        return true;
     }
 }

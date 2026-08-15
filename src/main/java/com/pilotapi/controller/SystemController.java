@@ -1,6 +1,8 @@
 package com.pilotapi.controller;
 
 import com.pilotapi.dto.AboutResponseDto;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.TextNode;
 import com.pilotapi.service.SystemService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -19,14 +21,18 @@ public class SystemController {
     }
 
     @GetMapping("/healthcheck")
-    public String healthcheck(@RequestHeader(name = "ApiVersion", required = false) String apiVersion) {
-        return systemService.healthcheck();
+    public JsonNode healthcheck(
+        @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
+        @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
+    ) {
+        return TextNode.valueOf(systemService.healthcheck());
     }
 
     @GetMapping("/about")
     public AboutResponseDto about(
         @RequestParam(name = "show-details", defaultValue = "false") boolean showDetails,
-        @RequestHeader(name = "ApiVersion", required = false) String apiVersion
+        @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
+        @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
     ) {
         return systemService.about(showDetails, apiVersion);
     }

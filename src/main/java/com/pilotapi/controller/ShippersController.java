@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/shippers")
@@ -28,14 +29,18 @@ public class ShippersController {
     }
 
     @GetMapping("/get-all")
-    public List<ShippersDto> getAll(@RequestHeader(name = "ApiVersion", required = false) String apiVersion) {
+    public List<ShippersDto> getAll(
+        @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
+        @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
+    ) {
         return service.getAll();
     }
 
     @GetMapping("/get/{shipperId}")
     public ShippersDto getById(
         @PathVariable Integer shipperId,
-        @RequestHeader(name = "ApiVersion", required = false) String apiVersion
+        @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
+        @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
     ) {
         return service.getById(shipperId);
     }
@@ -43,7 +48,8 @@ public class ShippersController {
     @PostMapping("/add")
     public AddResponseIntDto add(
         @Valid @RequestBody ShippersDto request,
-        @RequestHeader(name = "ApiVersion", required = false) String apiVersion
+        @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
+        @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
     ) {
         return service.add(request);
     }
@@ -51,18 +57,22 @@ public class ShippersController {
     @PutMapping("/update")
     public ResponseEntity<Void> update(
         @Valid @RequestBody ShippersDto request,
-        @RequestHeader(name = "ApiVersion", required = false) String apiVersion
+        @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
+        @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
     ) {
-        service.update(request);
-        return ResponseEntity.noContent().build();
+        return service.update(request)
+            ? ResponseEntity.noContent().build()
+            : ResponseEntity.badRequest().build();
     }
 
     @DeleteMapping("/delete/{shipperId}")
     public ResponseEntity<Void> delete(
         @PathVariable Integer shipperId,
-        @RequestHeader(name = "ApiVersion", required = false) String apiVersion
+        @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
+        @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
     ) {
-        service.delete(shipperId);
-        return ResponseEntity.noContent().build();
+        return service.delete(shipperId)
+            ? ResponseEntity.noContent().build()
+            : ResponseEntity.badRequest().build();
     }
 }

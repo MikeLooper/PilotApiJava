@@ -12,7 +12,7 @@ public interface CrudService<D, ID> {
 
     AddResponseIntDto add(D dto);
 
-    void update(D dto);
+    boolean update(D dto);
 
-    void delete(ID id);
+    boolean delete(ID id);
 }

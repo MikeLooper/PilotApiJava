@@ -20,6 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(SuppliersController.class)
@@ -68,8 +69,8 @@ class SuppliersControllerWebMvcTest {
     }
 
     @Test
-    void SuppliersControllerWebMvcTest_update_returns_no_content_Test() throws Exception {
-        doNothing().when(supplierService).update(any(SuppliersDto.class));
+    void SuppliersControllerWebMvcTest_update_returns_json_object_Test() throws Exception {
+        when(supplierService.update(any(SuppliersDto.class))).thenReturn(true);
 
         mockMvc.perform(put("/suppliers/update")
                 .header("ApiVersion", "1")
@@ -79,8 +80,8 @@ class SuppliersControllerWebMvcTest {
     }
 
     @Test
-    void SuppliersControllerWebMvcTest_delete_returns_no_content_Test() throws Exception {
-        doNothing().when(supplierService).delete(1);
+    void SuppliersControllerWebMvcTest_delete_returns_json_object_Test() throws Exception {
+        when(supplierService.delete(1)).thenReturn(true);
 
         mockMvc.perform(delete("/suppliers/delete/1").header("ApiVersion", "1"))
             .andExpect(status().isNoContent());

@@ -20,6 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CategoriesController.class)
@@ -68,8 +69,8 @@ class CategoriesControllerWebMvcTest {
     }
 
     @Test
-    void CategoriesControllerWebMvcTest_update_returns_no_content_Test() throws Exception {
-        doNothing().when(categoryService).update(any(CategoriesDto.class));
+    void CategoriesControllerWebMvcTest_update_returns_json_object_Test() throws Exception {
+        when(categoryService.update(any(CategoriesDto.class))).thenReturn(true);
 
         mockMvc.perform(put("/categories/update")
                 .header("ApiVersion", "1")
@@ -79,8 +80,8 @@ class CategoriesControllerWebMvcTest {
     }
 
     @Test
-    void CategoriesControllerWebMvcTest_delete_returns_no_content_Test() throws Exception {
-        doNothing().when(categoryService).delete(1);
+    void CategoriesControllerWebMvcTest_delete_returns_json_object_Test() throws Exception {
+        when(categoryService.delete(1)).thenReturn(true);
 
         mockMvc.perform(delete("/categories/delete/1").header("ApiVersion", "1"))
             .andExpect(status().isNoContent());

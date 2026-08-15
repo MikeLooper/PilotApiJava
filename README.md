@@ -60,28 +60,34 @@ Verify the application is running and connected to the database.
 Verify the healthcheck endpoint:
 
 ```
-Invoke-RestMethod -Method Get -Uri "http://localhost:56661/healthcheck"
+Invoke-RestMethod -Method Get -Uri "http://localhost:59999/healthcheck"
 ```
 
 Verify a database-backed endpoint:
 
 ```
-Invoke-RestMethod -Uri "http://localhost:56661/categories/get/1"
+Invoke-RestMethod -Uri "http://localhost:59999/categories/get/1"
+```
+
+View the Swagger UI:
+
+```
+Invoke-RestMethod -Uri "http://localhost:59999/swagger-ui/index.html"
 ```
 
 ## Port Configuration
 
-The application runs on port `56661` by default. Override it with the `SERVER_PORT` environment variable:
+The application runs on port `59999` by default. Override it with the `SERVER_PORT` environment variable:
 
 ```powershell
-$env:SERVER_PORT = "8081"
+$env:SERVER_PORT = "56601"
 mvn spring-boot:run "-Dspring-boot.run.profiles=local-sqlserver"
 ```
 
 Or pass it as a JVM argument without setting an environment variable:
 
 ```powershell
-mvn spring-boot:run "-Dspring-boot.run.profiles=local-sqlserver" "-Dserver.port=8081"
+mvn spring-boot:run "-Dspring-boot.run.profiles=local-sqlserver" "-Dserver.port=56601"
 ```
 
 ## Database Profiles
@@ -172,6 +178,34 @@ git commit -m "Update shared submodule to latest"
 ## Development
 
 The design of this application was based upon the OpenAPI specification, found in the shared\PilotSharedSource directory (which is a submodule of [PilotSharedSource](https://github.com/MikeLooper/PilotSharedSource)).
+
+### launch.json
+
+Launch settings to simpify startup:
+```
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "PilotApiApplication",
+            "request": "launch",
+            "mainClass": "com.pilotapi.PilotApiApplication",
+            "projectName": "mikel-looper",
+            "args": ["--spring.profiles.active=local-sqlserver"],
+            "console": "integratedTerminal",            
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "Started PilotApiApplication in|Listening on",
+                "uriFormat": "http://localhost:59999/swagger-ui/index.html"
+            }
+        }
+    ]
+}
+```
 
 ## Copilot Instructions
 
