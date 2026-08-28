@@ -66,7 +66,7 @@ Invoke-RestMethod -Method Get -Uri "http://localhost:59999/healthcheck"
 Verify a database-backed endpoint:
 
 ```
-Invoke-RestMethod -Uri "http://localhost:59999/categories/get/1"
+Invoke-RestMethod -Uri "http://localhost:59999/v1/categories/get/1"
 ```
 
 View the Swagger UI:
