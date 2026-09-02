@@ -5,6 +5,7 @@ import com.pilotapi.dto.CategoriesDto;
 import com.pilotapi.service.CategoryService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,12 +52,12 @@ public class CategoriesController {
     }
 
     @PostMapping("/add")
-    public AddResponseIntDto add(
+    public ResponseEntity<AddResponseIntDto> add(
         @Valid @RequestBody CategoriesDto request,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
         @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
     ) {
-        return service.add(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.add(request));
     }
 
     @PutMapping("/update")

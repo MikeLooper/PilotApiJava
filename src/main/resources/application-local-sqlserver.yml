@@ -4,6 +4,8 @@ server:
 app:
   table:
     order-details: "[Order Details]"
+  security:
+    provider-url: ${APP_SECURITY_PROVIDER_URL:http://localhost:55001}
 
 spring:
   datasource:

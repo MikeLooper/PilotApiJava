@@ -6,6 +6,9 @@ import com.pilotapi.service.EmployeeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.TestPropertySource;
+import com.pilotapi.security.SecurityConfig;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,6 +27,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(EmployeesController.class)
+@Import(SecurityConfig.class)
+@TestPropertySource(properties = "app.security.active=false")
 class EmployeesControllerWebMvcTest {
 
     @Autowired
@@ -59,14 +64,14 @@ class EmployeesControllerWebMvcTest {
     }
 
     @Test
-    void EmployeesControllerWebMvcTest_add_returns_ok_Test() throws Exception {
+    void EmployeesControllerWebMvcTest_add_returns_created_Test() throws Exception {
         when(employeeService.add(any(EmployeesDto.class))).thenReturn(new AddResponseIntDto(102L));
 
         mockMvc.perform(post("/v1/employees/add")
                 .header("ApiVersion", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"employeeID\":1,\"firstName\":\"Nancy\",\"lastName\":\"Davolio\"}"))
-            .andExpect(status().isOk())
+            .andExpect(status().isCreated())
             .andExpect(jsonPath("$.id").value(102));
     }
 

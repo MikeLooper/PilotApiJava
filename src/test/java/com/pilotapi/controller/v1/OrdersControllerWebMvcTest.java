@@ -6,6 +6,9 @@ import com.pilotapi.service.OrderService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.TestPropertySource;
+import com.pilotapi.security.SecurityConfig;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,6 +27,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(OrdersController.class)
+@Import(SecurityConfig.class)
+@TestPropertySource(properties = "app.security.active=false")
 class OrdersControllerWebMvcTest {
 
     @Autowired
@@ -55,14 +60,14 @@ class OrdersControllerWebMvcTest {
     }
 
     @Test
-    void OrdersControllerWebMvcTest_add_returns_ok_Test() throws Exception {
+    void OrdersControllerWebMvcTest_add_returns_created_Test() throws Exception {
         when(orderService.add(any(OrdersDto.class))).thenReturn(new AddResponseIntDto(104L));
 
         mockMvc.perform(post("/v1/orders/add")
                 .header("ApiVersion", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"orderID\":10}"))
-            .andExpect(status().isOk())
+            .andExpect(status().isCreated())
             .andExpect(jsonPath("$.id").value(104));
     }
 

@@ -6,6 +6,9 @@ import com.pilotapi.service.SupplierService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.TestPropertySource;
+import com.pilotapi.security.SecurityConfig;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,6 +27,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(SuppliersController.class)
+@Import(SecurityConfig.class)
+@TestPropertySource(properties = "app.security.active=false")
 class SuppliersControllerWebMvcTest {
 
     @Autowired
@@ -57,14 +62,14 @@ class SuppliersControllerWebMvcTest {
     }
 
     @Test
-    void SuppliersControllerWebMvcTest_add_returns_ok_Test() throws Exception {
+    void SuppliersControllerWebMvcTest_add_returns_created_Test() throws Exception {
         when(supplierService.add(any(SuppliersDto.class))).thenReturn(new AddResponseIntDto(107L));
 
         mockMvc.perform(post("/v1/suppliers/add")
                 .header("ApiVersion", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"supplierID\":1,\"companyName\":\"Exotic Liquids\"}"))
-            .andExpect(status().isOk())
+            .andExpect(status().isCreated())
             .andExpect(jsonPath("$.id").value(107));
     }
 

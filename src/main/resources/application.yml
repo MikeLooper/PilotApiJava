@@ -44,3 +44,9 @@ app:
     name: PilotApiJava
     build-version: ${APP_BUILD_VERSION:0.2.0}
     deploy-date: ${APP_DEPLOY_DATE:unknown}
+  security:
+    active: ${APP_SECURITY_ACTIVE:true}
+    provider-url: ${APP_SECURITY_PROVIDER_URL:http://local-keycloak:8080}
+    realm: ${APP_SECURITY_REALM:local-realm}
+    client-id: ${APP_SECURITY_CLIENT_ID:local-client}
+    resource-area: ${APP_SECURITY_RESOURCE_AREA:account}

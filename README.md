@@ -75,6 +75,62 @@ View the Swagger UI:
 Invoke-RestMethod -Uri "http://localhost:59999/swagger-ui/index.html"
 ```
 
+## Security Usage
+
+All `/v1/**` domain endpoints require a bearer token (JWT/OAuth2) issued by the configured identity provider. The System endpoints (`/healthcheck`, `/about`) are never secured.
+
+### Configuration
+
+| Property | Env override | Default (dev) |
+|---|---|---|
+| `app.security.active` | `APP_SECURITY_ACTIVE` | `true` |
+| `app.security.provider-url` | `APP_SECURITY_PROVIDER_URL` | `http://localhost:55001` |
+| `app.security.realm` | `APP_SECURITY_REALM` | `local-realm` |
+| `app.security.client-id` | `APP_SECURITY_CLIENT_ID` | `local-client` |
+| `app.security.resource-area` | `APP_SECURITY_RESOURCE_AREA` | `account` |
+
+When `app.security.active` is `true`, a missing/invalid token or an insufficient role blocks the request (`401`/`403`). When `false`, the same failures are logged and the request is still allowed through, with a `Warning` response header describing what failed.
+
+### Roles
+
+| Role | Allowed methods |
+|---|---|
+| `read_only_role` | GET, HEAD, OPTIONS, QUERY, TRACE |
+| `read_write_role` | + PATCH, POST, PUT |
+| `admin_role` | + DELETE |
+
+Role assignment is currently mocked (`UserRoles`), keyed by the token's `preferred_username`/`sub` claim: `reader_user` → `read_only_role`, `working_user` → `read_write_role`, `working_admin_user` → `admin_role`.
+
+### Calling a Secured Endpoint
+
+Obtain a token from the identity provider, then pass it as a bearer token:
+
+```powershell
+$token = "<jwt-issued-for-reader_user>"
+Invoke-RestMethod -Method Get -Uri "http://localhost:59999/v1/categories/get-all" `
+    -Headers @{ Authorization = "Bearer $token" }
+```
+
+A missing/invalid token (when `app.security.active=true`) returns:
+
+```json
+{
+  "type": "about:blank",
+  "title": "Unauthorized",
+  "status": 401,
+  "detail": "Missing or malformed Authorization header",
+  "instance": "/v1/categories/get-all"
+}
+```
+
+An authenticated request with an insufficient role (e.g. `reader_user` calling `DELETE`) returns a `403` with the same shape, `title: "Forbidden"`.
+
+When `app.security.active=false`, a failed check instead returns the normal successful response with an added header, e.g.:
+
+```
+Warning: 199 pilot-api "Missing or malformed Authorization header"
+```
+
 ## Port Configuration
 
 The application runs on port `59999` by default. Override it with the `SERVER_PORT` environment variable:
