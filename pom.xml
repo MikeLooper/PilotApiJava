@@ -13,7 +13,7 @@
 
     <groupId>github.com</groupId>
     <artifactId>mikel-looper</artifactId>
-    <version>0.1.0</version>
+    <version>1.0.0</version>
     <name>PilotApiJava</name>
     <description>OpenAPI-driven Spring Boot API</description>
 
