@@ -43,9 +43,22 @@ class EmployeesControllerWebMvcTest {
         dto.setEmployeeID(1);
         dto.setFirstName("Nancy");
         dto.setLastName("Davolio");
-        when(employeeService.getAll()).thenReturn(List.of(dto));
+        when(employeeService.getAll(0, 20)).thenReturn(List.of(dto));
 
         mockMvc.perform(get("/v1/employees/get-all").header("ApiVersion", "1"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].employeeID").value(1));
+    }
+
+    @Test
+    void EmployeesControllerWebMvcTest_getAll_withPageParams_passesThemToService_Test() throws Exception {
+        EmployeesDto dto = new EmployeesDto();
+        dto.setEmployeeID(1);
+        dto.setFirstName("Nancy");
+        dto.setLastName("Davolio");
+        when(employeeService.getAll(2, 10)).thenReturn(List.of(dto));
+
+        mockMvc.perform(get("/v1/employees/get-all?page=2&pageSize=10").header("ApiVersion", "1"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].employeeID").value(1));
     }

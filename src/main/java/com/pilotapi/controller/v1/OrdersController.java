@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -36,10 +37,12 @@ public class OrdersController {
 
     @GetMapping("/get-all")
     public List<OrdersDto> getAll(
+        @RequestParam(name = "page", defaultValue = "0") int page,
+        @RequestParam(name = "pageSize", defaultValue = "20") int pageSize,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
         @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
     ) {
-        return service.getAll();
+        return service.getAll(page, pageSize);
     }
 
     @GetMapping("/get/{orderId}")

@@ -42,9 +42,21 @@ class CustomersControllerWebMvcTest {
         CustomersDto dto = new CustomersDto();
         dto.setCustomerID("ALFKI");
         dto.setCompanyName("Alfreds");
-        when(customerService.getAll()).thenReturn(List.of(dto));
+        when(customerService.getAll(0, 20)).thenReturn(List.of(dto));
 
         mockMvc.perform(get("/v1/customers/get-all").header("ApiVersion", "1"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].customerID").value("ALFKI"));
+    }
+
+    @Test
+    void CustomersControllerWebMvcTest_getAll_withPageParams_passesThemToService_Test() throws Exception {
+        CustomersDto dto = new CustomersDto();
+        dto.setCustomerID("ALFKI");
+        dto.setCompanyName("Alfreds");
+        when(customerService.getAll(2, 10)).thenReturn(List.of(dto));
+
+        mockMvc.perform(get("/v1/customers/get-all?page=2&pageSize=10").header("ApiVersion", "1"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].customerID").value("ALFKI"));
     }

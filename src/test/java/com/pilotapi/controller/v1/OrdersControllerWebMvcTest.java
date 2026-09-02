@@ -41,9 +41,20 @@ class OrdersControllerWebMvcTest {
     void OrdersControllerWebMvcTest_getAll_returns_ok_Test() throws Exception {
         OrdersDto dto = new OrdersDto();
         dto.setOrderID(10);
-        when(orderService.getAll()).thenReturn(List.of(dto));
+        when(orderService.getAll(0, 20)).thenReturn(List.of(dto));
 
         mockMvc.perform(get("/v1/orders/get-all").header("ApiVersion", "1"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].orderID").value(10));
+    }
+
+    @Test
+    void OrdersControllerWebMvcTest_getAll_withPageParams_passesThemToService_Test() throws Exception {
+        OrdersDto dto = new OrdersDto();
+        dto.setOrderID(10);
+        when(orderService.getAll(2, 10)).thenReturn(List.of(dto));
+
+        mockMvc.perform(get("/v1/orders/get-all?page=2&pageSize=10").header("ApiVersion", "1"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].orderID").value(10));
     }

@@ -45,9 +45,24 @@ class ProductsControllerWebMvcTest {
         dto.setReorderLevel(1);
         dto.setUnitsInStock(10);
         dto.setUnitsOnOrder(0);
-        when(productService.getAll()).thenReturn(List.of(dto));
+        when(productService.getAll(0, 20)).thenReturn(List.of(dto));
 
         mockMvc.perform(get("/v1/products/get-all").header("ApiVersion", "1"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].productID").value(1));
+    }
+
+    @Test
+    void ProductsControllerWebMvcTest_getAll_withPageParams_passesThemToService_Test() throws Exception {
+        ProductsDto dto = new ProductsDto();
+        dto.setProductID(1);
+        dto.setProductName("Chai");
+        dto.setReorderLevel(1);
+        dto.setUnitsInStock(10);
+        dto.setUnitsOnOrder(0);
+        when(productService.getAll(2, 10)).thenReturn(List.of(dto));
+
+        mockMvc.perform(get("/v1/products/get-all?page=2&pageSize=10").header("ApiVersion", "1"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].productID").value(1));
     }

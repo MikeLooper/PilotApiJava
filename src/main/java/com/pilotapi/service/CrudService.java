@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface CrudService<D, ID> {
 
-    List<D> getAll();
+    List<D> getAll(int page, int pageSize);
 
     D getById(ID id);
 

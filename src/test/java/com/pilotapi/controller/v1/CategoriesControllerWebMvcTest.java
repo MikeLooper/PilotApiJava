@@ -48,9 +48,21 @@ class CategoriesControllerWebMvcTest {
         CategoriesDto dto = new CategoriesDto();
         dto.setCategoryID(1);
         dto.setCategoryName("Beverages");
-        when(categoryService.getAll()).thenReturn(List.of(dto));
+        when(categoryService.getAll(0, 20)).thenReturn(List.of(dto));
 
         mockMvc.perform(get("/v1/categories/get-all").header("ApiVersion", "1"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].categoryID").value(1));
+    }
+
+    @Test
+    void CategoriesControllerWebMvcTest_getAll_withPageParams_passesThemToService_Test() throws Exception {
+        CategoriesDto dto = new CategoriesDto();
+        dto.setCategoryID(1);
+        dto.setCategoryName("Beverages");
+        when(categoryService.getAll(2, 10)).thenReturn(List.of(dto));
+
+        mockMvc.perform(get("/v1/categories/get-all?page=2&pageSize=10").header("ApiVersion", "1"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].categoryID").value(1));
     }
@@ -102,7 +114,7 @@ class CategoriesControllerWebMvcTest {
     void CategoriesControllerWebMvcTest_getAll_withoutToken_whenInactive_allowsThrough_withWarningHeader_Test() throws Exception {
         CategoriesDto dto = new CategoriesDto();
         dto.setCategoryID(1);
-        when(categoryService.getAll()).thenReturn(List.of(dto));
+        when(categoryService.getAll(0, 20)).thenReturn(List.of(dto));
 
         mockMvc.perform(get("/v1/categories/get-all").header("ApiVersion", "1"))
             .andExpect(status().isOk())

@@ -49,7 +49,7 @@ class CategoriesControllerSecurityWebMvcTest {
     @Test
     void CategoriesControllerSecurityWebMvcTest_getAll_withReadOnlyRoleToken_returns200_Test() throws Exception {
         when(jwtDecoder.decode("reader-token")).thenReturn(TestJwtSupport.jwtForUser("reader_user"));
-        when(categoryService.getAll()).thenReturn(List.of(new CategoriesDto()));
+        when(categoryService.getAll(0, 20)).thenReturn(List.of(new CategoriesDto()));
 
         mockMvc.perform(get("/v1/categories/get-all").header("Authorization", "Bearer reader-token"))
             .andExpect(status().isOk());

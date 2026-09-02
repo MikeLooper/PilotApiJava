@@ -7,6 +7,8 @@ import com.pilotapi.mapper.OrderDetailMapper;
 import com.pilotapi.model.OrderDetail;
 import com.pilotapi.model.OrderDetailId;
 import com.pilotapi.repository.OrderDetailRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,8 +24,12 @@ public class OrderDetailService {
         this.mapper = mapper;
     }
 
-    public List<OrderDetailsDto> getAll() {
-        return repository.findAll().stream().map(mapper::toDto).toList();
+    public List<OrderDetailsDto> getAll(int page, int pageSize) {
+        if (page == 0) {
+            return repository.findAll().stream().map(mapper::toDto).toList();
+        }
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        return repository.findAll(pageable).stream().map(mapper::toDto).toList();
     }
 
     public OrderDetailsDto getById(Integer productId, Integer orderId) {

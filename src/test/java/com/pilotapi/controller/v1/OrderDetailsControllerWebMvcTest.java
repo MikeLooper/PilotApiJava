@@ -46,9 +46,24 @@ class OrderDetailsControllerWebMvcTest {
         dto.setDiscount(0.1f);
         dto.setQuantity(3);
         dto.setUnitPrice(BigDecimal.valueOf(5.25));
-        when(orderDetailService.getAll()).thenReturn(List.of(dto));
+        when(orderDetailService.getAll(0, 20)).thenReturn(List.of(dto));
 
         mockMvc.perform(get("/v1/order-details/get-all").header("ApiVersion", "1"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].productID").value(1));
+    }
+
+    @Test
+    void OrderDetailsControllerWebMvcTest_getAll_withPageParams_passesThemToService_Test() throws Exception {
+        OrderDetailsDto dto = new OrderDetailsDto();
+        dto.setProductID(1);
+        dto.setOrderID(10);
+        dto.setDiscount(0.1f);
+        dto.setQuantity(3);
+        dto.setUnitPrice(BigDecimal.valueOf(5.25));
+        when(orderDetailService.getAll(2, 10)).thenReturn(List.of(dto));
+
+        mockMvc.perform(get("/v1/order-details/get-all?page=2&pageSize=10").header("ApiVersion", "1"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].productID").value(1));
     }

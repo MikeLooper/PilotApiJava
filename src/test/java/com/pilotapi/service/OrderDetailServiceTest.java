@@ -12,6 +12,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -46,7 +48,26 @@ class OrderDetailServiceTest {
         when(mapper.toDto(entity)).thenReturn(dto);
 
         // Act
-        List<OrderDetailsDto> result = service.getAll();
+        List<OrderDetailsDto> result = service.getAll(0, 20);
+
+        // Assert
+        assertEquals(1, result.size());
+        assertEquals(10, result.get(0).getOrderID());
+    }
+
+    @Test
+    void OrderDetailService_getAll_returns_paged_dtos_when_page_specified_Test() {
+        // Arrange
+        OrderDetail entity = new OrderDetail();
+        OrderDetailsDto dto = new OrderDetailsDto();
+        dto.setOrderID(10);
+        dto.setProductID(1);
+
+        when(repository.findAll(PageRequest.of(1, 10))).thenReturn(new PageImpl<>(List.of(entity)));
+        when(mapper.toDto(entity)).thenReturn(dto);
+
+        // Act
+        List<OrderDetailsDto> result = service.getAll(2, 10);
 
         // Assert
         assertEquals(1, result.size());

@@ -42,9 +42,21 @@ class SuppliersControllerWebMvcTest {
         SuppliersDto dto = new SuppliersDto();
         dto.setSupplierID(1);
         dto.setCompanyName("Exotic Liquids");
-        when(supplierService.getAll()).thenReturn(List.of(dto));
+        when(supplierService.getAll(0, 20)).thenReturn(List.of(dto));
 
         mockMvc.perform(get("/v1/suppliers/get-all").header("ApiVersion", "1"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].supplierID").value(1));
+    }
+
+    @Test
+    void SuppliersControllerWebMvcTest_getAll_withPageParams_passesThemToService_Test() throws Exception {
+        SuppliersDto dto = new SuppliersDto();
+        dto.setSupplierID(1);
+        dto.setCompanyName("Exotic Liquids");
+        when(supplierService.getAll(2, 10)).thenReturn(List.of(dto));
+
+        mockMvc.perform(get("/v1/suppliers/get-all?page=2&pageSize=10").header("ApiVersion", "1"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].supplierID").value(1));
     }

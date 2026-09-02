@@ -42,9 +42,21 @@ class ShippersControllerWebMvcTest {
         ShippersDto dto = new ShippersDto();
         dto.setShipperID(1);
         dto.setCompanyName("Speedy Express");
-        when(shipperService.getAll()).thenReturn(List.of(dto));
+        when(shipperService.getAll(0, 20)).thenReturn(List.of(dto));
 
         mockMvc.perform(get("/v1/shippers/get-all").header("ApiVersion", "1"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].shipperID").value(1));
+    }
+
+    @Test
+    void ShippersControllerWebMvcTest_getAll_withPageParams_passesThemToService_Test() throws Exception {
+        ShippersDto dto = new ShippersDto();
+        dto.setShipperID(1);
+        dto.setCompanyName("Speedy Express");
+        when(shipperService.getAll(2, 10)).thenReturn(List.of(dto));
+
+        mockMvc.perform(get("/v1/shippers/get-all?page=2&pageSize=10").header("ApiVersion", "1"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].shipperID").value(1));
     }
