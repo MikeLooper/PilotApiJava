@@ -33,7 +33,27 @@ management:
       probes:
         enabled: true
 
+otel:
+  sdk:
+    disabled: ${OTEL_SDK_DISABLED:false}
+  service:
+    name: ${spring.application.name}
+  resource:
+    attributes:
+      deployment.environment: ${OTEL_DEPLOYMENT_ENVIRONMENT:development}
+  exporter:
+    otlp:
+      endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://otel-collector:4317}
+      protocol: ${OTEL_EXPORTER_OTLP_PROTOCOL:grpc}
+  traces:
+    exporter: otlp
+  metrics:
+    exporter: otlp
+  logs:
+    exporter: otlp
+
 springdoc:
+  enable-kotlin: false
   api-docs:
     path: /v3/api-docs
   swagger-ui:

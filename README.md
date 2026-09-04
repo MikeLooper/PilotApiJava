@@ -101,12 +101,32 @@ When `app.security.active` is `true`, a missing/invalid token or an insufficient
 
 Role assignment is currently mocked (`UserRoles`), keyed by the token's `preferred_username`/`sub` claim: `reader_user` → `read_only_role`, `working_user` → `read_write_role`, `working_admin_user` → `admin_role`.
 
-### Calling a Secured Endpoint
+### Obtaining a Token
 
-Obtain a token from the identity provider, then pass it as a bearer token:
+Tokens are issued by the identity provider's OIDC token endpoint, at `{app.security.provider-url}/realms/{app.security.realm}/protocol/openid-connect/token` (dev default: `http://localhost:55001/realms/local-realm/protocol/openid-connect/token`).
+
+For local/dev testing against the mocked users (`reader_user`, `working_user`, `working_admin_user`), request a token with the Resource Owner Password Credentials (direct access) grant — the client in the identity provider must have this grant type enabled:
 
 ```powershell
-$token = "<jwt-issued-for-reader_user>"
+$tokenResponse = Invoke-RestMethod -Method Post `
+    -Uri "http://localhost:55001/realms/local-realm/protocol/openid-connect/token" `
+    -ContentType "application/x-www-form-urlencoded" `
+    -Body @{
+        grant_type    = "password"
+        client_id     = "local-client"
+        client_secret = "<client-secret>"   # omit if the client is public, not confidential
+        username      = "reader_user"
+        password      = "<reader_user-password>"
+    }
+
+$token = $tokenResponse.access_token
+```
+
+### Calling a Secured Endpoint
+
+Pass the retrieved token as a bearer token:
+
+```powershell
 Invoke-RestMethod -Method Get -Uri "http://localhost:59999/v1/categories/get-all" `
     -Headers @{ Authorization = "Bearer $token" }
 ```
@@ -130,6 +150,62 @@ When `app.security.active=false`, a failed check instead returns the normal succ
 ```
 Warning: 199 pilot-api "Missing or malformed Authorization header"
 ```
+
+## OpenTelemetry
+
+The application exports traces, metrics, and logs via OpenTelemetry (OTEL), using the [`opentelemetry-spring-boot-starter`](https://github.com/open-telemetry/opentelemetry-java-instrumentation/tree/main/instrumentation/spring/spring-boot-autoconfigure) for auto-instrumentation (Spring MVC, JDBC, etc.) plus an OTLP Logback appender for log export. No Java agent is required.
+
+Telemetry is sent over OTLP/gRPC to a local OpenTelemetry Collector, which routes it to a Grafana LGTM stack (Tempo for traces, Mimir for metrics, Loki for logs):
+
+```
+PilotApiJava --OTLP/gRPC--> otel-collector --> Tempo / Mimir / Loki --> Grafana
+```
+
+View traces, metrics, and logs in Grafana at `http://localhost:3000`.
+
+### Configuration
+
+| Property | Env override | Default (dev) |
+|---|---|---|
+| `otel.sdk.disabled` | `OTEL_SDK_DISABLED` | `false` |
+| `otel.service.name` | — | `${spring.application.name}` |
+| `otel.resource.attributes.deployment.environment` | `OTEL_DEPLOYMENT_ENVIRONMENT` | `development` |
+| `otel.exporter.otlp.endpoint` | `OTEL_EXPORTER_OTLP_ENDPOINT` | `http://localhost:4317` (dev profiles) / `http://otel-collector:4317` (base/prod) |
+| `otel.exporter.otlp.protocol` | `OTEL_EXPORTER_OTLP_PROTOCOL` | `grpc` |
+
+The base `application.yml` defaults to the container hostname `otel-collector`, matching the pattern used for the database and identity provider. The `local-sqlserver`/`local-postgres` dev profiles override this to `localhost`, since the API runs on the host while the collector runs in Docker. The `prod-sqlserver`/`prod-postgres` profiles override `deployment.environment` to `production`.
+
+To disable telemetry export entirely (e.g. when the collector isn't running), set `OTEL_SDK_DISABLED=true`.
+
+### Querying Logs in Grafana
+
+Application logs land in Loki. In Grafana, open **Explore**, select the **Loki** datasource, and query using [LogQL](https://grafana.com/docs/loki/latest/query/), filtering on these labels:
+
+| Label | Example value | Purpose |
+|---|---|---|
+| `service_name` | `PilotApiJava` | Scope to this API |
+| `deployment_environment` | `development` / `production` | Filter by environment (from `OTEL_DEPLOYMENT_ENVIRONMENT`) |
+| `detected_level` / `severity_text` | `info`, `warn`, `error` | Filter by log level |
+| `code_namespace` | `com.pilotapi.security.SecurityHelper` | Filter by originating Java class |
+| `host_name` | *(machine name)* | Filter by the host the API ran on |
+
+Example queries:
+
+```logql
+# All PilotApiJava logs
+{service_name="PilotApiJava"}
+
+# Errors and warnings only
+{service_name="PilotApiJava", detected_level=~"error|warn"}
+
+# Logs from a specific class
+{service_name="PilotApiJava", code_namespace="com.pilotapi.security.SecurityHelper"}
+
+# Production logs mentioning a specific route
+{service_name="PilotApiJava", deployment_environment="production"} |= "/v1/categories"
+```
+
+Each log entry also carries `trace_id`/`span_id` (when logged within a traced request), so you can jump from a log line directly to its trace in Tempo.
 
 ## Port Configuration
 

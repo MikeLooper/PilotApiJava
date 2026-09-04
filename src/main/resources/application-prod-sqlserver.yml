@@ -2,6 +2,11 @@ app:
   table:
     order-details: "[Order Details]"
 
+otel:
+  resource:
+    attributes:
+      deployment.environment: ${OTEL_DEPLOYMENT_ENVIRONMENT:production}
+
 spring:
   datasource:
     url: jdbc:sqlserver://local-mssql:1433;databaseName=NorthWind;encrypt=true;trustServerCertificate=true;connectTimeout=30
