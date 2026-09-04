@@ -67,6 +67,37 @@ class SecurityPropertiesTest {
             });
     }
 
+    @Test
+    void SecurityProperties_publicIssuerUri_withoutPublicProviderUrl_fallsBackToProviderUrl_Test() {
+        // Act
+        contextRunner
+            .withPropertyValues(
+                "app.security.provider-url=http://localhost:55001",
+                "app.security.realm=local-realm")
+            .run(context -> {
+                SecurityProperties properties = context.getBean(SecurityProperties.class);
+
+                // Assert
+                assertEquals("http://localhost:55001/realms/local-realm", properties.publicIssuerUri());
+            });
+    }
+
+    @Test
+    void SecurityProperties_publicIssuerUri_withPublicProviderUrl_combinesPublicProviderUrlAndRealm_Test() {
+        // Act
+        contextRunner
+            .withPropertyValues(
+                "app.security.provider-url=http://local-keycloak:8080",
+                "app.security.public-provider-url=http://localhost:55001",
+                "app.security.realm=local-realm")
+            .run(context -> {
+                SecurityProperties properties = context.getBean(SecurityProperties.class);
+
+                // Assert
+                assertEquals("http://localhost:55001/realms/local-realm", properties.publicIssuerUri());
+            });
+    }
+
     @Configuration
     @EnableConfigurationProperties(SecurityProperties.class)
     static class TestConfiguration {

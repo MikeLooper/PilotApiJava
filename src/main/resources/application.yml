@@ -56,6 +56,7 @@ app:
   security:
     active: ${APP_SECURITY_ACTIVE:true}
     provider-url: ${APP_SECURITY_PROVIDER_URL:http://local-keycloak:8080}
+    public-provider-url: ${APP_SECURITY_PUBLIC_PROVIDER_URL:http://localhost:55001}
     realm: ${APP_SECURITY_REALM:local-realm}
     client-id: ${APP_SECURITY_CLIENT_ID:local-client}
     resource-area: ${APP_SECURITY_RESOURCE_AREA:account}

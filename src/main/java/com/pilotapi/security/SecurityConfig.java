@@ -34,7 +34,7 @@ public class SecurityConfig {
     @Bean
     public JwtDecoder jwtDecoder(SecurityProperties securityProperties) {
         NimbusJwtDecoder decoder = NimbusJwtDecoder.withJwkSetUri(securityProperties.jwkSetUri()).build();
-        decoder.setJwtValidator(JwtValidators.createDefaultWithIssuer(securityProperties.issuerUri()));
+        decoder.setJwtValidator(JwtValidators.createDefaultWithIssuer(securityProperties.publicIssuerUri()));
         return decoder;
     }
 
