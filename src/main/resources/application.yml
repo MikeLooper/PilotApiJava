@@ -62,7 +62,7 @@ springdoc:
 app:
   metadata:
     name: PilotApiJava
-    build-version: ${APP_BUILD_VERSION:1.0.0}
+    build-version: ${APP_BUILD_VERSION:1.1.0}
     deploy-date: ${APP_DEPLOY_DATE:unknown}
   openapi:
     title: PilotApiJava
