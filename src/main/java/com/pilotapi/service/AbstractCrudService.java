@@ -3,6 +3,8 @@ package com.pilotapi.service;
 import com.pilotapi.dto.AddResponseIntDto;
 import com.pilotapi.exception.ResourceNotFoundException;
 import com.pilotapi.mapper.EntityDtoMapper;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -31,8 +33,12 @@ public abstract class AbstractCrudService<E, D, ID> implements CrudService<D, ID
     }
 
     @Override
-    public List<D> getAll() {
-        return repository.findAll().stream().map(mapper::toDto).toList();
+    public List<D> getAll(int page, int pageSize) {
+        if (page == 0) {
+            return repository.findAll().stream().map(mapper::toDto).toList();
+        }
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        return repository.findAll(pageable).stream().map(mapper::toDto).toList();
     }
 
     @Override

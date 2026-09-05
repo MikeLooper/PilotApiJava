@@ -1,7 +1,7 @@
 info:
   name: Add
   type: http
-  seq: 3
+  seq: 4
 
 http:
   method: POST
@@ -36,7 +36,7 @@ runtime:
     - type: tests
       code: |-
         test("should return success", function () {
-          expect(res.getStatus()).to.equal(200);
+          expect(res.getStatus()).to.equal(201);
         });
 
         test("should return id", function () {

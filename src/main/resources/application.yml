@@ -33,7 +33,27 @@ management:
       probes:
         enabled: true
 
+otel:
+  sdk:
+    disabled: ${OTEL_SDK_DISABLED:false}
+  service:
+    name: ${spring.application.name}
+  resource:
+    attributes:
+      deployment.environment: ${OTEL_DEPLOYMENT_ENVIRONMENT:development}
+  exporter:
+    otlp:
+      endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://otel-collector:4317}
+      protocol: ${OTEL_EXPORTER_OTLP_PROTOCOL:grpc}
+  traces:
+    exporter: otlp
+  metrics:
+    exporter: otlp
+  logs:
+    exporter: otlp
+
 springdoc:
+  enable-kotlin: false
   api-docs:
     path: /v3/api-docs
   swagger-ui:
@@ -42,5 +62,21 @@ springdoc:
 app:
   metadata:
     name: PilotApiJava
-    build-version: ${APP_BUILD_VERSION:0.2.0}
+    build-version: ${APP_BUILD_VERSION:1.1.0}
     deploy-date: ${APP_DEPLOY_DATE:unknown}
+  openapi:
+    title: PilotApiJava
+    description: A proof of concept API to explore best-practices and new ideas, based upon the Northwind database. This API is intended to be a reference implementation for building APIs.
+    summary: Proof of concept API for the Northwind database.
+    license: MIT
+    contact:
+      name: Michael Looper
+      email: MikelLooper@gmail.com
+      url: https://github.com/MikeLooper
+  security:
+    active: ${APP_SECURITY_ACTIVE:true}
+    provider-url: ${APP_SECURITY_PROVIDER_URL:http://local-keycloak:8080}
+    public-provider-url: ${APP_SECURITY_PUBLIC_PROVIDER_URL:http://localhost:55001}
+    realm: ${APP_SECURITY_REALM:local-realm}
+    client-id: ${APP_SECURITY_CLIENT_ID:local-client}
+    resource-area: ${APP_SECURITY_RESOURCE_AREA:account}

@@ -6,6 +6,9 @@ import com.pilotapi.service.ProductService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.TestPropertySource;
+import com.pilotapi.security.SecurityConfig;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,6 +27,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProductsController.class)
+@Import(SecurityConfig.class)
+@TestPropertySource(properties = "app.security.active=false")
 class ProductsControllerWebMvcTest {
 
     @Autowired
@@ -40,9 +45,24 @@ class ProductsControllerWebMvcTest {
         dto.setReorderLevel(1);
         dto.setUnitsInStock(10);
         dto.setUnitsOnOrder(0);
-        when(productService.getAll()).thenReturn(List.of(dto));
+        when(productService.getAll(0, 20)).thenReturn(List.of(dto));
 
         mockMvc.perform(get("/v1/products/get-all").header("ApiVersion", "1"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].productID").value(1));
+    }
+
+    @Test
+    void ProductsControllerWebMvcTest_getAll_withPageParams_passesThemToService_Test() throws Exception {
+        ProductsDto dto = new ProductsDto();
+        dto.setProductID(1);
+        dto.setProductName("Chai");
+        dto.setReorderLevel(1);
+        dto.setUnitsInStock(10);
+        dto.setUnitsOnOrder(0);
+        when(productService.getAll(2, 10)).thenReturn(List.of(dto));
+
+        mockMvc.perform(get("/v1/products/get-all?page=2&pageSize=10").header("ApiVersion", "1"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].productID").value(1));
     }
@@ -63,14 +83,14 @@ class ProductsControllerWebMvcTest {
     }
 
     @Test
-    void ProductsControllerWebMvcTest_add_returns_ok_Test() throws Exception {
+    void ProductsControllerWebMvcTest_add_returns_created_Test() throws Exception {
         when(productService.add(any(ProductsDto.class))).thenReturn(new AddResponseIntDto(105L));
 
         mockMvc.perform(post("/v1/products/add")
                 .header("ApiVersion", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"productID\":1,\"productName\":\"Chai\",\"reorderLevel\":1,\"unitsInStock\":10,\"unitsOnOrder\":0}"))
-            .andExpect(status().isOk())
+            .andExpect(status().isCreated())
             .andExpect(jsonPath("$.id").value(105));
     }
 

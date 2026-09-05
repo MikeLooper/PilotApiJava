@@ -6,6 +6,9 @@ import com.pilotapi.service.EmployeeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.TestPropertySource;
+import com.pilotapi.security.SecurityConfig;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,6 +27,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(EmployeesController.class)
+@Import(SecurityConfig.class)
+@TestPropertySource(properties = "app.security.active=false")
 class EmployeesControllerWebMvcTest {
 
     @Autowired
@@ -38,9 +43,22 @@ class EmployeesControllerWebMvcTest {
         dto.setEmployeeID(1);
         dto.setFirstName("Nancy");
         dto.setLastName("Davolio");
-        when(employeeService.getAll()).thenReturn(List.of(dto));
+        when(employeeService.getAll(0, 20)).thenReturn(List.of(dto));
 
         mockMvc.perform(get("/v1/employees/get-all").header("ApiVersion", "1"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].employeeID").value(1));
+    }
+
+    @Test
+    void EmployeesControllerWebMvcTest_getAll_withPageParams_passesThemToService_Test() throws Exception {
+        EmployeesDto dto = new EmployeesDto();
+        dto.setEmployeeID(1);
+        dto.setFirstName("Nancy");
+        dto.setLastName("Davolio");
+        when(employeeService.getAll(2, 10)).thenReturn(List.of(dto));
+
+        mockMvc.perform(get("/v1/employees/get-all?page=2&pageSize=10").header("ApiVersion", "1"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].employeeID").value(1));
     }
@@ -59,14 +77,14 @@ class EmployeesControllerWebMvcTest {
     }
 
     @Test
-    void EmployeesControllerWebMvcTest_add_returns_ok_Test() throws Exception {
+    void EmployeesControllerWebMvcTest_add_returns_created_Test() throws Exception {
         when(employeeService.add(any(EmployeesDto.class))).thenReturn(new AddResponseIntDto(102L));
 
         mockMvc.perform(post("/v1/employees/add")
                 .header("ApiVersion", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"employeeID\":1,\"firstName\":\"Nancy\",\"lastName\":\"Davolio\"}"))
-            .andExpect(status().isOk())
+            .andExpect(status().isCreated())
             .andExpect(jsonPath("$.id").value(102));
     }
 

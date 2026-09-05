@@ -7,8 +7,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import com.pilotapi.security.SecurityConfig;
 
 import java.util.List;
 
@@ -21,9 +24,17 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * Runs with security inactive (warn-only) so the pre-existing CRUD assertions here
+ * do not need to supply a bearer token. Active-mode (block) behavior is covered by
+ * {@link CategoriesControllerSecurityWebMvcTest}.
+ */
 @WebMvcTest(CategoriesController.class)
+@Import(SecurityConfig.class)
+@TestPropertySource(properties = "app.security.active=false")
 class CategoriesControllerWebMvcTest {
 
     @Autowired
@@ -37,9 +48,21 @@ class CategoriesControllerWebMvcTest {
         CategoriesDto dto = new CategoriesDto();
         dto.setCategoryID(1);
         dto.setCategoryName("Beverages");
-        when(categoryService.getAll()).thenReturn(List.of(dto));
+        when(categoryService.getAll(0, 20)).thenReturn(List.of(dto));
 
         mockMvc.perform(get("/v1/categories/get-all").header("ApiVersion", "1"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$[0].categoryID").value(1));
+    }
+
+    @Test
+    void CategoriesControllerWebMvcTest_getAll_withPageParams_passesThemToService_Test() throws Exception {
+        CategoriesDto dto = new CategoriesDto();
+        dto.setCategoryID(1);
+        dto.setCategoryName("Beverages");
+        when(categoryService.getAll(2, 10)).thenReturn(List.of(dto));
+
+        mockMvc.perform(get("/v1/categories/get-all?page=2&pageSize=10").header("ApiVersion", "1"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$[0].categoryID").value(1));
     }
@@ -57,14 +80,14 @@ class CategoriesControllerWebMvcTest {
     }
 
     @Test
-    void CategoriesControllerWebMvcTest_add_returns_ok_Test() throws Exception {
+    void CategoriesControllerWebMvcTest_add_returns_created_Test() throws Exception {
         when(categoryService.add(any(CategoriesDto.class))).thenReturn(new AddResponseIntDto(100L));
 
         mockMvc.perform(post("/v1/categories/add")
                 .header("ApiVersion", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"categoryID\":1,\"categoryName\":\"Beverages\"}"))
-            .andExpect(status().isOk())
+            .andExpect(status().isCreated())
             .andExpect(jsonPath("$.id").value(100));
     }
 
@@ -85,5 +108,16 @@ class CategoriesControllerWebMvcTest {
 
         mockMvc.perform(delete("/v1/categories/delete/1").header("ApiVersion", "1"))
             .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void CategoriesControllerWebMvcTest_getAll_withoutToken_whenInactive_allowsThrough_withWarningHeader_Test() throws Exception {
+        CategoriesDto dto = new CategoriesDto();
+        dto.setCategoryID(1);
+        when(categoryService.getAll(0, 20)).thenReturn(List.of(dto));
+
+        mockMvc.perform(get("/v1/categories/get-all").header("ApiVersion", "1"))
+            .andExpect(status().isOk())
+            .andExpect(header().exists("Warning"));
     }
 }

@@ -11,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -48,7 +50,26 @@ class CustomerServiceTest {
         when(mapper.toDto(entity)).thenReturn(dto);
 
         // Act
-        List<CustomersDto> result = service.getAll();
+        List<CustomersDto> result = service.getAll(0, 20);
+
+        // Assert
+        assertEquals(1, result.size());
+        assertEquals("ALFKI", result.get(0).getCustomerID());
+    }
+
+    @Test
+    void CustomerService_getAll_returns_paged_dtos_when_page_specified_Test() {
+        // Arrange
+        Customer entity = new Customer();
+        entity.setCustomerID("ALFKI");
+        CustomersDto dto = new CustomersDto();
+        dto.setCustomerID("ALFKI");
+
+        when(repository.findAll(PageRequest.of(1, 10))).thenReturn(new PageImpl<>(List.of(entity)));
+        when(mapper.toDto(entity)).thenReturn(dto);
+
+        // Act
+        List<CustomersDto> result = service.getAll(2, 10);
 
         // Assert
         assertEquals(1, result.size());
