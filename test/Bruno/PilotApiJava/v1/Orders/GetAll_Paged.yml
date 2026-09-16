@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: "{{Host}}v{{version}}/{{controller}}/get-all?page=1&pageSize=3"
+  url: "{{Host}}v{{version}}/{{controller}}/get-all"
   params:
     - name: page
       value: "1"

@@ -65,7 +65,8 @@ public class SecurityHelper {
         try {
             jwt = jwtDecoder.decode(rawToken.get());
         } catch (JwtException ex) {
-            return new AuthCheckResult(AuthOutcome.UNAUTHENTICATED, "Invalid token: " + ex.getMessage(), null);
+            LOGGER.warn("JWT validation failed in SecurityHelper.check(): {}", ex.getMessage(), ex);
+            return new AuthCheckResult(AuthOutcome.UNAUTHENTICATED, "Invalid token", null);
         }
 
         String userId = resolveUserId(jwt);
