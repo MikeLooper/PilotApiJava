@@ -95,7 +95,7 @@ public class SecurityHelper {
     }
 
     public void logOutcome(AuthCheckResult result, HttpServletRequest request, boolean blocked) {
-        String jwt = redact(extractBearerToken(request).orElse(""));
+        String jwt = maskToken(extractBearerToken(request).orElse(""));
         if (result.isAuthorized()) {
             LOGGER.info("Authentication succeeded for user '{}' with role '{}' on {} {} (token={})",
                 result.user().getUserId(), result.user().getRole().getRoleName(),
@@ -113,6 +113,16 @@ public class SecurityHelper {
         }
         Matcher matcher = PASSWORD_PATTERN.matcher(raw);
         return matcher.replaceAll("$1***REDACTED***");
+    }
+
+    public String maskToken(String token) {
+        if (!StringUtils.hasText(token)) {
+            return "";
+        }
+        if (token.length() <= 8) {
+            return "...[Redacted]...";
+        }
+        return token.substring(0, 4) + "...[Redacted]..." + token.substring(token.length() - 4);
     }
 
     public String buildWarningHeaderValue(String reason) {

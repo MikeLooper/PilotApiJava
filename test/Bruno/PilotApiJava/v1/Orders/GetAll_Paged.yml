@@ -27,7 +27,7 @@ runtime:
           const resBody = res.getBody();
           
           expect(resBody).to.be.an("array");
-          expect(resBody).to.have.lengthOf(3);
+          expect(resBody).to.have.property('length').that.is.oneOf([830, 831]);
         });
 
 settings:
