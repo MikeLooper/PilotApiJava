@@ -34,10 +34,11 @@ public abstract class AbstractCrudService<E, D, ID> implements CrudService<D, ID
 
     @Override
     public List<D> getAll(int page, int pageSize) {
-        if (page == 0) {
-            return repository.findAll().stream().map(mapper::toDto).toList();
+        if (page <= 0) {
+                return repository.findAll().stream().map(mapper::toDto).toList();
         }
-        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        int effectivePageSize = pageSize > 0 ? pageSize : 20;
+        Pageable pageable = PageRequest.of(page - 1, effectivePageSize);
         return repository.findAll(pageable).stream().map(mapper::toDto).toList();
     }
 

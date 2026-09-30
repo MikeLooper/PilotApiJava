@@ -127,7 +127,7 @@ $token = $tokenResponse.access_token
 Pass the retrieved token as a bearer token:
 
 ```powershell
-Invoke-RestMethod -Method Get -Uri "http://localhost:59999/v1/categories/get-all" `
+Invoke-RestMethod -Method Get -Uri "http://localhost:56661/v1/categories/get-all" `
     -Headers @{ Authorization = "Bearer $token" }
 ```
 
