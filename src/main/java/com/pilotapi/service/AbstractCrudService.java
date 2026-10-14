@@ -3,6 +3,8 @@ package com.pilotapi.service;
 import com.pilotapi.dto.AddResponseIntDto;
 import com.pilotapi.exception.ResourceNotFoundException;
 import com.pilotapi.mapper.EntityDtoMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,6 +13,8 @@ import java.util.List;
 import java.util.function.Function;
 
 public abstract class AbstractCrudService<E, D, ID> implements CrudService<D, ID> {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(AbstractCrudService.class);
 
     private final JpaRepository<E, ID> repository;
     private final EntityDtoMapper<E, D> mapper;
@@ -35,18 +39,25 @@ public abstract class AbstractCrudService<E, D, ID> implements CrudService<D, ID
     @Override
     public List<D> getAll(int page, int pageSize) {
         if (page <= 0) {
-                return repository.findAll().stream().map(mapper::toDto).toList();
+            List<D> results = repository.findAll().stream().map(mapper::toDto).toList();
+            LOGGER.info("Retrieved {} {} record(s) (unpaged)", results.size(), resourceName);
+            return results;
         }
+
         int effectivePageSize = pageSize > 0 ? pageSize : 20;
         Pageable pageable = PageRequest.of(page - 1, effectivePageSize);
-        return repository.findAll(pageable).stream().map(mapper::toDto).toList();
+        List<D> results = repository.findAll(pageable).stream().map(mapper::toDto).toList();
+        LOGGER.info("Retrieved {} {} record(s) for page {} (page size {})", results.size(), resourceName, page, effectivePageSize);
+        return results;
     }
 
     @Override
     public D getById(ID id) {
         E entity = repository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException(resourceName + " not found"));
-        return mapper.toDto(entity);
+        D result = mapper.toDto(entity);
+        LOGGER.info("Retrieved {} record with id {}", resourceName, id);
+        return result;
     }
 
     @Override

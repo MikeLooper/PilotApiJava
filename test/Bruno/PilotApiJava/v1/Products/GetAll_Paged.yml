@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: "{{Host}}v{{version}}/{{controller}}/get-all"
+  url: "{{Host}}v{{version}}/{{controller}}/get-all?page=1&pageSize=3"
   params:
     - name: page
       value: "1"
@@ -27,7 +27,7 @@ runtime:
           const resBody = res.getBody();
           
           expect(resBody).to.be.an("array");
-          expect(resBody).to.have.lengthOf(77);
+          expect(resBody).to.have.lengthOf(3);
         });
 
 settings:
