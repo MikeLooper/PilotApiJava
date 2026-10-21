@@ -15,8 +15,8 @@ otel:
 spring:
   datasource:
     url: jdbc:sqlserver://localhost:1433;databaseName=NorthWind;encrypt=true;trustServerCertificate=true;connectTimeout=30
-    username: DevUser
-    password: Hjm$435yVt7a
+    username: <DB_USERNAME:DevUser>
+    password: <DB_PASSWORD>
   jpa:
     properties:
       hibernate:
