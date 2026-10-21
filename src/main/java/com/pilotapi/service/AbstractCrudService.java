@@ -12,27 +12,27 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.function.Function;
 
-public abstract class AbstractCrudService<E, D, ID> implements CrudService<D, ID> {
+public abstract class AbstractCrudService<E, D, ID, R> implements CrudService<D, ID, R> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AbstractCrudService.class);
 
     private final JpaRepository<E, ID> repository;
     private final EntityDtoMapper<E, D> mapper;
     private final Function<D, ID> dtoIdExtractor;
-    private final Function<E, Object> entityIdExtractor;
+    private final Function<E, R> addResponseMapper;
     private final String resourceName;
 
     protected AbstractCrudService(
         JpaRepository<E, ID> repository,
         EntityDtoMapper<E, D> mapper,
         Function<D, ID> dtoIdExtractor,
-        Function<E, Object> entityIdExtractor,
+        Function<E, R> addResponseMapper,
         String resourceName
     ) {
         this.repository = repository;
         this.mapper = mapper;
         this.dtoIdExtractor = dtoIdExtractor;
-        this.entityIdExtractor = entityIdExtractor;
+        this.addResponseMapper = addResponseMapper;
         this.resourceName = resourceName;
     }
 
@@ -61,9 +61,9 @@ public abstract class AbstractCrudService<E, D, ID> implements CrudService<D, ID
     }
 
     @Override
-    public AddResponseIntDto add(D dto) {
+    public R add(D dto) {
         E saved = repository.save(mapper.toEntity(dto));
-        return new AddResponseIntDto(toLong(entityIdExtractor.apply(saved)));
+        return addResponseMapper.apply(saved);
     }
 
     @Override
@@ -89,7 +89,11 @@ public abstract class AbstractCrudService<E, D, ID> implements CrudService<D, ID
         return true;
     }
 
-    private long toLong(Object value) {
+    protected static <E> Function<E, AddResponseIntDto> intIdResponse(Function<E, Object> entityIdExtractor) {
+        return saved -> new AddResponseIntDto(toLong(entityIdExtractor.apply(saved)));
+    }
+
+    private static long toLong(Object value) {
         if (value == null) {
             return 0L;
         }

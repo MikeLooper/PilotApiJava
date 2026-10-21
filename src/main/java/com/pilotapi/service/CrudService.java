@@ -1,16 +1,14 @@
 package com.pilotapi.service;
 
-import com.pilotapi.dto.AddResponseIntDto;
-
 import java.util.List;
 
-public interface CrudService<D, ID> {
+public interface CrudService<D, ID, R> {
 
     List<D> getAll(int page, int pageSize);
 
     D getById(ID id);
 
-    AddResponseIntDto add(D dto);
+    R add(D dto);
 
     boolean update(D dto);
 

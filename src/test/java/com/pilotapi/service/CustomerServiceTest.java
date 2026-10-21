@@ -1,6 +1,6 @@
 package com.pilotapi.service;
 
-import com.pilotapi.dto.AddResponseIntDto;
+import com.pilotapi.dto.AddResponseStringDto;
 import com.pilotapi.dto.CustomersDto;
 import com.pilotapi.exception.ResourceNotFoundException;
 import com.pilotapi.mapper.CustomerMapper;
@@ -86,7 +86,7 @@ class CustomerServiceTest {
     }
 
     @Test
-    void CustomerService_add_returns_zero_id_for_non_numeric_identifier_Test() {
+    void CustomerService_add_returns_customer_id_as_response_Test() {
         // Arrange
         CustomersDto input = new CustomersDto();
         input.setCustomerID("ALFKI");
@@ -99,10 +99,10 @@ class CustomerServiceTest {
         when(repository.save(mapped)).thenReturn(saved);
 
         // Act
-        AddResponseIntDto result = service.add(input);
+        AddResponseStringDto result = service.add(input);
 
         // Assert
-        assertEquals(0L, result.getId());
+        assertEquals("ALFKI", result.getId());
     }
 
     @Test

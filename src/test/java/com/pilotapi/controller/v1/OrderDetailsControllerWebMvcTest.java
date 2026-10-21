@@ -1,6 +1,6 @@
 package com.pilotapi.controller.v1;
 
-import com.pilotapi.dto.AddResponseIntDto;
+import com.pilotapi.dto.AddResponseOrderDetailsDto;
 import com.pilotapi.dto.OrderDetailsDto;
 import com.pilotapi.service.OrderDetailService;
 import org.junit.jupiter.api.Test;
@@ -85,14 +85,15 @@ class OrderDetailsControllerWebMvcTest {
 
     @Test
     void OrderDetailsControllerWebMvcTest_add_returns_created_Test() throws Exception {
-        when(orderDetailService.add(any(OrderDetailsDto.class))).thenReturn(new AddResponseIntDto(103L));
+        when(orderDetailService.add(any(OrderDetailsDto.class))).thenReturn(new AddResponseOrderDetailsDto(10, 1));
 
         mockMvc.perform(post("/v1/order-details/add")
                 .header("ApiVersion", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"productID\":1,\"orderID\":10,\"discount\":0.1,\"quantity\":3,\"unitPrice\":5.25}"))
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.id").value(103));
+            .andExpect(jsonPath("$.orderID").value(10))
+            .andExpect(jsonPath("$.productID").value(1));
     }
 
     @Test
