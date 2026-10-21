@@ -1,6 +1,6 @@
 package com.pilotapi.service;
 
-import com.pilotapi.dto.AddResponseIntDto;
+import com.pilotapi.dto.AddResponseOrderDetailsDto;
 import com.pilotapi.dto.OrderDetailsDto;
 import com.pilotapi.exception.ResourceNotFoundException;
 import com.pilotapi.mapper.OrderDetailMapper;
@@ -39,9 +39,9 @@ public class OrderDetailService {
             .orElseThrow(() -> new ResourceNotFoundException("Order detail not found")));
     }
 
-    public AddResponseIntDto add(OrderDetailsDto dto) {
+    public AddResponseOrderDetailsDto add(OrderDetailsDto dto) {
         OrderDetail saved = repository.save(mapper.toEntity(dto));
-        return new AddResponseIntDto(saved.getId().getOrderID().longValue());
+        return new AddResponseOrderDetailsDto(saved.getId().getOrderID(), saved.getId().getProductID());
     }
 
     public boolean update(OrderDetailsDto dto) {

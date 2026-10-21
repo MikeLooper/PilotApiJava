@@ -1,6 +1,6 @@
 package com.pilotapi.service;
 
-import com.pilotapi.dto.AddResponseIntDto;
+import com.pilotapi.dto.AddResponseOrderDetailsDto;
 import com.pilotapi.dto.OrderDetailsDto;
 import com.pilotapi.exception.ResourceNotFoundException;
 import com.pilotapi.mapper.OrderDetailMapper;
@@ -103,7 +103,7 @@ class OrderDetailServiceTest {
     }
 
     @Test
-    void OrderDetailService_add_returns_order_id_as_response_Test() {
+    void OrderDetailService_add_returns_order_and_product_ids_as_response_Test() {
         // Arrange
         OrderDetailsDto dto = new OrderDetailsDto();
         dto.setOrderID(10);
@@ -117,10 +117,11 @@ class OrderDetailServiceTest {
         when(repository.save(mapped)).thenReturn(saved);
 
         // Act
-        AddResponseIntDto response = service.add(dto);
+        AddResponseOrderDetailsDto response = service.add(dto);
 
         // Assert
-        assertEquals(10L, response.getId());
+        assertEquals(10, response.getOrderID());
+        assertEquals(1, response.getProductID());
     }
 
     @Test

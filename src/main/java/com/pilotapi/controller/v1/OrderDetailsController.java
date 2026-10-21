@@ -1,6 +1,6 @@
 package com.pilotapi.controller.v1;
 
-import com.pilotapi.dto.AddResponseIntDto;
+import com.pilotapi.dto.AddResponseOrderDetailsDto;
 import com.pilotapi.dto.OrderDetailsDto;
 import com.pilotapi.service.OrderDetailService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -56,7 +56,7 @@ public class OrderDetailsController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<AddResponseIntDto> add(
+    public ResponseEntity<AddResponseOrderDetailsDto> add(
         @Valid @RequestBody OrderDetailsDto request,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
         @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
