@@ -3,6 +3,10 @@ package com.pilotapi.service;
 import com.pilotapi.config.ApplicationMetadataProperties;
 import com.pilotapi.dto.AboutResponseDto;
 import com.pilotapi.dto.ApplicationConfigurationDto;
+import com.pilotapi.dto.DataConnectionConfigurationDto;
+import com.pilotapi.dto.DataSourceConfigurationDto;
+import com.pilotapi.dto.OpenTelemetryConfigurationDto;
+import com.pilotapi.dto.SecurityConfigurationDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,6 +18,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -82,6 +87,26 @@ class SystemServiceTest {
     void SystemService_about_uses_application_name_fallback_and_includes_details_Test() {
         // Arrange
         ApplicationConfigurationDto configuration = new ApplicationConfigurationDto();
+        DataConnectionConfigurationDto dataConnection = new DataConnectionConfigurationDto();
+        dataConnection.setHost("database.internal");
+        dataConnection.setPort(5432);
+        dataConnection.setDataSourceName("production");
+        configuration.setDataConnections(List.of(dataConnection));
+        DataSourceConfigurationDto dataSourceConfiguration = new DataSourceConfigurationDto();
+        dataSourceConfiguration.setDataSource("production");
+        dataSourceConfiguration.setDataSourceName("production");
+        dataSourceConfiguration.setSchema("private");
+        configuration.setDataSources(List.of(dataSourceConfiguration));
+        SecurityConfigurationDto security = new SecurityConfigurationDto();
+        security.setBaseUrl("https://identity.internal");
+        security.setRealm("internal");
+        security.setClientId("pilot-api");
+        security.setAuthority("https://identity.internal/internal");
+        configuration.setSecurity(security);
+        OpenTelemetryConfigurationDto openTelemetry = new OpenTelemetryConfigurationDto();
+        openTelemetry.setServer("telemetry.internal");
+        openTelemetry.setPort(4317);
+        configuration.setOpenTelemetry(openTelemetry);
         when(applicationConfigurationService.describe()).thenReturn(configuration);
 
         // Act
@@ -91,6 +116,14 @@ class SystemServiceTest {
         assertEquals("v2", result.getApiVersion());
         assertEquals("PilotApiJava (SQL Server)", result.getName());
         assertSame(configuration, result.getApplicationConfiguration());
+        assertNull(configuration.getDataConnections());
+        assertNull(configuration.getDataSources());
+        assertNull(security.getBaseUrl());
+        assertNull(security.getRealm());
+        assertNull(security.getClientId());
+        assertNull(security.getAuthority());
+        assertNull(openTelemetry.getServer());
+        assertNull(openTelemetry.getPort());
     }
 
     @Test

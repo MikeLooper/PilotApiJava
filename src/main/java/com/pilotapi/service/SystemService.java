@@ -2,6 +2,7 @@ package com.pilotapi.service;
 
 import com.pilotapi.config.ApplicationMetadataProperties;
 import com.pilotapi.dto.AboutResponseDto;
+import com.pilotapi.dto.ApplicationConfigurationDto;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -39,10 +40,33 @@ public class SystemService {
         response.setDeployDate(metadata.getDeployDate());
 
         if (showDetails) {
-            response.setApplicationConfiguration(applicationConfigurationService.describe());
+            response.setApplicationConfiguration(redactInfrastructureDetails(applicationConfigurationService.describe()));
         }
 
         return response;
+    }
+
+    private static ApplicationConfigurationDto redactInfrastructureDetails(ApplicationConfigurationDto configuration) {
+        if (configuration == null) {
+            return null;
+        }
+
+        configuration.setDataConnections(null);
+        configuration.setDataSources(null);
+
+        if (configuration.getSecurity() != null) {
+            configuration.getSecurity().setBaseUrl(null);
+            configuration.getSecurity().setRealm(null);
+            configuration.getSecurity().setClientId(null);
+            configuration.getSecurity().setAuthority(null);
+        }
+
+        if (configuration.getOpenTelemetry() != null) {
+            configuration.getOpenTelemetry().setServer(null);
+            configuration.getOpenTelemetry().setPort(null);
+        }
+
+        return configuration;
     }
 
     private String buildNameWithDatabase(String name) {
