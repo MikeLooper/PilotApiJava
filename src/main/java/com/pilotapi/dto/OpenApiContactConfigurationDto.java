@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(name = "OpenApiContactConfiguration", description = ConfigurationBaseDto.BASE_DESCRIPTION)
 public class OpenApiContactConfigurationDto extends ConfigurationBaseDto {
 
-    @Schema(types = {"null", "string"}, description = "Gets or sets an contactEmail.")
+    @Schema(types = {"null", "string"}, description = "Gets or sets a contact email.")
     private String email;
 
     @Schema(types = {"null", "string"}, description = "Gets or sets the contact Name.")
