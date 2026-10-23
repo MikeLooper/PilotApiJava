@@ -179,6 +179,29 @@ class OpenApiComparatorTest {
     }
 
     @Test
+    void OpenApiComparatorTest_compositionBranchSchemaDifference_isReported_Test() throws Exception {
+        JsonNode spec = baseline();
+        JsonNode app = baseline();
+        ObjectNode specChild = obj(spec, "/components/schemas/Child");
+        ObjectNode appChild = obj(app, "/components/schemas/Child");
+        for (ObjectNode child : List.of(specChild, appChild)) {
+            child.remove("type");
+            child.remove("properties");
+        }
+        specChild.putArray("oneOf").addObject().put("type", "string");
+        specChild.withArray("oneOf").addObject().put("type", "integer");
+        appChild.putArray("oneOf").addObject().put("type", "boolean");
+        appChild.withArray("oneOf").addObject().put("type", "integer");
+
+        List<ComplianceFinding> findings = new OpenApiComparator(spec, app).compare();
+
+        assertTrue(findings.stream().anyMatch(finding ->
+            finding.severity() == ERROR
+                && finding.location().equals("components.schemas.Child.oneOf[0]")
+                && finding.message().equals("Base type is incompatible")), findings::toString);
+    }
+
+    @Test
     void OpenApiComparatorTest_renamedComponent_isInfo_Test() throws Exception {
         JsonNode app = MAPPER.readTree(BASELINE.replace("schemas/Child", "schemas/ChildDto")
             .replace("\"Child\":", "\"ChildDto\":"));

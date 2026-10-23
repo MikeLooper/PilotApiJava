@@ -442,9 +442,16 @@ public class OpenApiComparator {
             compareValue(INFO, SCHEMAS, schemaLocation, "Schema " + field, specNode.path(field), appNode.path(field));
         }
         for (String keyword : List.of("oneOf", "anyOf", "allOf")) {
-            if (specNode.path(keyword).size() != appNode.path(keyword).size()) {
+            JsonNode specBranches = specNode.path(keyword);
+            JsonNode appBranches = appNode.path(keyword);
+            if (specBranches.size() != appBranches.size()) {
                 add(ERROR, SCHEMAS, schemaLocation, "Composition (" + keyword + ") differs",
-                    specNode.path(keyword).size() + " branch(es)", appNode.path(keyword).size() + " branch(es)");
+                    specBranches.size() + " branch(es)", appBranches.size() + " branch(es)");
+            }
+            int sharedBranches = Math.min(specBranches.size(), appBranches.size());
+            for (int index = 0; index < sharedBranches; index++) {
+                compareSchema(schemaLocation + "." + keyword + "[" + index + "]",
+                    specBranches.get(index), appBranches.get(index));
             }
         }
 
