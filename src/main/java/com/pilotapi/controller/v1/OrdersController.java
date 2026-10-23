@@ -95,7 +95,7 @@ public class OrdersController {
             : ResponseEntity.badRequest().build();
     }
 
-    @Operation(summary = "Deletes a order record by its ID.")
+    @Operation(summary = "Deletes an order record by its ID.")
     @ApiResponse(responseCode = "204", description = "No Content",
         content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
     @DeleteMapping("/delete/{orderId}")
