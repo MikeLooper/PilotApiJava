@@ -1,5 +1,6 @@
 package com.pilotapi.exception;
 
+import com.pilotapi.common.RequestSettings;
 import com.pilotapi.dto.ProblemDetailsDto;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import java.time.Instant;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
@@ -23,7 +25,7 @@ public class ApiExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ProblemDetailsDto> handleNotFound(ResourceNotFoundException ex, HttpServletRequest request) {
-        return buildProblem(HttpStatus.NOT_FOUND, ex.getMessage(), request.getRequestURI());
+        return buildProblem(HttpStatus.NOT_FOUND, ex.getMessage(), request);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -33,7 +35,7 @@ public class ApiExceptionHandler {
             .stream()
             .map(this::fieldErrorMessage)
             .collect(Collectors.joining("; "));
-        return buildProblem(HttpStatus.BAD_REQUEST, details, request.getRequestURI());
+        return buildProblem(HttpStatus.BAD_REQUEST, details, request);
     }
 
     @ExceptionHandler({
@@ -42,27 +44,31 @@ public class ApiExceptionHandler {
         HttpMessageNotReadableException.class
     })
     public ResponseEntity<ProblemDetailsDto> handleMalformedRequest(Exception ex, HttpServletRequest request) {
-        return buildProblem(HttpStatus.BAD_REQUEST, ex.getMessage(), request.getRequestURI());
+        return buildProblem(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ProblemDetailsDto> handleBadRequest(IllegalArgumentException ex, HttpServletRequest request) {
-        return buildProblem(HttpStatus.BAD_REQUEST, ex.getMessage(), request.getRequestURI());
+        return buildProblem(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ProblemDetailsDto> handleUnexpected(Exception ex, HttpServletRequest request) {
         LOGGER.error("Unhandled exception for {}", request.getRequestURI(), ex);
-        return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected server error", request.getRequestURI());
+        return buildProblem(HttpStatus.INTERNAL_SERVER_ERROR, "Unexpected server error", request);
     }
 
-    private ResponseEntity<ProblemDetailsDto> buildProblem(HttpStatus status, String detail, String instance) {
+    private ResponseEntity<ProblemDetailsDto> buildProblem(HttpStatus status, String detail, HttpServletRequest request) {
+        RequestSettings requestSettings = RequestSettings.from(request);
         ProblemDetailsDto body = new ProblemDetailsDto();
         body.setType("about:blank");
         body.setTitle(status.getReasonPhrase());
         body.setStatus(status.value());
         body.setDetail(detail);
-        body.setInstance(instance);
+        body.setInstance(request.getRequestURI());
+        body.addExtension("correlationId", requestSettings.getCorrelationId());
+        body.addExtension("requestId", requestSettings.getRequestId());
+        body.addExtension("timestamp", Instant.now());
         return ResponseEntity.status(status).body(body);
     }
 

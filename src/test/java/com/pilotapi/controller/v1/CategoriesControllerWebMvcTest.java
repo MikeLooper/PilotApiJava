@@ -159,10 +159,15 @@ class CategoriesControllerWebMvcTest {
 
     @Test
     void CategoriesControllerWebMvcTest_getById_withNonNumericId_returns_badRequest_Test() throws Exception {
-        mockMvc.perform(get("/v1/categories/get/abc").header("X-Api-Version", "1"))
+        mockMvc.perform(get("/v1/categories/get/abc")
+                .header("X-Api-Version", "1")
+                .header("X-Correlation-Id", "problem-correlation-id"))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.title").value("Bad Request"))
-            .andExpect(jsonPath("$.instance").value("/v1/categories/get/abc"));
+            .andExpect(jsonPath("$.instance").value("/v1/categories/get/abc"))
+            .andExpect(jsonPath("$.correlationId").value("problem-correlation-id"))
+            .andExpect(jsonPath("$.requestId").isNotEmpty())
+            .andExpect(jsonPath("$.timestamp").isNotEmpty());
     }
 
     @Test
