@@ -44,12 +44,17 @@ public class ApplicationConfig implements HibernatePropertiesCustomizer, WebMvcC
             Object handler,
             ModelAndView modelAndView
         ) {
-            String apiVersion = request.getHeader("ApiVersion");
+            String apiVersion = request.getHeader("X-Api-Version");
             if (apiVersion == null || apiVersion.isBlank()) {
                 apiVersion = DEFAULT_API_VERSION;
             }
 
-            response.setHeader("ApiVersion", apiVersion);
+            response.setHeader("X-Api-Version", apiVersion);
+
+            String correlationId = request.getHeader("X-Correlation-Id");
+            if (correlationId != null && !correlationId.isBlank()) {
+                response.setHeader("X-Correlation-Id", correlationId);
+            }
             response.setHeader("Content-Type", "application/json");
             response.setDateHeader("Date", System.currentTimeMillis());
         }

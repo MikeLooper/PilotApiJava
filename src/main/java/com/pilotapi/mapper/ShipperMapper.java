@@ -12,7 +12,7 @@ public class ShipperMapper implements EntityDtoMapper<Shipper, ShippersDto> {
         ShippersDto dto = new ShippersDto();
         dto.setCompanyName(entity.getCompanyName());
         dto.setPhone(entity.getPhone());
-        dto.setShipperID(entity.getShipperID());
+        dto.setShipperId(entity.getShipperID());
         return dto;
     }
 
@@ -27,6 +27,6 @@ public class ShipperMapper implements EntityDtoMapper<Shipper, ShippersDto> {
     public void updateEntityFromDto(ShippersDto dto, Shipper entity) {
         entity.setCompanyName(dto.getCompanyName());
         entity.setPhone(dto.getPhone());
-        // entity.setShipperID(dto.getShipperID());
+        // entity.setShipperID(dto.getShipperId());
     }
 }

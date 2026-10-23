@@ -15,7 +15,7 @@ public class CustomersDto {
     private String country;
 
     @NotBlank
-    private String customerID;
+    private String customerId;
 
     private String fax;
     private String phone;
@@ -70,12 +70,12 @@ public class CustomersDto {
         this.country = country;
     }
 
-    public String getCustomerID() {
-        return customerID;
+    public String getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomerID(String customerID) {
-        this.customerID = customerID;
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
     }
 
     public String getFax() {

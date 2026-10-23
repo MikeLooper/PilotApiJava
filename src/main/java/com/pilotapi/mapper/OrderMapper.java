@@ -10,11 +10,11 @@ public class OrderMapper implements EntityDtoMapper<Order, OrdersDto> {
     @Override
     public OrdersDto toDto(Order entity) {
         OrdersDto dto = new OrdersDto();
-        dto.setCustomerID(entity.getCustomerID());
-        dto.setEmployeeID(entity.getEmployeeID());
+        dto.setCustomerId(entity.getCustomerID());
+        dto.setEmployeeId(entity.getEmployeeID());
         dto.setFreight(entity.getFreight());
         dto.setOrderDate(entity.getOrderDate());
-        dto.setOrderID(entity.getOrderID());
+        dto.setOrderId(entity.getOrderID());
         dto.setRequiredDate(entity.getRequiredDate());
         dto.setShipAddress(entity.getShipAddress());
         dto.setShipCity(entity.getShipCity());
@@ -36,11 +36,11 @@ public class OrderMapper implements EntityDtoMapper<Order, OrdersDto> {
 
     @Override
     public void updateEntityFromDto(OrdersDto dto, Order entity) {
-        entity.setCustomerID(dto.getCustomerID());
-        entity.setEmployeeID(dto.getEmployeeID());
+        entity.setCustomerID(dto.getCustomerId());
+        entity.setEmployeeID(dto.getEmployeeId());
         entity.setFreight(dto.getFreight());
         entity.setOrderDate(dto.getOrderDate());
-        // entity.setOrderID(dto.getOrderID());
+        // entity.setOrderID(dto.getOrderId());
         entity.setRequiredDate(dto.getRequiredDate());
         entity.setShipAddress(dto.getShipAddress());
         entity.setShipCity(dto.getShipCity());

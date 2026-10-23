@@ -11,6 +11,6 @@ import org.springframework.stereotype.Service;
 public class CustomerService extends AbstractCrudService<Customer, CustomersDto, String, AddResponseStringDto> {
 
     public CustomerService(CustomerRepository repository, CustomerMapper mapper) {
-        super(repository, mapper, CustomersDto::getCustomerID, saved -> new AddResponseStringDto(saved.getCustomerID()), "Customer");
+        super(repository, mapper, CustomersDto::getCustomerId, saved -> new AddResponseStringDto(saved.getCustomerID()), "Customer");
     }
 }

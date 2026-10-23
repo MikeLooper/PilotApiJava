@@ -11,6 +11,6 @@ import org.springframework.stereotype.Service;
 public class ProductService extends AbstractCrudService<Product, ProductsDto, Integer, AddResponseIntDto> {
 
     public ProductService(ProductRepository repository, ProductMapper mapper) {
-        super(repository, mapper, ProductsDto::getProductID, intIdResponse(Product::getProductID), "Product");
+        super(repository, mapper, ProductsDto::getProductId, intIdResponse(Product::getProductID), "Product");
     }
 }

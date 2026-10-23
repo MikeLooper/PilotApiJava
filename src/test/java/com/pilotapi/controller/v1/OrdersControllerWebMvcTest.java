@@ -40,34 +40,34 @@ class OrdersControllerWebMvcTest {
     @Test
     void OrdersControllerWebMvcTest_getAll_returns_ok_Test() throws Exception {
         OrdersDto dto = new OrdersDto();
-        dto.setOrderID(10);
+        dto.setOrderId(10);
         when(orderService.getAll(0, 20)).thenReturn(List.of(dto));
 
-        mockMvc.perform(get("/v1/orders/get-all").header("ApiVersion", "1"))
+        mockMvc.perform(get("/v1/orders/get-all").header("X-Api-Version", "1"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].orderID").value(10));
+            .andExpect(jsonPath("$[0].orderId").value(10));
     }
 
     @Test
     void OrdersControllerWebMvcTest_getAll_withPageParams_passesThemToService_Test() throws Exception {
         OrdersDto dto = new OrdersDto();
-        dto.setOrderID(10);
+        dto.setOrderId(10);
         when(orderService.getAll(2, 10)).thenReturn(List.of(dto));
 
-        mockMvc.perform(get("/v1/orders/get-all?page=2&pageSize=10").header("ApiVersion", "1"))
+        mockMvc.perform(get("/v1/orders/get-all?page=2&pageSize=10").header("X-Api-Version", "1"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].orderID").value(10));
+            .andExpect(jsonPath("$[0].orderId").value(10));
     }
 
     @Test
     void OrdersControllerWebMvcTest_getById_returns_ok_Test() throws Exception {
         OrdersDto dto = new OrdersDto();
-        dto.setOrderID(10);
+        dto.setOrderId(10);
         when(orderService.getById(10)).thenReturn(dto);
 
-        mockMvc.perform(get("/v1/orders/get/10").header("ApiVersion", "1"))
+        mockMvc.perform(get("/v1/orders/get/10").header("X-Api-Version", "1"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.orderID").value(10));
+            .andExpect(jsonPath("$.orderId").value(10));
     }
 
     @Test
@@ -75,9 +75,9 @@ class OrdersControllerWebMvcTest {
         when(orderService.add(any(OrdersDto.class))).thenReturn(new AddResponseIntDto(104L));
 
         mockMvc.perform(post("/v1/orders/add")
-                .header("ApiVersion", "1")
+                .header("X-Api-Version", "1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"orderID\":10}"))
+                .content("{\"orderId\":10}"))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.id").value(104));
     }
@@ -87,9 +87,9 @@ class OrdersControllerWebMvcTest {
         when(orderService.update(any(OrdersDto.class))).thenReturn(true);
 
         mockMvc.perform(put("/v1/orders/update")
-                .header("ApiVersion", "1")
+                .header("X-Api-Version", "1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"orderID\":10}"))
+                .content("{\"orderId\":10}"))
             .andExpect(status().isNoContent());
     }
 
@@ -97,7 +97,7 @@ class OrdersControllerWebMvcTest {
     void OrdersControllerWebMvcTest_delete_returns_json_object_Test() throws Exception {
         when(orderService.delete(10)).thenReturn(true);
 
-        mockMvc.perform(delete("/v1/orders/delete/10").header("ApiVersion", "1"))
+        mockMvc.perform(delete("/v1/orders/delete/10").header("X-Api-Version", "1"))
             .andExpect(status().isNoContent());
     }
 }

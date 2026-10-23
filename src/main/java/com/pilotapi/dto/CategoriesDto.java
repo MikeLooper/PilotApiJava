@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 public class CategoriesDto {
 
     @Nullable
-    private Integer categoryID;
+    private Integer categoryId;
 
     @NotNull
     private String categoryName;
@@ -14,12 +14,12 @@ public class CategoriesDto {
     private String description;
     private String picture;
 
-    public Integer getCategoryID() {
-        return categoryID;
+    public Integer getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategoryID(Integer categoryID) {
-        this.categoryID = categoryID;
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getCategoryName() {

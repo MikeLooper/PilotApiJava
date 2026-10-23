@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -17,6 +18,8 @@ import java.util.List;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -43,7 +46,9 @@ class CategoriesControllerSecurityWebMvcTest {
     @Test
     void CategoriesControllerSecurityWebMvcTest_getAll_withoutToken_returns401_Test() throws Exception {
         mockMvc.perform(get("/v1/categories/get-all"))
-            .andExpect(status().isUnauthorized());
+            .andExpect(status().isUnauthorized())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+            .andExpect(content().json("\"Missing or malformed Authorization header\""));
     }
 
     @Test
@@ -60,7 +65,9 @@ class CategoriesControllerSecurityWebMvcTest {
         when(jwtDecoder.decode("reader-token")).thenReturn(TestJwtSupport.jwtForUser("reader_user"));
 
         mockMvc.perform(delete("/v1/categories/delete/1").header("Authorization", "Bearer reader-token"))
-            .andExpect(status().isForbidden());
+            .andExpect(status().isForbidden())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$").isString());
     }
 
     @Test

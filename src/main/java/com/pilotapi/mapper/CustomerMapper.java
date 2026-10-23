@@ -16,7 +16,7 @@ public class CustomerMapper implements EntityDtoMapper<Customer, CustomersDto> {
         dto.setContactName(entity.getContactName());
         dto.setContactTitle(entity.getContactTitle());
         dto.setCountry(entity.getCountry());
-        dto.setCustomerID(entity.getCustomerID());
+        dto.setCustomerId(entity.getCustomerID());
         dto.setFax(entity.getFax());
         dto.setPhone(entity.getPhone());
         dto.setPostalCode(entity.getPostalCode());
@@ -39,7 +39,7 @@ public class CustomerMapper implements EntityDtoMapper<Customer, CustomersDto> {
         entity.setContactName(dto.getContactName());
         entity.setContactTitle(dto.getContactTitle());
         entity.setCountry(dto.getCountry());
-        entity.setCustomerID(dto.getCustomerID());
+        entity.setCustomerID(dto.getCustomerId());
         entity.setFax(dto.getFax());
         entity.setPhone(dto.getPhone());
         entity.setPostalCode(dto.getPostalCode());

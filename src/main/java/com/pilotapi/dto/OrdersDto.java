@@ -7,13 +7,13 @@ import io.micrometer.common.lang.Nullable;
 
 public class OrdersDto {
 
-    private String customerID;
-    private Integer employeeID;
+    private String customerId;
+    private Integer employeeId;
     private BigDecimal freight;
     private LocalDateTime orderDate;
 
     @Nullable
-    private Integer orderID;
+    private Integer orderId;
 
     private LocalDateTime requiredDate;
     private String shipAddress;
@@ -25,20 +25,20 @@ public class OrdersDto {
     private String shipRegion;
     private Integer shipVia;
 
-    public String getCustomerID() {
-        return customerID;
+    public String getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomerID(String customerID) {
-        this.customerID = customerID;
+    public void setCustomerId(String customerId) {
+        this.customerId = customerId;
     }
 
-    public Integer getEmployeeID() {
-        return employeeID;
+    public Integer getEmployeeId() {
+        return employeeId;
     }
 
-    public void setEmployeeID(Integer employeeID) {
-        this.employeeID = employeeID;
+    public void setEmployeeId(Integer employeeId) {
+        this.employeeId = employeeId;
     }
 
     public BigDecimal getFreight() {
@@ -57,12 +57,12 @@ public class OrdersDto {
         this.orderDate = orderDate;
     }
 
-    public Integer getOrderID() {
-        return orderID;
+    public Integer getOrderId() {
+        return orderId;
     }
 
-    public void setOrderID(Integer orderID) {
-        this.orderID = orderID;
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
     }
 
     public LocalDateTime getRequiredDate() {

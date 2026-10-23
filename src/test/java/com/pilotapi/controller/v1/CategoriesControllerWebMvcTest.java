@@ -46,37 +46,37 @@ class CategoriesControllerWebMvcTest {
     @Test
     void CategoriesControllerWebMvcTest_getAll_returns_ok_Test() throws Exception {
         CategoriesDto dto = new CategoriesDto();
-        dto.setCategoryID(1);
+        dto.setCategoryId(1);
         dto.setCategoryName("Beverages");
         when(categoryService.getAll(0, 20)).thenReturn(List.of(dto));
 
-        mockMvc.perform(get("/v1/categories/get-all").header("ApiVersion", "1"))
+        mockMvc.perform(get("/v1/categories/get-all").header("X-Api-Version", "1"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].categoryID").value(1));
+            .andExpect(jsonPath("$[0].categoryId").value(1));
     }
 
     @Test
     void CategoriesControllerWebMvcTest_getAll_withPageParams_passesThemToService_Test() throws Exception {
         CategoriesDto dto = new CategoriesDto();
-        dto.setCategoryID(1);
+        dto.setCategoryId(1);
         dto.setCategoryName("Beverages");
         when(categoryService.getAll(2, 10)).thenReturn(List.of(dto));
 
-        mockMvc.perform(get("/v1/categories/get-all?page=2&pageSize=10").header("ApiVersion", "1"))
+        mockMvc.perform(get("/v1/categories/get-all?page=2&pageSize=10").header("X-Api-Version", "1"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].categoryID").value(1));
+            .andExpect(jsonPath("$[0].categoryId").value(1));
     }
 
     @Test
     void CategoriesControllerWebMvcTest_getById_returns_ok_Test() throws Exception {
         CategoriesDto dto = new CategoriesDto();
-        dto.setCategoryID(1);
+        dto.setCategoryId(1);
         dto.setCategoryName("Beverages");
         when(categoryService.getById(1)).thenReturn(dto);
 
-        mockMvc.perform(get("/v1/categories/get/1").header("ApiVersion", "1"))
+        mockMvc.perform(get("/v1/categories/get/1").header("X-Api-Version", "1"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.categoryID").value(1));
+            .andExpect(jsonPath("$.categoryId").value(1));
     }
 
     @Test
@@ -84,9 +84,9 @@ class CategoriesControllerWebMvcTest {
         when(categoryService.add(any(CategoriesDto.class))).thenReturn(new AddResponseIntDto(100L));
 
         mockMvc.perform(post("/v1/categories/add")
-                .header("ApiVersion", "1")
+                .header("X-Api-Version", "1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"categoryID\":1,\"categoryName\":\"Beverages\"}"))
+                .content("{\"categoryId\":1,\"categoryName\":\"Beverages\"}"))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.id").value(100));
     }
@@ -96,9 +96,9 @@ class CategoriesControllerWebMvcTest {
         when(categoryService.update(any(CategoriesDto.class))).thenReturn(true);
 
         mockMvc.perform(put("/v1/categories/update")
-                .header("ApiVersion", "1")
+                .header("X-Api-Version", "1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"categoryID\":1,\"categoryName\":\"Beverages\"}"))
+                .content("{\"categoryId\":1,\"categoryName\":\"Beverages\"}"))
             .andExpect(status().isNoContent());
     }
 
@@ -106,17 +106,67 @@ class CategoriesControllerWebMvcTest {
     void CategoriesControllerWebMvcTest_delete_returns_json_object_Test() throws Exception {
         when(categoryService.delete(1)).thenReturn(true);
 
-        mockMvc.perform(delete("/v1/categories/delete/1").header("ApiVersion", "1"))
+        mockMvc.perform(delete("/v1/categories/delete/1").header("X-Api-Version", "1"))
             .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void CategoriesControllerWebMvcTest_getById_echoesApiVersionAndCorrelationIdHeaders_Test() throws Exception {
+        CategoriesDto dto = new CategoriesDto();
+        dto.setCategoryId(1);
+        when(categoryService.getById(1)).thenReturn(dto);
+
+        mockMvc.perform(get("/v1/categories/get/1")
+                .header("X-Api-Version", "1.2.3")
+                .header("X-Correlation-Id", "7ea2c7f7-8b46-475d-86f8-7aaaa9e4a35b"))
+            .andExpect(status().isOk())
+            .andExpect(header().string("X-Api-Version", "1.2.3"))
+            .andExpect(header().string("X-Correlation-Id", "7ea2c7f7-8b46-475d-86f8-7aaaa9e4a35b"));
+    }
+
+    @Test
+    void CategoriesControllerWebMvcTest_getById_withInvalidCorrelationId_returns_badRequest_Test() throws Exception {
+        mockMvc.perform(get("/v1/categories/get/1").header("X-Correlation-Id", "not-a-uuid"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.type").value("about:blank"))
+            .andExpect(jsonPath("$.status").value(400));
+    }
+
+    @Test
+    void CategoriesControllerWebMvcTest_getById_withNonNumericId_returns_badRequest_Test() throws Exception {
+        mockMvc.perform(get("/v1/categories/get/abc").header("X-Api-Version", "1"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.title").value("Bad Request"))
+            .andExpect(jsonPath("$.instance").value("/v1/categories/get/abc"));
+    }
+
+    @Test
+    void CategoriesControllerWebMvcTest_add_withMalformedBody_returns_badRequest_Test() throws Exception {
+        mockMvc.perform(post("/v1/categories/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"categoryName\":"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400));
+    }
+
+    @Test
+    void CategoriesControllerWebMvcTest_add_withMissingRequiredField_returns_badRequest_Test() throws Exception {
+        mockMvc.perform(post("/v1/categories/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"description\":\"No name\"}"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400));
     }
 
     @Test
     void CategoriesControllerWebMvcTest_getAll_withoutToken_whenInactive_allowsThrough_withWarningHeader_Test() throws Exception {
         CategoriesDto dto = new CategoriesDto();
-        dto.setCategoryID(1);
+        dto.setCategoryId(1);
         when(categoryService.getAll(0, 20)).thenReturn(List.of(dto));
 
-        mockMvc.perform(get("/v1/categories/get-all").header("ApiVersion", "1"))
+        mockMvc.perform(get("/v1/categories/get-all").header("X-Api-Version", "1"))
             .andExpect(status().isOk())
             .andExpect(header().exists("Warning"));
     }

@@ -40,40 +40,40 @@ class EmployeesControllerWebMvcTest {
     @Test
     void EmployeesControllerWebMvcTest_getAll_returns_ok_Test() throws Exception {
         EmployeesDto dto = new EmployeesDto();
-        dto.setEmployeeID(1);
+        dto.setEmployeeId(1);
         dto.setFirstName("Nancy");
         dto.setLastName("Davolio");
         when(employeeService.getAll(0, 20)).thenReturn(List.of(dto));
 
-        mockMvc.perform(get("/v1/employees/get-all").header("ApiVersion", "1"))
+        mockMvc.perform(get("/v1/employees/get-all").header("X-Api-Version", "1"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].employeeID").value(1));
+            .andExpect(jsonPath("$[0].employeeId").value(1));
     }
 
     @Test
     void EmployeesControllerWebMvcTest_getAll_withPageParams_passesThemToService_Test() throws Exception {
         EmployeesDto dto = new EmployeesDto();
-        dto.setEmployeeID(1);
+        dto.setEmployeeId(1);
         dto.setFirstName("Nancy");
         dto.setLastName("Davolio");
         when(employeeService.getAll(2, 10)).thenReturn(List.of(dto));
 
-        mockMvc.perform(get("/v1/employees/get-all?page=2&pageSize=10").header("ApiVersion", "1"))
+        mockMvc.perform(get("/v1/employees/get-all?page=2&pageSize=10").header("X-Api-Version", "1"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].employeeID").value(1));
+            .andExpect(jsonPath("$[0].employeeId").value(1));
     }
 
     @Test
     void EmployeesControllerWebMvcTest_getById_returns_ok_Test() throws Exception {
         EmployeesDto dto = new EmployeesDto();
-        dto.setEmployeeID(1);
+        dto.setEmployeeId(1);
         dto.setFirstName("Nancy");
         dto.setLastName("Davolio");
         when(employeeService.getById(1)).thenReturn(dto);
 
-        mockMvc.perform(get("/v1/employees/get/1").header("ApiVersion", "1"))
+        mockMvc.perform(get("/v1/employees/get/1").header("X-Api-Version", "1"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.employeeID").value(1));
+            .andExpect(jsonPath("$.employeeId").value(1));
     }
 
     @Test
@@ -81,9 +81,9 @@ class EmployeesControllerWebMvcTest {
         when(employeeService.add(any(EmployeesDto.class))).thenReturn(new AddResponseIntDto(102L));
 
         mockMvc.perform(post("/v1/employees/add")
-                .header("ApiVersion", "1")
+                .header("X-Api-Version", "1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"employeeID\":1,\"firstName\":\"Nancy\",\"lastName\":\"Davolio\"}"))
+                .content("{\"employeeId\":1,\"firstName\":\"Nancy\",\"lastName\":\"Davolio\"}"))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.id").value(102));
     }
@@ -93,9 +93,9 @@ class EmployeesControllerWebMvcTest {
         when(employeeService.update(any(EmployeesDto.class))).thenReturn(true);
 
         mockMvc.perform(put("/v1/employees/update")
-                .header("ApiVersion", "1")
+                .header("X-Api-Version", "1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"employeeID\":1,\"firstName\":\"Nancy\",\"lastName\":\"Davolio\"}"))
+                .content("{\"employeeId\":1,\"firstName\":\"Nancy\",\"lastName\":\"Davolio\"}"))
             .andExpect(status().isNoContent());
     }
 
@@ -103,7 +103,7 @@ class EmployeesControllerWebMvcTest {
     void EmployeesControllerWebMvcTest_delete_returns_json_object_Test() throws Exception {
         when(employeeService.delete(1)).thenReturn(true);
 
-        mockMvc.perform(delete("/v1/employees/delete/1").header("ApiVersion", "1"))
+        mockMvc.perform(delete("/v1/employees/delete/1").header("X-Api-Version", "1"))
             .andExpect(status().isNoContent());
     }
 }

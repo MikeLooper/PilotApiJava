@@ -11,6 +11,6 @@ import org.springframework.stereotype.Service;
 public class SupplierService extends AbstractCrudService<Supplier, SuppliersDto, Integer, AddResponseIntDto> {
 
     public SupplierService(SupplierRepository repository, SupplierMapper mapper) {
-        super(repository, mapper, SuppliersDto::getSupplierID, intIdResponse(Supplier::getSupplierID), "Supplier");
+        super(repository, mapper, SuppliersDto::getSupplierId, intIdResponse(Supplier::getSupplierID), "Supplier");
     }
 }

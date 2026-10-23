@@ -11,6 +11,6 @@ import org.springframework.stereotype.Service;
 public class EmployeeService extends AbstractCrudService<Employee, EmployeesDto, Integer, AddResponseIntDto> {
 
     public EmployeeService(EmployeeRepository repository, EmployeeMapper mapper) {
-        super(repository, mapper, EmployeesDto::getEmployeeID, intIdResponse(Employee::getEmployeeID), "Employee");
+        super(repository, mapper, EmployeesDto::getEmployeeId, intIdResponse(Employee::getEmployeeID), "Employee");
     }
 }

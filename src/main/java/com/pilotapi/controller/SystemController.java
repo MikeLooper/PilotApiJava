@@ -23,7 +23,7 @@ public class SystemController {
     @GetMapping("/healthcheck")
     public JsonNode healthcheck(
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
-        @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
+        @RequestHeader(name = "X-Api-Version", required = false, defaultValue = "1.0.0") String apiVersion
     ) {
         return TextNode.valueOf(systemService.healthcheck());
     }
@@ -32,7 +32,7 @@ public class SystemController {
     public AboutResponseDto about(
         @RequestParam(name = "show-details", defaultValue = "false") boolean showDetails,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
-        @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
+        @RequestHeader(name = "X-Api-Version", required = false, defaultValue = "1.0.0") String apiVersion
     ) {
         return systemService.about(showDetails, apiVersion);
     }

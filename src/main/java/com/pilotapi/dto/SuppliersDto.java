@@ -21,7 +21,7 @@ public class SuppliersDto {
     private String region;
 
     @Nullable
-    private Integer supplierID;
+    private Integer supplierId;
 
     public String getAddress() {
         return address;
@@ -111,11 +111,11 @@ public class SuppliersDto {
         this.region = region;
     }
 
-    public Integer getSupplierID() {
-        return supplierID;
+    public Integer getSupplierId() {
+        return supplierId;
     }
 
-    public void setSupplierID(Integer supplierID) {
-        this.supplierID = supplierID;
+    public void setSupplierId(Integer supplierId) {
+        this.supplierId = supplierId;
     }
 }

@@ -17,7 +17,7 @@ public class EmployeeMapper implements EntityDtoMapper<Employee, EmployeesDto> {
         dto.setBirthDate(entity.getBirthDate());
         dto.setCity(entity.getCity());
         dto.setCountry(entity.getCountry());
-        // dto.setEmployeeID(entity.getEmployeeID());
+        // dto.setEmployeeId(entity.getEmployeeID());
         dto.setExtension(entity.getExtension());
         dto.setFirstName(entity.getFirstName());
         dto.setHireDate(entity.getHireDate());

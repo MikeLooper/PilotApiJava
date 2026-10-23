@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * API Version: 1.0
@@ -40,7 +41,8 @@ public class EmployeesController {
         @RequestParam(name = "page", defaultValue = "0") int page,
         @RequestParam(name = "pageSize", defaultValue = "20") int pageSize,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
-        @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
+        @RequestHeader(name = "X-Api-Version", required = false, defaultValue = "1.0.0") String apiVersion,
+        @RequestHeader(name = "X-Correlation-Id", required = false) UUID correlationId
     ) {
         return service.getAll(page, pageSize);
     }
@@ -49,7 +51,8 @@ public class EmployeesController {
     public EmployeesDto getById(
         @PathVariable Integer employeeId,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
-        @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
+        @RequestHeader(name = "X-Api-Version", required = false, defaultValue = "1.0.0") String apiVersion,
+        @RequestHeader(name = "X-Correlation-Id", required = false) UUID correlationId
     ) {
         return service.getById(employeeId);
     }
@@ -58,7 +61,8 @@ public class EmployeesController {
     public ResponseEntity<AddResponseIntDto> add(
         @Valid @RequestBody EmployeesDto request,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
-        @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
+        @RequestHeader(name = "X-Api-Version", required = false, defaultValue = "1.0.0") String apiVersion,
+        @RequestHeader(name = "X-Correlation-Id", required = false) UUID correlationId
     ) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.add(request));
     }
@@ -67,7 +71,8 @@ public class EmployeesController {
     public ResponseEntity<Void> update(
         @Valid @RequestBody EmployeesDto request,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
-        @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
+        @RequestHeader(name = "X-Api-Version", required = false, defaultValue = "1.0.0") String apiVersion,
+        @RequestHeader(name = "X-Correlation-Id", required = false) UUID correlationId
     ) {
         return service.update(request)
             ? ResponseEntity.noContent().build()
@@ -78,7 +83,8 @@ public class EmployeesController {
     public ResponseEntity<Void> delete(
         @PathVariable Integer employeeId,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
-        @RequestHeader(name = "ApiVersion", required = false, defaultValue = "1.0.0") String apiVersion
+        @RequestHeader(name = "X-Api-Version", required = false, defaultValue = "1.0.0") String apiVersion,
+        @RequestHeader(name = "X-Correlation-Id", required = false) UUID correlationId
     ) {
         return service.delete(employeeId)
             ? ResponseEntity.noContent().build()

@@ -41,8 +41,8 @@ class OrderDetailServiceTest {
         // Arrange
         OrderDetail entity = new OrderDetail();
         OrderDetailsDto dto = new OrderDetailsDto();
-        dto.setOrderID(10);
-        dto.setProductID(1);
+        dto.setOrderId(10);
+        dto.setProductId(1);
 
         when(repository.findAll()).thenReturn(List.of(entity));
         when(mapper.toDto(entity)).thenReturn(dto);
@@ -52,7 +52,7 @@ class OrderDetailServiceTest {
 
         // Assert
         assertEquals(1, result.size());
-        assertEquals(10, result.get(0).getOrderID());
+        assertEquals(10, result.get(0).getOrderId());
     }
 
     @Test
@@ -60,8 +60,8 @@ class OrderDetailServiceTest {
         // Arrange
         OrderDetail entity = new OrderDetail();
         OrderDetailsDto dto = new OrderDetailsDto();
-        dto.setOrderID(10);
-        dto.setProductID(1);
+        dto.setOrderId(10);
+        dto.setProductId(1);
 
         when(repository.findAll(PageRequest.of(1, 10))).thenReturn(new PageImpl<>(List.of(entity)));
         when(mapper.toDto(entity)).thenReturn(dto);
@@ -71,7 +71,7 @@ class OrderDetailServiceTest {
 
         // Assert
         assertEquals(1, result.size());
-        assertEquals(10, result.get(0).getOrderID());
+        assertEquals(10, result.get(0).getOrderId());
     }
 
     @Test
@@ -79,8 +79,8 @@ class OrderDetailServiceTest {
         // Arrange
         OrderDetail entity = new OrderDetail();
         OrderDetailsDto dto = new OrderDetailsDto();
-        dto.setOrderID(10);
-        dto.setProductID(1);
+        dto.setOrderId(10);
+        dto.setProductId(1);
 
         when(repository.findById(new OrderDetailId(1, 10))).thenReturn(Optional.of(entity));
         when(mapper.toDto(entity)).thenReturn(dto);
@@ -89,8 +89,8 @@ class OrderDetailServiceTest {
         OrderDetailsDto result = service.getById(1, 10);
 
         // Assert
-        assertEquals(1, result.getProductID());
-        assertEquals(10, result.getOrderID());
+        assertEquals(1, result.getProductId());
+        assertEquals(10, result.getOrderId());
     }
 
     @Test
@@ -106,8 +106,8 @@ class OrderDetailServiceTest {
     void OrderDetailService_add_returns_order_and_product_ids_as_response_Test() {
         // Arrange
         OrderDetailsDto dto = new OrderDetailsDto();
-        dto.setOrderID(10);
-        dto.setProductID(1);
+        dto.setOrderId(10);
+        dto.setProductId(1);
 
         OrderDetail mapped = new OrderDetail();
         OrderDetail saved = new OrderDetail();
@@ -120,16 +120,16 @@ class OrderDetailServiceTest {
         AddResponseOrderDetailsDto response = service.add(dto);
 
         // Assert
-        assertEquals(10, response.getOrderID());
-        assertEquals(1, response.getProductID());
+        assertEquals(10, response.getOrderId());
+        assertEquals(1, response.getProductId());
     }
 
     @Test
     void OrderDetailService_update_throws_resource_not_found_when_missing_Test() {
         // Arrange
         OrderDetailsDto dto = new OrderDetailsDto();
-        dto.setProductID(1);
-        dto.setOrderID(10);
+        dto.setProductId(1);
+        dto.setOrderId(10);
 
         when(repository.findById(new OrderDetailId(1, 10))).thenReturn(Optional.empty());
 
@@ -141,8 +141,8 @@ class OrderDetailServiceTest {
     void OrderDetailService_update_saves_changes_when_found_Test() {
         // Arrange
         OrderDetailsDto dto = new OrderDetailsDto();
-        dto.setProductID(1);
-        dto.setOrderID(10);
+        dto.setProductId(1);
+        dto.setOrderId(10);
 
         OrderDetail current = new OrderDetail();
         current.setId(new OrderDetailId(1, 10));

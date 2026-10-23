@@ -11,7 +11,7 @@ public class ShippersDto {
     private String phone;
 
     @Nullable
-    private Integer shipperID;
+    private Integer shipperId;
 
     public String getCompanyName() {
         return companyName;
@@ -29,11 +29,11 @@ public class ShippersDto {
         this.phone = phone;
     }
 
-    public Integer getShipperID() {
-        return shipperID;
+    public Integer getShipperId() {
+        return shipperId;
     }
 
-    public void setShipperID(Integer shipperID) {
-        this.shipperID = shipperID;
+    public void setShipperId(Integer shipperId) {
+        this.shipperId = shipperId;
     }
 }

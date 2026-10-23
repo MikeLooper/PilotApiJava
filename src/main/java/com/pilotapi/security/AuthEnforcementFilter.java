@@ -1,7 +1,6 @@
 package com.pilotapi.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pilotapi.dto.ProblemDetailsDto;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -55,20 +54,20 @@ public class AuthEnforcementFilter extends OncePerRequestFilter {
             return;
         }
 
-        writeError(response, result, request.getRequestURI());
+        writeError(response, result);
     }
 
-    private void writeError(HttpServletResponse response, AuthCheckResult result, String requestUri) throws IOException {
+    /**
+     * Per the OpenAPI spec, 401/403 bodies are a JSON string (not a ProblemDetails object).
+     */
+    private void writeError(HttpServletResponse response, AuthCheckResult result) throws IOException {
         HttpStatus status = result.outcome() == AuthOutcome.UNAUTHENTICATED
             ? HttpStatus.UNAUTHORIZED
             : HttpStatus.FORBIDDEN;
 
-        ProblemDetailsDto body = new ProblemDetailsDto();
-        body.setType("about:blank");
-        body.setTitle(status.getReasonPhrase());
-        body.setStatus(status.value());
-        body.setDetail(result.reason());
-        body.setInstance(requestUri);
+        String body = result.reason() == null || result.reason().isBlank()
+            ? status.getReasonPhrase()
+            : result.reason();
 
         response.setStatus(status.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);

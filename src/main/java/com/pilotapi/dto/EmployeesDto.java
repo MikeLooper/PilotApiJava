@@ -14,7 +14,7 @@ public class EmployeesDto {
     private String country;
 
     @Nullable
-    private Integer employeeID;
+    private Integer employeeId;
 
     private String extension;
 
@@ -68,12 +68,12 @@ public class EmployeesDto {
         this.country = country;
     }
 
-    public Integer getEmployeeID() {
-        return employeeID;
+    public Integer getEmployeeId() {
+        return employeeId;
     }
 
-    public void setEmployeeID(Integer employeeID) {
-        this.employeeID = employeeID;
+    public void setEmployeeId(Integer employeeId) {
+        this.employeeId = employeeId;
     }
 
     public String getExtension() {

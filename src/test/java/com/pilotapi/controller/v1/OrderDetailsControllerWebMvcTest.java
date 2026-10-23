@@ -41,46 +41,46 @@ class OrderDetailsControllerWebMvcTest {
     @Test
     void OrderDetailsControllerWebMvcTest_getAll_returns_ok_Test() throws Exception {
         OrderDetailsDto dto = new OrderDetailsDto();
-        dto.setProductID(1);
-        dto.setOrderID(10);
+        dto.setProductId(1);
+        dto.setOrderId(10);
         dto.setDiscount(0.1f);
         dto.setQuantity(3);
         dto.setUnitPrice(BigDecimal.valueOf(5.25));
         when(orderDetailService.getAll(0, 20)).thenReturn(List.of(dto));
 
-        mockMvc.perform(get("/v1/order-details/get-all").header("ApiVersion", "1"))
+        mockMvc.perform(get("/v1/order-details/get-all").header("X-Api-Version", "1"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].productID").value(1));
+            .andExpect(jsonPath("$[0].productId").value(1));
     }
 
     @Test
     void OrderDetailsControllerWebMvcTest_getAll_withPageParams_passesThemToService_Test() throws Exception {
         OrderDetailsDto dto = new OrderDetailsDto();
-        dto.setProductID(1);
-        dto.setOrderID(10);
+        dto.setProductId(1);
+        dto.setOrderId(10);
         dto.setDiscount(0.1f);
         dto.setQuantity(3);
         dto.setUnitPrice(BigDecimal.valueOf(5.25));
         when(orderDetailService.getAll(2, 10)).thenReturn(List.of(dto));
 
-        mockMvc.perform(get("/v1/order-details/get-all?page=2&pageSize=10").header("ApiVersion", "1"))
+        mockMvc.perform(get("/v1/order-details/get-all?page=2&pageSize=10").header("X-Api-Version", "1"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].productID").value(1));
+            .andExpect(jsonPath("$[0].productId").value(1));
     }
 
     @Test
     void OrderDetailsControllerWebMvcTest_getById_returns_ok_Test() throws Exception {
         OrderDetailsDto dto = new OrderDetailsDto();
-        dto.setProductID(1);
-        dto.setOrderID(10);
+        dto.setProductId(1);
+        dto.setOrderId(10);
         dto.setDiscount(0.1f);
         dto.setQuantity(3);
         dto.setUnitPrice(BigDecimal.valueOf(5.25));
         when(orderDetailService.getById(1, 10)).thenReturn(dto);
 
-        mockMvc.perform(get("/v1/order-details/get/product/1/order/10").header("ApiVersion", "1"))
+        mockMvc.perform(get("/v1/order-details/get/product/1/order/10").header("X-Api-Version", "1"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.orderID").value(10));
+            .andExpect(jsonPath("$.orderId").value(10));
     }
 
     @Test
@@ -88,12 +88,12 @@ class OrderDetailsControllerWebMvcTest {
         when(orderDetailService.add(any(OrderDetailsDto.class))).thenReturn(new AddResponseOrderDetailsDto(10, 1));
 
         mockMvc.perform(post("/v1/order-details/add")
-                .header("ApiVersion", "1")
+                .header("X-Api-Version", "1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"productID\":1,\"orderID\":10,\"discount\":0.1,\"quantity\":3,\"unitPrice\":5.25}"))
+                .content("{\"productId\":1,\"orderId\":10,\"discount\":0.1,\"quantity\":3,\"unitPrice\":5.25}"))
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.orderID").value(10))
-            .andExpect(jsonPath("$.productID").value(1));
+            .andExpect(jsonPath("$.orderId").value(10))
+            .andExpect(jsonPath("$.productId").value(1));
     }
 
     @Test
@@ -101,9 +101,9 @@ class OrderDetailsControllerWebMvcTest {
         when(orderDetailService.update(any(OrderDetailsDto.class))).thenReturn(true);
 
         mockMvc.perform(put("/v1/order-details/update")
-                .header("ApiVersion", "1")
+                .header("X-Api-Version", "1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"productID\":1,\"orderID\":10,\"discount\":0.1,\"quantity\":3,\"unitPrice\":5.25}"))
+                .content("{\"productId\":1,\"orderId\":10,\"discount\":0.1,\"quantity\":3,\"unitPrice\":5.25}"))
             .andExpect(status().isNoContent());
     }
 
@@ -111,7 +111,7 @@ class OrderDetailsControllerWebMvcTest {
     void OrderDetailsControllerWebMvcTest_delete_returns_json_object_Test() throws Exception {
         when(orderDetailService.delete(1, 10)).thenReturn(true);
 
-        mockMvc.perform(delete("/v1/order-details/delete/product/1/order/10").header("ApiVersion", "1"))
+        mockMvc.perform(delete("/v1/order-details/delete/product/1/order/10").header("X-Api-Version", "1"))
             .andExpect(status().isNoContent());
     }
 }

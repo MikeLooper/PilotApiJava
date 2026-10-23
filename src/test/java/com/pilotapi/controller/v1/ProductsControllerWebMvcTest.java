@@ -40,46 +40,46 @@ class ProductsControllerWebMvcTest {
     @Test
     void ProductsControllerWebMvcTest_getAll_returns_ok_Test() throws Exception {
         ProductsDto dto = new ProductsDto();
-        dto.setProductID(1);
+        dto.setProductId(1);
         dto.setProductName("Chai");
         dto.setReorderLevel(1);
         dto.setUnitsInStock(10);
         dto.setUnitsOnOrder(0);
         when(productService.getAll(0, 20)).thenReturn(List.of(dto));
 
-        mockMvc.perform(get("/v1/products/get-all").header("ApiVersion", "1"))
+        mockMvc.perform(get("/v1/products/get-all").header("X-Api-Version", "1"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].productID").value(1));
+            .andExpect(jsonPath("$[0].productId").value(1));
     }
 
     @Test
     void ProductsControllerWebMvcTest_getAll_withPageParams_passesThemToService_Test() throws Exception {
         ProductsDto dto = new ProductsDto();
-        dto.setProductID(1);
+        dto.setProductId(1);
         dto.setProductName("Chai");
         dto.setReorderLevel(1);
         dto.setUnitsInStock(10);
         dto.setUnitsOnOrder(0);
         when(productService.getAll(2, 10)).thenReturn(List.of(dto));
 
-        mockMvc.perform(get("/v1/products/get-all?page=2&pageSize=10").header("ApiVersion", "1"))
+        mockMvc.perform(get("/v1/products/get-all?page=2&pageSize=10").header("X-Api-Version", "1"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].productID").value(1));
+            .andExpect(jsonPath("$[0].productId").value(1));
     }
 
     @Test
     void ProductsControllerWebMvcTest_getById_returns_ok_Test() throws Exception {
         ProductsDto dto = new ProductsDto();
-        dto.setProductID(1);
+        dto.setProductId(1);
         dto.setProductName("Chai");
         dto.setReorderLevel(1);
         dto.setUnitsInStock(10);
         dto.setUnitsOnOrder(0);
         when(productService.getById(1)).thenReturn(dto);
 
-        mockMvc.perform(get("/v1/products/get/1").header("ApiVersion", "1"))
+        mockMvc.perform(get("/v1/products/get/1").header("X-Api-Version", "1"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.productID").value(1));
+            .andExpect(jsonPath("$.productId").value(1));
     }
 
     @Test
@@ -87,9 +87,9 @@ class ProductsControllerWebMvcTest {
         when(productService.add(any(ProductsDto.class))).thenReturn(new AddResponseIntDto(105L));
 
         mockMvc.perform(post("/v1/products/add")
-                .header("ApiVersion", "1")
+                .header("X-Api-Version", "1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"productID\":1,\"productName\":\"Chai\",\"reorderLevel\":1,\"unitsInStock\":10,\"unitsOnOrder\":0}"))
+                .content("{\"productId\":1,\"productName\":\"Chai\",\"reorderLevel\":1,\"unitsInStock\":10,\"unitsOnOrder\":0}"))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.id").value(105));
     }
@@ -99,9 +99,9 @@ class ProductsControllerWebMvcTest {
         when(productService.update(any(ProductsDto.class))).thenReturn(true);
 
         mockMvc.perform(put("/v1/products/update")
-                .header("ApiVersion", "1")
+                .header("X-Api-Version", "1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"productID\":1,\"productName\":\"Chai\",\"reorderLevel\":1,\"unitsInStock\":10,\"unitsOnOrder\":0}"))
+                .content("{\"productId\":1,\"productName\":\"Chai\",\"reorderLevel\":1,\"unitsInStock\":10,\"unitsOnOrder\":0}"))
             .andExpect(status().isNoContent());
     }
 
@@ -109,14 +109,14 @@ class ProductsControllerWebMvcTest {
     void ProductsControllerWebMvcTest_delete_returns_json_object_Test() throws Exception {
         when(productService.delete(1)).thenReturn(true);
 
-        mockMvc.perform(delete("/v1/products/delete/1").header("ApiVersion", "1"))
+        mockMvc.perform(delete("/v1/products/delete/1").header("X-Api-Version", "1"))
             .andExpect(status().isNoContent());
     }
 
     @Test
     void ProductsControllerWebMvcTest_add_returns_bad_request_for_invalid_payload_Test() throws Exception {
         mockMvc.perform(post("/v1/products/add")
-                .header("ApiVersion", "1")
+                .header("X-Api-Version", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{}"))
             .andExpect(status().isBadRequest());

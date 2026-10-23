@@ -21,7 +21,7 @@ public class SupplierMapper implements EntityDtoMapper<Supplier, SuppliersDto> {
         dto.setPhone(entity.getPhone());
         dto.setPostalCode(entity.getPostalCode());
         dto.setRegion(entity.getRegion());
-        dto.setSupplierID(entity.getSupplierID());
+        dto.setSupplierId(entity.getSupplierID());
         return dto;
     }
 
@@ -45,6 +45,6 @@ public class SupplierMapper implements EntityDtoMapper<Supplier, SuppliersDto> {
         entity.setPhone(dto.getPhone());
         entity.setPostalCode(dto.getPostalCode());
         entity.setRegion(dto.getRegion());
-        // entity.setSupplierID(dto.getSupplierID());
+        // entity.setSupplierID(dto.getSupplierId());
     }
 }

@@ -8,11 +8,11 @@ import io.micrometer.common.lang.Nullable;
 
 public class ProductsDto {
 
-    private Integer categoryID;
+    private Integer categoryId;
     private boolean discontinued;
 
     @Nullable
-    private Integer productID;
+    private Integer productId;
 
     @NotBlank
     private String productName;
@@ -22,7 +22,7 @@ public class ProductsDto {
     @NotNull
     private Integer reorderLevel;
 
-    private Integer supplierID;
+    private Integer supplierId;
     private BigDecimal unitPrice;
 
     @NotNull
@@ -31,12 +31,12 @@ public class ProductsDto {
     @NotNull
     private Integer unitsOnOrder;
 
-    public Integer getCategoryID() {
-        return categoryID;
+    public Integer getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategoryID(Integer categoryID) {
-        this.categoryID = categoryID;
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
     }
 
     public boolean isDiscontinued() {
@@ -47,12 +47,12 @@ public class ProductsDto {
         this.discontinued = discontinued;
     }
 
-    public Integer getProductID() {
-        return productID;
+    public Integer getProductId() {
+        return productId;
     }
 
-    public void setProductID(Integer productID) {
-        this.productID = productID;
+    public void setProductId(Integer productId) {
+        this.productId = productId;
     }
 
     public String getProductName() {
@@ -79,12 +79,12 @@ public class ProductsDto {
         this.reorderLevel = reorderLevel;
     }
 
-    public Integer getSupplierID() {
-        return supplierID;
+    public Integer getSupplierId() {
+        return supplierId;
     }
 
-    public void setSupplierID(Integer supplierID) {
-        this.supplierID = supplierID;
+    public void setSupplierId(Integer supplierId) {
+        this.supplierId = supplierId;
     }
 
     public BigDecimal getUnitPrice() {

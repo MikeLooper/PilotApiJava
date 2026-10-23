@@ -44,7 +44,7 @@ class CustomerServiceTest {
         Customer entity = new Customer();
         entity.setCustomerID("ALFKI");
         CustomersDto dto = new CustomersDto();
-        dto.setCustomerID("ALFKI");
+        dto.setCustomerId("ALFKI");
 
         when(repository.findAll()).thenReturn(List.of(entity));
         when(mapper.toDto(entity)).thenReturn(dto);
@@ -54,7 +54,7 @@ class CustomerServiceTest {
 
         // Assert
         assertEquals(1, result.size());
-        assertEquals("ALFKI", result.get(0).getCustomerID());
+        assertEquals("ALFKI", result.get(0).getCustomerId());
     }
 
     @Test
@@ -63,7 +63,7 @@ class CustomerServiceTest {
         Customer entity = new Customer();
         entity.setCustomerID("ALFKI");
         CustomersDto dto = new CustomersDto();
-        dto.setCustomerID("ALFKI");
+        dto.setCustomerId("ALFKI");
 
         when(repository.findAll(PageRequest.of(1, 10))).thenReturn(new PageImpl<>(List.of(entity)));
         when(mapper.toDto(entity)).thenReturn(dto);
@@ -73,7 +73,7 @@ class CustomerServiceTest {
 
         // Assert
         assertEquals(1, result.size());
-        assertEquals("ALFKI", result.get(0).getCustomerID());
+        assertEquals("ALFKI", result.get(0).getCustomerId());
     }
 
     @Test
@@ -89,7 +89,7 @@ class CustomerServiceTest {
     void CustomerService_add_returns_customer_id_as_response_Test() {
         // Arrange
         CustomersDto input = new CustomersDto();
-        input.setCustomerID("ALFKI");
+        input.setCustomerId("ALFKI");
 
         Customer mapped = new Customer();
         Customer saved = new Customer();
@@ -109,7 +109,7 @@ class CustomerServiceTest {
     void CustomerService_update_persists_changes_when_found_Test() {
         // Arrange
         CustomersDto input = new CustomersDto();
-        input.setCustomerID("ALFKI");
+        input.setCustomerId("ALFKI");
 
         Customer current = new Customer();
         current.setCustomerID("ALFKI");

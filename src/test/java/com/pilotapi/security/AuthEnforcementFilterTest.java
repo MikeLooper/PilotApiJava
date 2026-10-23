@@ -12,7 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -91,7 +91,27 @@ class AuthEnforcementFilterTest {
         // Assert
         verify(filterChain, never()).doFilter(request, response);
         verify(response).setStatus(401);
-        assertTrue(body.toString().contains("Missing token"));
+        verify(response).setContentType("application/json");
+        assertEquals("\"Missing token\"", body.toString());
+    }
+
+    @Test
+    void AuthEnforcementFilter_doFilterInternal_blocks_with_reasonPhrase_body_when_reason_blank_Test() throws Exception {
+        // Arrange
+        when(request.getRequestURI()).thenReturn("/v1/categories/get-all");
+        securityProperties.setActive(true);
+        AuthCheckResult failure = new AuthCheckResult(AuthOutcome.UNAUTHENTICATED, " ", null);
+        when(securityHelper.check(request)).thenReturn(failure);
+
+        StringWriter body = new StringWriter();
+        when(response.getWriter()).thenReturn(new PrintWriter(body));
+
+        // Act
+        filter.doFilterInternal(request, response, filterChain);
+
+        // Assert
+        verify(response).setStatus(401);
+        assertEquals("\"Unauthorized\"", body.toString());
     }
 
     @Test
@@ -111,6 +131,8 @@ class AuthEnforcementFilterTest {
         // Assert
         verify(filterChain, never()).doFilter(request, response);
         verify(response).setStatus(403);
+        verify(response).setContentType("application/json");
+        assertEquals("\"Role too low\"", body.toString());
     }
 
     @Test

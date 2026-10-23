@@ -44,7 +44,7 @@ class OrderServiceTest {
         Order entity = new Order();
         entity.setOrderID(10);
         OrdersDto dto = new OrdersDto();
-        dto.setOrderID(10);
+        dto.setOrderId(10);
 
         when(repository.findAll()).thenReturn(List.of(entity));
         when(mapper.toDto(entity)).thenReturn(dto);
@@ -54,7 +54,7 @@ class OrderServiceTest {
 
         // Assert
         assertEquals(1, result.size());
-        assertEquals(10, result.get(0).getOrderID());
+        assertEquals(10, result.get(0).getOrderId());
     }
 
     @Test
@@ -63,7 +63,7 @@ class OrderServiceTest {
         Order entity = new Order();
         entity.setOrderID(10);
         OrdersDto dto = new OrdersDto();
-        dto.setOrderID(10);
+        dto.setOrderId(10);
 
         when(repository.findAll(PageRequest.of(1, 10))).thenReturn(new PageImpl<>(List.of(entity)));
         when(mapper.toDto(entity)).thenReturn(dto);
@@ -73,7 +73,7 @@ class OrderServiceTest {
 
         // Assert
         assertEquals(1, result.size());
-        assertEquals(10, result.get(0).getOrderID());
+        assertEquals(10, result.get(0).getOrderId());
     }
 
     @Test
@@ -89,7 +89,7 @@ class OrderServiceTest {
     void OrderService_add_returns_generated_id_Test() {
         // Arrange
         OrdersDto input = new OrdersDto();
-        input.setOrderID(10);
+        input.setOrderId(10);
 
         Order mapped = new Order();
         Order saved = new Order();
@@ -109,7 +109,7 @@ class OrderServiceTest {
     void OrderService_update_persists_changes_when_found_Test() {
         // Arrange
         OrdersDto input = new OrdersDto();
-        input.setOrderID(10);
+        input.setOrderId(10);
 
         Order current = new Order();
         current.setOrderID(10);

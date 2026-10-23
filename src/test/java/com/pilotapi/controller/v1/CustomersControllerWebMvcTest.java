@@ -40,37 +40,37 @@ class CustomersControllerWebMvcTest {
     @Test
     void CustomersControllerWebMvcTest_getAll_returns_ok_Test() throws Exception {
         CustomersDto dto = new CustomersDto();
-        dto.setCustomerID("ALFKI");
+        dto.setCustomerId("ALFKI");
         dto.setCompanyName("Alfreds");
         when(customerService.getAll(0, 20)).thenReturn(List.of(dto));
 
-        mockMvc.perform(get("/v1/customers/get-all").header("ApiVersion", "1"))
+        mockMvc.perform(get("/v1/customers/get-all").header("X-Api-Version", "1"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].customerID").value("ALFKI"));
+            .andExpect(jsonPath("$[0].customerId").value("ALFKI"));
     }
 
     @Test
     void CustomersControllerWebMvcTest_getAll_withPageParams_passesThemToService_Test() throws Exception {
         CustomersDto dto = new CustomersDto();
-        dto.setCustomerID("ALFKI");
+        dto.setCustomerId("ALFKI");
         dto.setCompanyName("Alfreds");
         when(customerService.getAll(2, 10)).thenReturn(List.of(dto));
 
-        mockMvc.perform(get("/v1/customers/get-all?page=2&pageSize=10").header("ApiVersion", "1"))
+        mockMvc.perform(get("/v1/customers/get-all?page=2&pageSize=10").header("X-Api-Version", "1"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].customerID").value("ALFKI"));
+            .andExpect(jsonPath("$[0].customerId").value("ALFKI"));
     }
 
     @Test
     void CustomersControllerWebMvcTest_getById_returns_ok_Test() throws Exception {
         CustomersDto dto = new CustomersDto();
-        dto.setCustomerID("ALFKI");
+        dto.setCustomerId("ALFKI");
         dto.setCompanyName("Alfreds");
         when(customerService.getById("ALFKI")).thenReturn(dto);
 
-        mockMvc.perform(get("/v1/customers/get/ALFKI").header("ApiVersion", "1"))
+        mockMvc.perform(get("/v1/customers/get/ALFKI").header("X-Api-Version", "1"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.customerID").value("ALFKI"));
+            .andExpect(jsonPath("$.customerId").value("ALFKI"));
     }
 
     @Test
@@ -78,9 +78,9 @@ class CustomersControllerWebMvcTest {
         when(customerService.add(any(CustomersDto.class))).thenReturn(new AddResponseStringDto("ALFKI"));
 
         mockMvc.perform(post("/v1/customers/add")
-                .header("ApiVersion", "1")
+                .header("X-Api-Version", "1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"customerID\":\"ALFKI\",\"companyName\":\"Alfreds\"}"))
+                .content("{\"customerId\":\"ALFKI\",\"companyName\":\"Alfreds\"}"))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.id").value("ALFKI"));
     }
@@ -90,9 +90,9 @@ class CustomersControllerWebMvcTest {
         when(customerService.update(any(CustomersDto.class))).thenReturn(true);
 
         mockMvc.perform(put("/v1/customers/update")
-                .header("ApiVersion", "1")
+                .header("X-Api-Version", "1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"customerID\":\"ALFKI\",\"companyName\":\"Alfreds\"}"))
+                .content("{\"customerId\":\"ALFKI\",\"companyName\":\"Alfreds\"}"))
             .andExpect(status().isNoContent());
     }
 
@@ -100,7 +100,7 @@ class CustomersControllerWebMvcTest {
     void CustomersControllerWebMvcTest_delete_returns_json_object_Test() throws Exception {
         when(customerService.delete("ALFKI")).thenReturn(true);
 
-        mockMvc.perform(delete("/v1/customers/delete/ALFKI").header("ApiVersion", "1"))
+        mockMvc.perform(delete("/v1/customers/delete/ALFKI").header("X-Api-Version", "1"))
             .andExpect(status().isNoContent());
     }
 }

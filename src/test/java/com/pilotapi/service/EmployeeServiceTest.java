@@ -44,7 +44,7 @@ class EmployeeServiceTest {
         Employee entity = new Employee();
         entity.setEmployeeID(1);
         EmployeesDto dto = new EmployeesDto();
-        dto.setEmployeeID(1);
+        dto.setEmployeeId(1);
 
         when(repository.findAll()).thenReturn(List.of(entity));
         when(mapper.toDto(entity)).thenReturn(dto);
@@ -54,7 +54,7 @@ class EmployeeServiceTest {
 
         // Assert
         assertEquals(1, result.size());
-        assertEquals(1, result.get(0).getEmployeeID());
+        assertEquals(1, result.get(0).getEmployeeId());
     }
 
     @Test
@@ -63,7 +63,7 @@ class EmployeeServiceTest {
         Employee entity = new Employee();
         entity.setEmployeeID(1);
         EmployeesDto dto = new EmployeesDto();
-        dto.setEmployeeID(1);
+        dto.setEmployeeId(1);
 
         when(repository.findAll(PageRequest.of(1, 10))).thenReturn(new PageImpl<>(List.of(entity)));
         when(mapper.toDto(entity)).thenReturn(dto);
@@ -73,7 +73,7 @@ class EmployeeServiceTest {
 
         // Assert
         assertEquals(1, result.size());
-        assertEquals(1, result.get(0).getEmployeeID());
+        assertEquals(1, result.get(0).getEmployeeId());
     }
 
     @Test
@@ -89,7 +89,7 @@ class EmployeeServiceTest {
     void EmployeeService_add_returns_generated_id_Test() {
         // Arrange
         EmployeesDto input = new EmployeesDto();
-        input.setEmployeeID(1);
+        input.setEmployeeId(1);
 
         Employee mapped = new Employee();
         Employee saved = new Employee();
@@ -109,7 +109,7 @@ class EmployeeServiceTest {
     void EmployeeService_update_persists_changes_when_found_Test() {
         // Arrange
         EmployeesDto input = new EmployeesDto();
-        input.setEmployeeID(7);
+        input.setEmployeeId(7);
 
         Employee current = new Employee();
         current.setEmployeeID(7);

@@ -6,10 +6,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.stream.Collectors;
 
@@ -31,6 +34,15 @@ public class ApiExceptionHandler {
             .map(this::fieldErrorMessage)
             .collect(Collectors.joining("; "));
         return buildProblem(HttpStatus.BAD_REQUEST, details, request.getRequestURI());
+    }
+
+    @ExceptionHandler({
+        MethodArgumentTypeMismatchException.class,
+        MissingServletRequestParameterException.class,
+        HttpMessageNotReadableException.class
+    })
+    public ResponseEntity<ProblemDetailsDto> handleMalformedRequest(Exception ex, HttpServletRequest request) {
+        return buildProblem(HttpStatus.BAD_REQUEST, ex.getMessage(), request.getRequestURI());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

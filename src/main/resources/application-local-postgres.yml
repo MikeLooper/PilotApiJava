@@ -15,8 +15,8 @@ otel:
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/northwind
-    username: <DB_USERNAME:DevUser>
-    password: <DB_PASSWORD>
+    username: DevUser
+    password: Pwo_698UVtra
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     properties:

@@ -2,30 +2,30 @@ package com.pilotapi.dto;
 
 public class AddResponseOrderDetailsDto {
 
-    private Integer orderID;
-    private Integer productID;
+    private Integer orderId;
+    private Integer productId;
 
     public AddResponseOrderDetailsDto() {
     }
 
-    public AddResponseOrderDetailsDto(Integer orderID, Integer productID) {
-        this.orderID = orderID;
-        this.productID = productID;
+    public AddResponseOrderDetailsDto(Integer orderId, Integer productId) {
+        this.orderId = orderId;
+        this.productId = productId;
     }
 
-    public Integer getOrderID() {
-        return orderID;
+    public Integer getOrderId() {
+        return orderId;
     }
 
-    public void setOrderID(Integer orderID) {
-        this.orderID = orderID;
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
     }
 
-    public Integer getProductID() {
-        return productID;
+    public Integer getProductId() {
+        return productId;
     }
 
-    public void setProductID(Integer productID) {
-        this.productID = productID;
+    public void setProductId(Integer productId) {
+        this.productId = productId;
     }
 }
