@@ -60,17 +60,12 @@ public class ApplicationConfigurationService {
     private static DataConnectionConfigurationDto dataConnection(JdbcUrl jdbcUrl) {
         DataConnectionConfigurationDto dataConnection = new DataConnectionConfigurationDto();
         dataConnection.setConnectTimeout(jdbcUrl.connectTimeout());
-        dataConnection.setDataSourceName(jdbcUrl.database());
-        dataConnection.setHost(jdbcUrl.host());
-        dataConnection.setPort(jdbcUrl.port());
         return dataConnection;
     }
 
     private DataSourceConfigurationDto dataSource(JdbcUrl jdbcUrl) {
         DataSourceConfigurationDto dataSource = new DataSourceConfigurationDto();
-        dataSource.setDataSource(jdbcUrl.database());
         dataSource.setDataSourceEnum(jdbcUrl.type());
-        dataSource.setDataSourceName(jdbcUrl.database());
         dataSource.setDataSourceType(switch (jdbcUrl.type()) {
             case SQL_SERVER -> "SqlServer";
             case POSTGRESQL -> "PostgreSQL";
@@ -84,13 +79,9 @@ public class ApplicationConfigurationService {
     private SecurityConfigurationDto security() {
         SecurityConfigurationDto security = new SecurityConfigurationDto();
         security.setActive(securityProperties.isActive());
-        security.setBaseUrl(securityProperties.getProviderUrl());
-        security.setRealm(securityProperties.getRealm());
-        security.setClientId(securityProperties.getClientId());
         // Signing keys are fetched from the JWK-set URI as configured; HTTPS is not enforced.
         security.setRequireHttpsMetadata(false);
         security.setClockSkewSeconds(CLOCK_SKEW_SECONDS);
-        security.setAuthority(securityProperties.issuerUri());
         return security;
     }
 
@@ -113,12 +104,6 @@ public class ApplicationConfigurationService {
     private OpenTelemetryConfigurationDto openTelemetry() {
         OpenTelemetryConfigurationDto openTelemetry = new OpenTelemetryConfigurationDto();
         openTelemetry.setActive(!environment.getProperty("otel.sdk.disabled", Boolean.class, false));
-        String endpoint = environment.getProperty("otel.exporter.otlp.endpoint");
-        if (StringUtils.hasText(endpoint)) {
-            URI uri = URI.create(endpoint);
-            openTelemetry.setServer(uri.getHost());
-            openTelemetry.setPort(uri.getPort() < 0 ? null : uri.getPort());
-        }
         return openTelemetry;
     }
 

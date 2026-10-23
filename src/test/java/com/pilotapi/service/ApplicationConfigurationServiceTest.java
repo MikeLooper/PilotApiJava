@@ -43,12 +43,13 @@ class ApplicationConfigurationServiceTest {
 
         // Assert
         DataConnectionConfigurationDto connection = result.getDataConnections().get(0);
-        assertEquals("local_mssql", connection.getHost());
-        assertEquals(1433, connection.getPort());
+        assertNull(connection.getHost());
+        assertNull(connection.getPort());
         assertEquals(30, connection.getConnectTimeout());
-        assertEquals("NorthWind", connection.getDataSourceName());
+        assertNull(connection.getDataSourceName());
         DataSourceConfigurationDto dataSource = result.getDataSources().get(0);
-        assertEquals("NorthWind", dataSource.getDataSource());
+        assertNull(dataSource.getDataSource());
+        assertNull(dataSource.getDataSourceName());
         assertEquals(DataSourceTypes.SQL_SERVER, dataSource.getDataSourceEnum());
         assertEquals("SqlServer", dataSource.getDataSourceType());
         assertEquals("dbo", dataSource.getSchema());
@@ -65,11 +66,12 @@ class ApplicationConfigurationServiceTest {
 
         // Assert
         DataConnectionConfigurationDto connection = result.getDataConnections().get(0);
-        assertEquals("local-postgres", connection.getHost());
-        assertEquals(5432, connection.getPort());
+        assertNull(connection.getHost());
+        assertNull(connection.getPort());
         assertEquals(10, connection.getConnectTimeout());
         DataSourceConfigurationDto dataSource = result.getDataSources().get(0);
-        assertEquals("northwind", dataSource.getDataSource());
+        assertNull(dataSource.getDataSource());
+        assertNull(dataSource.getDataSourceName());
         assertEquals(DataSourceTypes.POSTGRESQL, dataSource.getDataSourceEnum());
         assertEquals("PostgreSQL", dataSource.getDataSourceType());
         assertNull(dataSource.getSchema());
@@ -104,10 +106,10 @@ class ApplicationConfigurationServiceTest {
 
         // Assert
         assertFalse(result.getSecurity().isActive());
-        assertEquals("http://local-keycloak:8080", result.getSecurity().getBaseUrl());
-        assertEquals("local-realm", result.getSecurity().getRealm());
-        assertEquals("local-client", result.getSecurity().getClientId());
-        assertEquals("http://local-keycloak:8080/realms/local-realm", result.getSecurity().getAuthority());
+        assertNull(result.getSecurity().getBaseUrl());
+        assertNull(result.getSecurity().getRealm());
+        assertNull(result.getSecurity().getClientId());
+        assertNull(result.getSecurity().getAuthority());
         assertEquals(ApplicationConfigurationService.CLOCK_SKEW_SECONDS, result.getSecurity().getClockSkewSeconds());
     }
 
@@ -138,8 +140,8 @@ class ApplicationConfigurationServiceTest {
 
         // Assert
         assertTrue(result.getOpenTelemetry().isActive());
-        assertEquals("otel-collector", result.getOpenTelemetry().getServer());
-        assertEquals(4317, result.getOpenTelemetry().getPort());
+        assertNull(result.getOpenTelemetry().getServer());
+        assertNull(result.getOpenTelemetry().getPort());
     }
 
     @Test
