@@ -1,5 +1,8 @@
 package com.pilotapi.common;
 
+import io.opentelemetry.context.Context;
+import io.opentelemetry.context.ContextKey;
+import io.opentelemetry.context.ImplicitContextKeyed;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.UUID;
@@ -9,13 +12,19 @@ import java.util.UUID;
  * Created once at the start of each request by {@link RequestSettingsFilter} and stored as a
  * request attribute. Read it with {@link #from(HttpServletRequest)}, or inject the
  * request-scoped {@code RequestSettings} bean.
+ * <p>
+ * The filter also makes the settings current in the OpenTelemetry {@link Context} for the rest
+ * of the request, so telemetry recorded on the request's behalf can read them with
+ * {@link #fromContext(Context)}.
  */
-public class RequestSettings {
+public class RequestSettings implements ImplicitContextKeyed {
 
     public static final String CORRELATION_ID_HEADER = "X-Correlation-Id";
     public static final String REQUEST_ID_HEADER = "X-Request-Id";
 
     static final String ATTRIBUTE_NAME = RequestSettings.class.getName();
+
+    private static final ContextKey<RequestSettings> CONTEXT_KEY = ContextKey.named(ATTRIBUTE_NAME);
 
     private final String requestId;
     private final String correlationId;
@@ -51,6 +60,19 @@ public class RequestSettings {
         RequestSettings settings = initialize(request);
         request.setAttribute(ATTRIBUTE_NAME, settings);
         return settings;
+    }
+
+    /**
+     * Returns the settings stored in the OpenTelemetry context, or {@code null} when the
+     * context does not belong to a request.
+     */
+    public static RequestSettings fromContext(Context context) {
+        return context.get(CONTEXT_KEY);
+    }
+
+    @Override
+    public Context storeInContext(Context context) {
+        return context.with(CONTEXT_KEY, this);
     }
 
     public String getRequestId() {

@@ -1,5 +1,6 @@
 package com.pilotapi.common;
 
+import io.opentelemetry.context.Scope;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,6 +20,10 @@ import java.io.IOException;
  * headers are set before the rest of the chain because a response body commits the
  * headers once written; setting them here means every response carries them, including
  * auth failures and error responses.
+ * <p>
+ * The settings are made current in the OpenTelemetry context for the rest of the chain, so the
+ * spans and log records produced while handling the request carry its IDs. Running before the
+ * OpenTelemetry Web MVC filter means the server span is started inside that context too.
  */
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -32,6 +37,8 @@ public class RequestSettingsFilter extends OncePerRequestFilter {
         response.setHeader(RequestSettings.CORRELATION_ID_HEADER, settings.getCorrelationId());
         response.setHeader(RequestSettings.REQUEST_ID_HEADER, settings.getRequestId());
 
-        filterChain.doFilter(request, response);
+        try (Scope ignored = settings.makeCurrent()) {
+            filterChain.doFilter(request, response);
+        }
     }
 }

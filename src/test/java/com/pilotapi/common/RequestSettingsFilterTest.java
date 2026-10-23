@@ -1,5 +1,6 @@
 package com.pilotapi.common;
 
+import io.opentelemetry.context.Context;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -7,6 +8,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 class RequestSettingsFilterTest {
@@ -48,5 +50,17 @@ class RequestSettingsFilterTest {
 
         assertNotNull(seen[0]);
         assertSame(seen[0], RequestSettings.from(request));
+    }
+
+    @Test
+    void RequestSettingsFilterTest_doFilter_makesSettingsCurrentForRestOfChain_Test() throws Exception {
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "/v1/categories/get/1");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        RequestSettings[] seen = new RequestSettings[1];
+
+        filter.doFilter(request, response, (req, res) -> seen[0] = RequestSettings.fromContext(Context.current()));
+
+        assertSame(RequestSettings.from(request), seen[0]);
+        assertNull(RequestSettings.fromContext(Context.current()));
     }
 }
