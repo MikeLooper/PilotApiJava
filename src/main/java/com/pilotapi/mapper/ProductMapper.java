@@ -27,6 +27,9 @@ public class ProductMapper implements EntityDtoMapper<Product, ProductsDto> {
     public Product toEntity(ProductsDto dto) {
         Product entity = new Product();
         updateEntityFromDto(dto, entity);
+        entity.setReorderLevel(dto.getReorderLevel());
+        entity.setUnitsInStock(dto.getUnitsInStock());
+        entity.setUnitsOnOrder(dto.getUnitsOnOrder());
         return entity;
     }
 
@@ -37,10 +40,16 @@ public class ProductMapper implements EntityDtoMapper<Product, ProductsDto> {
         // entity.setProductID(dto.getProductId());
         entity.setProductName(dto.getProductName());
         entity.setQuantityPerUnit(dto.getQuantityPerUnit());
-        entity.setReorderLevel(dto.getReorderLevel());
+        if (dto.wasReorderLevelProvided()) {
+            entity.setReorderLevel(dto.getReorderLevel());
+        }
         entity.setSupplierID(dto.getSupplierId());
         entity.setUnitPrice(dto.getUnitPrice());
-        entity.setUnitsInStock(dto.getUnitsInStock());
-        entity.setUnitsOnOrder(dto.getUnitsOnOrder());
+        if (dto.wereUnitsInStockProvided()) {
+            entity.setUnitsInStock(dto.getUnitsInStock());
+        }
+        if (dto.wereUnitsOnOrderProvided()) {
+            entity.setUnitsOnOrder(dto.getUnitsOnOrder());
+        }
     }
 }

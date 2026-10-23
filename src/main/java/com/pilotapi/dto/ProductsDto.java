@@ -30,6 +30,7 @@ public class ProductsDto {
         requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     @NotNull
     private Integer reorderLevel = 0;
+    private boolean reorderLevelProvided;
 
     @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN)
     private Integer supplierId;
@@ -41,11 +42,13 @@ public class ProductsDto {
         requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     @NotNull
     private Integer unitsInStock = 0;
+    private boolean unitsInStockProvided;
 
     @Schema(types = {"integer", "string"}, format = "int16", pattern = OpenApiConfig.INTEGER_PATTERN,
         requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     @NotNull
     private Integer unitsOnOrder = 0;
+    private boolean unitsOnOrderProvided;
 
     public Integer getCategoryId() {
         return categoryId;
@@ -93,6 +96,11 @@ public class ProductsDto {
 
     public void setReorderLevel(Integer reorderLevel) {
         this.reorderLevel = reorderLevel;
+        this.reorderLevelProvided = true;
+    }
+
+    public boolean wasReorderLevelProvided() {
+        return reorderLevelProvided;
     }
 
     public Integer getSupplierId() {
@@ -117,6 +125,11 @@ public class ProductsDto {
 
     public void setUnitsInStock(Integer unitsInStock) {
         this.unitsInStock = unitsInStock;
+        this.unitsInStockProvided = true;
+    }
+
+    public boolean wereUnitsInStockProvided() {
+        return unitsInStockProvided;
     }
 
     public Integer getUnitsOnOrder() {
@@ -125,5 +138,10 @@ public class ProductsDto {
 
     public void setUnitsOnOrder(Integer unitsOnOrder) {
         this.unitsOnOrder = unitsOnOrder;
+        this.unitsOnOrderProvided = true;
+    }
+
+    public boolean wereUnitsOnOrderProvided() {
+        return unitsOnOrderProvided;
     }
 }
