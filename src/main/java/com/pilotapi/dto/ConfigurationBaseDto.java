@@ -9,7 +9,7 @@ public abstract class ConfigurationBaseDto {
 
     static final String BASE_DESCRIPTION = "A base class for configuration objects.";
 
-    @Schema(description = "Gets or sets a flag that indicates whether this settigs object is active.")
+    @Schema(description = "Gets or sets a flag that indicates whether this settings object is active.")
     private boolean active = true;
 
     public boolean isActive() {
