@@ -15,6 +15,7 @@ import com.pilotapi.security.SecurityConfig;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.matchesPattern;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -36,6 +37,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(SecurityConfig.class)
 @TestPropertySource(properties = "app.security.active=false")
 class CategoriesControllerWebMvcTest {
+
+    private static final String UUID_PATTERN =
+        "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$";
 
     @Autowired
     private MockMvc mockMvc;
@@ -122,6 +126,27 @@ class CategoriesControllerWebMvcTest {
             .andExpect(status().isOk())
             .andExpect(header().string("X-Api-Version", "1.2.3"))
             .andExpect(header().string("X-Correlation-Id", "7ea2c7f7-8b46-475d-86f8-7aaaa9e4a35b"));
+    }
+
+    @Test
+    void CategoriesControllerWebMvcTest_getById_withoutCorrelationId_returnsGeneratedCorrelationAndRequestIdHeaders_Test() throws Exception {
+        CategoriesDto dto = new CategoriesDto();
+        dto.setCategoryId(1);
+        when(categoryService.getById(1)).thenReturn(dto);
+
+        mockMvc.perform(get("/v1/categories/get/1").header("X-Api-Version", "1"))
+            .andExpect(status().isOk())
+            .andExpect(header().string("X-Correlation-Id", matchesPattern(UUID_PATTERN)))
+            .andExpect(header().string("X-Request-Id", matchesPattern(UUID_PATTERN)));
+    }
+
+    @Test
+    void CategoriesControllerWebMvcTest_getById_withNonNumericId_returnsRequestIdHeaderOnError_Test() throws Exception {
+        mockMvc.perform(get("/v1/categories/get/abc")
+                .header("X-Correlation-Id", "7ea2c7f7-8b46-475d-86f8-7aaaa9e4a35b"))
+            .andExpect(status().isBadRequest())
+            .andExpect(header().string("X-Correlation-Id", "7ea2c7f7-8b46-475d-86f8-7aaaa9e4a35b"))
+            .andExpect(header().string("X-Request-Id", matchesPattern(UUID_PATTERN)));
     }
 
     @Test

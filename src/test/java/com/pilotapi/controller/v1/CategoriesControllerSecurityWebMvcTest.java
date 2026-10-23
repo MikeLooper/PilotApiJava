@@ -20,6 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -42,6 +43,15 @@ class CategoriesControllerSecurityWebMvcTest {
 
     @MockBean
     private JwtDecoder jwtDecoder;
+
+    @Test
+    void CategoriesControllerSecurityWebMvcTest_getAll_withoutToken_returnsCorrelationAndRequestIdHeaders_Test() throws Exception {
+        mockMvc.perform(get("/v1/categories/get-all")
+                .header("X-Correlation-Id", "7ea2c7f7-8b46-475d-86f8-7aaaa9e4a35b"))
+            .andExpect(status().isUnauthorized())
+            .andExpect(header().string("X-Correlation-Id", "7ea2c7f7-8b46-475d-86f8-7aaaa9e4a35b"))
+            .andExpect(header().exists("X-Request-Id"));
+    }
 
     @Test
     void CategoriesControllerSecurityWebMvcTest_getAll_withoutToken_returns401_Test() throws Exception {
