@@ -103,4 +103,16 @@ class ShippersControllerWebMvcTest {
         mockMvc.perform(delete("/v1/shippers/delete/1").header("X-Api-Version", "1"))
             .andExpect(status().isNoContent());
     }
+
+    @Test
+    void ShippersControllerWebMvcTest_add_accepts_payload_without_company_name_Test() throws Exception {
+        when(shipperService.add(any(ShippersDto.class))).thenReturn(new AddResponseIntDto(7L));
+
+        mockMvc.perform(post("/v1/shippers/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"phone\":\"(503) 555-9831\"}"))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.id").value(7));
+    }
 }

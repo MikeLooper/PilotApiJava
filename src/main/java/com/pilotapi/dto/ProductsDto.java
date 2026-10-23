@@ -1,5 +1,8 @@
 package com.pilotapi.dto;
 
+import com.pilotapi.config.OpenApiConfig;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.math.BigDecimal;
 
 import jakarta.validation.constraints.NotBlank;
@@ -8,28 +11,41 @@ import io.micrometer.common.lang.Nullable;
 
 public class ProductsDto {
 
+    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN)
     private Integer categoryId;
     private boolean discontinued;
 
+    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN)
     @Nullable
     private Integer productId;
 
+    @Schema(types = {"null", "string"})
     @NotBlank
     private String productName;
 
+    @Schema(types = {"null", "string"})
     private String quantityPerUnit;
 
+    @Schema(types = {"integer", "string"}, format = "int16", pattern = OpenApiConfig.INTEGER_PATTERN,
+        requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     @NotNull
-    private Integer reorderLevel;
+    private Integer reorderLevel = 0;
 
+    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN)
     private Integer supplierId;
+
+    @Schema(types = {"null", "number", "string"}, format = "double", pattern = OpenApiConfig.DECIMAL_PATTERN)
     private BigDecimal unitPrice;
 
+    @Schema(types = {"integer", "string"}, format = "int16", pattern = OpenApiConfig.INTEGER_PATTERN,
+        requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     @NotNull
-    private Integer unitsInStock;
+    private Integer unitsInStock = 0;
 
+    @Schema(types = {"integer", "string"}, format = "int16", pattern = OpenApiConfig.INTEGER_PATTERN,
+        requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     @NotNull
-    private Integer unitsOnOrder;
+    private Integer unitsOnOrder = 0;
 
     public Integer getCategoryId() {
         return categoryId;

@@ -2,22 +2,21 @@ package com.pilotapi.service;
 
 import com.pilotapi.config.ApplicationMetadataProperties;
 import com.pilotapi.dto.AboutResponseDto;
+import com.pilotapi.dto.ApplicationConfigurationDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.core.env.Environment;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
@@ -26,7 +25,7 @@ import static org.mockito.Mockito.when;
 class SystemServiceTest {
 
     @Mock
-    private Environment environment;
+    private ApplicationConfigurationService applicationConfigurationService;
 
     @Mock
     private DataSource dataSource;
@@ -46,7 +45,7 @@ class SystemServiceTest {
         lenient().when(dataSource.getConnection()).thenReturn(connection);
         lenient().when(connection.getMetaData()).thenReturn(databaseMetaData);
         lenient().when(databaseMetaData.getDatabaseProductName()).thenReturn("Microsoft SQL Server");
-        service = new SystemService(metadata, environment, dataSource);
+        service = new SystemService(metadata, dataSource, applicationConfigurationService);
         ReflectionTestUtils.setField(service, "applicationName", "PilotApiJava");
     }
 
@@ -82,7 +81,8 @@ class SystemServiceTest {
     @Test
     void SystemService_about_uses_application_name_fallback_and_includes_details_Test() {
         // Arrange
-        when(environment.getActiveProfiles()).thenReturn(new String[]{"dev", "local"});
+        ApplicationConfigurationDto configuration = new ApplicationConfigurationDto();
+        when(applicationConfigurationService.describe()).thenReturn(configuration);
 
         // Act
         AboutResponseDto result = service.about(true, "v2");
@@ -90,11 +90,7 @@ class SystemServiceTest {
         // Assert
         assertEquals("v2", result.getApiVersion());
         assertEquals("PilotApiJava (SQL Server)", result.getName());
-        assertInstanceOf(Map.class, result.getApplicationConfiguration());
-
-        @SuppressWarnings("unchecked")
-        Map<String, Object> details = (Map<String, Object>) result.getApplicationConfiguration();
-        assertInstanceOf(String[].class, details.get("activeProfiles"));
+        assertSame(configuration, result.getApplicationConfiguration());
     }
 
     @Test

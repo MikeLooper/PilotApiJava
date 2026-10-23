@@ -16,7 +16,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -119,6 +121,31 @@ class ProductsControllerWebMvcTest {
                 .header("X-Api-Version", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{}"))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void ProductsControllerWebMvcTest_add_defaults_omitted_stock_levels_to_zero_Test() throws Exception {
+        when(productService.add(any(ProductsDto.class))).thenReturn(new AddResponseIntDto(106L));
+
+        mockMvc.perform(post("/v1/products/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"productName\":\"Chai\"}"))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.id").value(106));
+
+        verify(productService).add(argThat(dto -> dto.getReorderLevel() == 0
+            && dto.getUnitsInStock() == 0
+            && dto.getUnitsOnOrder() == 0));
+    }
+
+    @Test
+    void ProductsControllerWebMvcTest_add_returns_bad_request_for_null_stock_level_Test() throws Exception {
+        mockMvc.perform(post("/v1/products/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"productName\":\"Chai\",\"unitsInStock\":null}"))
             .andExpect(status().isBadRequest());
     }
 }

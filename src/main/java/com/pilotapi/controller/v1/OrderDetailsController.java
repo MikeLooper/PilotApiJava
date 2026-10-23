@@ -3,9 +3,16 @@ package com.pilotapi.controller.v1;
 import com.pilotapi.dto.AddResponseOrderDetailsDto;
 import com.pilotapi.dto.OrderDetailsDto;
 import com.pilotapi.service.OrderDetailService;
+import com.pilotapi.config.OpenApiConfig;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +32,7 @@ import java.util.UUID;
 /**
  * API Version: 1.0
  */
-@Tag(name = "Order Details", description = "Line items belonging to customer orders")
+@Tag(name = OpenApiConfig.TAG_ORDER_DETAILS)
 @RestController
 @RequestMapping("/v1/order-details")
 public class OrderDetailsController {
@@ -36,6 +43,7 @@ public class OrderDetailsController {
         this.service = service;
     }
 
+    @Operation(summary = "Gets all DTO objects from the OrderDetails table.")
     @GetMapping("/get-all")
     public List<OrderDetailsDto> getAll(
         @RequestParam(name = "page", defaultValue = "0") int page,
@@ -47,9 +55,14 @@ public class OrderDetailsController {
         return service.getAll(page, pageSize);
     }
 
+    @Operation(summary = "Gets a DTO object of the OrderDetails record by its IDs.")
     @GetMapping("/get/product/{productId}/order/{orderId}")
     public OrderDetailsDto getById(
+        @Parameter(schema = @Schema(types = {"integer", "string"}, format = "int32",
+            pattern = OpenApiConfig.INTEGER_PATTERN))
         @PathVariable Integer productId,
+        @Parameter(schema = @Schema(types = {"integer", "string"}, format = "int32",
+            pattern = OpenApiConfig.INTEGER_PATTERN))
         @PathVariable Integer orderId,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
         @RequestHeader(name = "X-Api-Version", required = false, defaultValue = "1.0.0") String apiVersion,
@@ -58,7 +71,9 @@ public class OrderDetailsController {
         return service.getById(productId, orderId);
     }
 
-    @PostMapping("/add")
+    @Operation(summary = "Adds a new OrderDetails record.")
+    @ApiResponse(responseCode = "201", description = "Created")
+    @PostMapping(path = "/add", consumes = {MediaType.APPLICATION_JSON_VALUE, "application/*+json"})
     public ResponseEntity<AddResponseOrderDetailsDto> add(
         @Valid @RequestBody OrderDetailsDto request,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
@@ -68,7 +83,10 @@ public class OrderDetailsController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.add(request));
     }
 
-    @PutMapping("/update")
+    @Operation(summary = "Updates an existing OrderDetails record.")
+    @ApiResponse(responseCode = "204", description = "No Content",
+        content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
+    @PutMapping(path = "/update", consumes = {MediaType.APPLICATION_JSON_VALUE, "application/*+json"})
     public ResponseEntity<Void> update(
         @Valid @RequestBody OrderDetailsDto request,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
@@ -80,9 +98,16 @@ public class OrderDetailsController {
             : ResponseEntity.badRequest().build();
     }
 
+    @Operation(summary = "Deletes an OrderDetails record of the given type by its IDs.")
+    @ApiResponse(responseCode = "204", description = "No Content",
+        content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
     @DeleteMapping("/delete/product/{productId}/order/{orderId}")
     public ResponseEntity<Void> delete(
+        @Parameter(schema = @Schema(types = {"integer", "string"}, format = "int32",
+            pattern = OpenApiConfig.INTEGER_PATTERN))
         @PathVariable Integer productId,
+        @Parameter(schema = @Schema(types = {"integer", "string"}, format = "int32",
+            pattern = OpenApiConfig.INTEGER_PATTERN))
         @PathVariable Integer orderId,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
         @RequestHeader(name = "X-Api-Version", required = false, defaultValue = "1.0.0") String apiVersion,

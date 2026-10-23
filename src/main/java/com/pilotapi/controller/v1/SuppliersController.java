@@ -3,9 +3,16 @@ package com.pilotapi.controller.v1;
 import com.pilotapi.dto.AddResponseIntDto;
 import com.pilotapi.dto.SuppliersDto;
 import com.pilotapi.service.SupplierService;
+import com.pilotapi.config.OpenApiConfig;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +32,7 @@ import java.util.UUID;
 /**
  * API Version: 1.0
  */
-@Tag(name = "Suppliers", description = "Suppliers that provide products")
+@Tag(name = OpenApiConfig.TAG_SUPPLIERS)
 @RestController
 @RequestMapping("/v1/suppliers")
 public class SuppliersController {
@@ -36,6 +43,7 @@ public class SuppliersController {
         this.service = service;
     }
 
+    @Operation(summary = "Gets all DTO objects from the supplier table.")
     @GetMapping("/get-all")
     public List<SuppliersDto> getAll(
         @RequestParam(name = "page", defaultValue = "0") int page,
@@ -47,8 +55,11 @@ public class SuppliersController {
         return service.getAll(page, pageSize);
     }
 
+    @Operation(summary = "Gets a DTO object of the supplier record by its ID.")
     @GetMapping("/get/{supplierId}")
     public SuppliersDto getById(
+        @Parameter(schema = @Schema(types = {"integer", "string"}, format = "int32",
+            pattern = OpenApiConfig.INTEGER_PATTERN))
         @PathVariable Integer supplierId,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
         @RequestHeader(name = "X-Api-Version", required = false, defaultValue = "1.0.0") String apiVersion,
@@ -57,7 +68,9 @@ public class SuppliersController {
         return service.getById(supplierId);
     }
 
-    @PostMapping("/add")
+    @Operation(summary = "Adds a new supplier record.")
+    @ApiResponse(responseCode = "201", description = "Created")
+    @PostMapping(path = "/add", consumes = {MediaType.APPLICATION_JSON_VALUE, "application/*+json"})
     public ResponseEntity<AddResponseIntDto> add(
         @Valid @RequestBody SuppliersDto request,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
@@ -67,7 +80,10 @@ public class SuppliersController {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.add(request));
     }
 
-    @PutMapping("/update")
+    @Operation(summary = "Updates an existing supplier record.")
+    @ApiResponse(responseCode = "204", description = "No Content",
+        content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
+    @PutMapping(path = "/update", consumes = {MediaType.APPLICATION_JSON_VALUE, "application/*+json"})
     public ResponseEntity<Void> update(
         @Valid @RequestBody SuppliersDto request,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
@@ -79,8 +95,13 @@ public class SuppliersController {
             : ResponseEntity.badRequest().build();
     }
 
+    @Operation(summary = "Deletes a supplier record by its ID.")
+    @ApiResponse(responseCode = "204", description = "No Content",
+        content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
     @DeleteMapping("/delete/{supplierId}")
     public ResponseEntity<Void> delete(
+        @Parameter(schema = @Schema(types = {"integer", "string"}, format = "int32",
+            pattern = OpenApiConfig.INTEGER_PATTERN))
         @PathVariable Integer supplierId,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
         @RequestHeader(name = "X-Api-Version", required = false, defaultValue = "1.0.0") String apiVersion,

@@ -1,15 +1,18 @@
 package com.pilotapi.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import com.pilotapi.config.OpenApiConfig;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.micrometer.common.lang.Nullable;
 
 public class ShippersDto {
 
-    @NotBlank
+    @Schema(types = {"null", "string"})
     private String companyName;
 
+    @Schema(types = {"null", "string"})
     private String phone;
 
+    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN)
     @Nullable
     private Integer shipperId;
 

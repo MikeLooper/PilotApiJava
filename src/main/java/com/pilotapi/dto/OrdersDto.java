@@ -1,5 +1,8 @@
 package com.pilotapi.dto;
 
+import com.pilotapi.config.OpenApiConfig;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -7,22 +10,47 @@ import io.micrometer.common.lang.Nullable;
 
 public class OrdersDto {
 
+    @Schema(types = {"null", "string"})
     private String customerId;
+
+    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN)
     private Integer employeeId;
+
+    @Schema(types = {"null", "number", "string"}, format = "double", pattern = OpenApiConfig.DECIMAL_PATTERN)
     private BigDecimal freight;
+
+    @Schema(types = {"null", "string"}, format = "date-time")
     private LocalDateTime orderDate;
 
+    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN)
     @Nullable
     private Integer orderId;
 
+    @Schema(types = {"null", "string"}, format = "date-time")
     private LocalDateTime requiredDate;
+
+    @Schema(types = {"null", "string"})
     private String shipAddress;
+
+    @Schema(types = {"null", "string"})
     private String shipCity;
+
+    @Schema(types = {"null", "string"})
     private String shipCountry;
+
+    @Schema(types = {"null", "string"})
     private String shipName;
+
+    @Schema(types = {"null", "string"}, format = "date-time")
     private LocalDateTime shippedDate;
+
+    @Schema(types = {"null", "string"})
     private String shipPostalCode;
+
+    @Schema(types = {"null", "string"})
     private String shipRegion;
+
+    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN)
     private Integer shipVia;
 
     public String getCustomerId() {

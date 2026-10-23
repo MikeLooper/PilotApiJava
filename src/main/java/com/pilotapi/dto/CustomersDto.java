@@ -1,25 +1,43 @@
 package com.pilotapi.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 
 public class CustomersDto {
 
+    @Schema(types = {"null", "string"})
     private String address;
+
+    @Schema(types = {"null", "string"})
     private String city;
 
+    @Schema(types = {"null", "string"})
     @NotBlank
     private String companyName;
 
+    @Schema(types = {"null", "string"})
     private String contactName;
+
+    @Schema(types = {"null", "string"})
     private String contactTitle;
+
+    @Schema(types = {"null", "string"})
     private String country;
 
+    @Schema(types = {"null", "string"})
     @NotBlank
     private String customerId;
 
+    @Schema(types = {"null", "string"})
     private String fax;
+
+    @Schema(types = {"null", "string"})
     private String phone;
+
+    @Schema(types = {"null", "string"})
     private String postalCode;
+
+    @Schema(types = {"null", "string"})
     private String region;
 
     public String getAddress() {

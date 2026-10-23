@@ -1,8 +1,17 @@
 package com.pilotapi.dto;
 
+import com.pilotapi.config.OpenApiConfig;
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(name = "AddResponseOrderDetails")
 public class AddResponseOrderDetailsDto {
 
+    @Schema(types = {"integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN,
+        requiredMode = Schema.RequiredMode.REQUIRED)
     private Integer orderId;
+
+    @Schema(types = {"integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN,
+        requiredMode = Schema.RequiredMode.REQUIRED)
     private Integer productId;
 
     public AddResponseOrderDetailsDto() {

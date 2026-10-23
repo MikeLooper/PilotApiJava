@@ -54,6 +54,7 @@ otel:
 
 springdoc:
   enable-kotlin: false
+  default-produces-media-type: application/json
   api-docs:
     path: /v3/api-docs
   swagger-ui:

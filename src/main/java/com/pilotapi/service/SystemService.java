@@ -3,30 +3,28 @@ package com.pilotapi.service;
 import com.pilotapi.config.ApplicationMetadataProperties;
 import com.pilotapi.dto.AboutResponseDto;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.LinkedHashMap;
 import java.util.Locale;
-import java.util.Map;
 
 @Service
 public class SystemService {
 
     private final ApplicationMetadataProperties metadata;
-    private final Environment environment;
     private final DataSource dataSource;
+    private final ApplicationConfigurationService applicationConfigurationService;
 
     @Value("${spring.application.name:PilotApiJava}")
     private String applicationName;
 
-    public SystemService(ApplicationMetadataProperties metadata, Environment environment, DataSource dataSource) {
+    public SystemService(ApplicationMetadataProperties metadata, DataSource dataSource,
+                         ApplicationConfigurationService applicationConfigurationService) {
         this.metadata = metadata;
-        this.environment = environment;
         this.dataSource = dataSource;
+        this.applicationConfigurationService = applicationConfigurationService;
     }
 
     public String healthcheck() {
@@ -41,9 +39,7 @@ public class SystemService {
         response.setDeployDate(metadata.getDeployDate());
 
         if (showDetails) {
-            Map<String, Object> config = new LinkedHashMap<>();
-            config.put("activeProfiles", environment.getActiveProfiles());
-            response.setApplicationConfiguration(config);
+            response.setApplicationConfiguration(applicationConfigurationService.describe());
         }
 
         return response;
