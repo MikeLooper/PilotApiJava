@@ -4,6 +4,7 @@ import com.pilotapi.dto.AboutResponseDto;
 import com.pilotapi.service.SystemService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import com.pilotapi.security.SecurityConfig;
@@ -29,6 +30,9 @@ class SystemControllerWebMvcTest {
     @MockBean
     private SystemService systemService;
 
+    @Value("${app.metadata.build-version}")
+    private String buildVersion;
+
     @Test
     void SystemControllerWebMvcTest_healthcheck_returns_json_string_Test() throws Exception {
         when(systemService.healthcheck()).thenReturn("OK");
@@ -47,7 +51,7 @@ class SystemControllerWebMvcTest {
         AboutResponseDto dto = new AboutResponseDto();
         dto.setApiVersion("1.0.0");
         dto.setName("PilotApiJava");
-        dto.setBuildVersion("0.0.1");
+        dto.setBuildVersion(buildVersion);
         when(systemService.about(true, "1.0.0")).thenReturn(dto);
 
         mockMvc.perform(get("/about")
@@ -56,7 +60,8 @@ class SystemControllerWebMvcTest {
             .andExpect(status().isOk())
             .andExpect(header().string("X-Api-Version", "1.0.0"))
             .andExpect(header().string("Content-Type", "application/json"))
-            .andExpect(jsonPath("$.name").value("PilotApiJava"));
+            .andExpect(jsonPath("$.name").value("PilotApiJava"))
+            .andExpect(jsonPath("$.buildVersion").value(buildVersion));
 
         verify(systemService).about(true, "1.0.0");
     }

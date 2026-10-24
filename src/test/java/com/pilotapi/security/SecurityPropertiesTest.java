@@ -19,7 +19,7 @@ class SecurityPropertiesTest {
         contextRunner
             .withPropertyValues(
                 "app.security.active=false",
-                "app.security.provider-url=http://localhost:55001",
+                "app.security.provider-url=http://localhost:11141",
                 "app.security.realm=local-realm",
                 "app.security.client-id=local-client",
                 "app.security.resource-area=account")
@@ -28,7 +28,7 @@ class SecurityPropertiesTest {
 
                 // Assert
                 assertFalse(properties.isActive());
-                assertEquals("http://localhost:55001", properties.getProviderUrl());
+                assertEquals("http://localhost:11141", properties.getProviderUrl());
                 assertEquals("local-realm", properties.getRealm());
                 assertEquals("local-client", properties.getClientId());
                 assertEquals("account", properties.getResourceArea());
@@ -40,13 +40,13 @@ class SecurityPropertiesTest {
         // Act
         contextRunner
             .withPropertyValues(
-                "app.security.provider-url=http://localhost:55001",
+                "app.security.provider-url=http://localhost:11141",
                 "app.security.realm=local-realm")
             .run(context -> {
                 SecurityProperties properties = context.getBean(SecurityProperties.class);
 
                 // Assert
-                assertEquals("http://localhost:55001/realms/local-realm", properties.issuerUri());
+                assertEquals("http://localhost:11141/realms/local-realm", properties.issuerUri());
             });
     }
 
@@ -55,14 +55,14 @@ class SecurityPropertiesTest {
         // Act
         contextRunner
             .withPropertyValues(
-                "app.security.provider-url=http://localhost:55001",
+                "app.security.provider-url=http://localhost:11141",
                 "app.security.realm=local-realm")
             .run(context -> {
                 SecurityProperties properties = context.getBean(SecurityProperties.class);
 
                 // Assert
                 assertEquals(
-                    "http://localhost:55001/realms/local-realm/protocol/openid-connect/certs",
+                    "http://localhost:11141/realms/local-realm/protocol/openid-connect/certs",
                     properties.jwkSetUri());
             });
     }
@@ -72,13 +72,13 @@ class SecurityPropertiesTest {
         // Act
         contextRunner
             .withPropertyValues(
-                "app.security.provider-url=http://localhost:55001",
+                "app.security.provider-url=http://localhost:11141",
                 "app.security.realm=local-realm")
             .run(context -> {
                 SecurityProperties properties = context.getBean(SecurityProperties.class);
 
                 // Assert
-                assertEquals("http://localhost:55001/realms/local-realm", properties.publicIssuerUri());
+                assertEquals("http://localhost:11141/realms/local-realm", properties.publicIssuerUri());
             });
     }
 
@@ -88,13 +88,13 @@ class SecurityPropertiesTest {
         contextRunner
             .withPropertyValues(
                 "app.security.provider-url=http://local-keycloak:8080",
-                "app.security.public-provider-url=http://localhost:55001",
+                "app.security.public-provider-url=http://localhost:11141",
                 "app.security.realm=local-realm")
             .run(context -> {
                 SecurityProperties properties = context.getBean(SecurityProperties.class);
 
                 // Assert
-                assertEquals("http://localhost:55001/realms/local-realm", properties.publicIssuerUri());
+                assertEquals("http://localhost:11141/realms/local-realm", properties.publicIssuerUri());
             });
     }
 

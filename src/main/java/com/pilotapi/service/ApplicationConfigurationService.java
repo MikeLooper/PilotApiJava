@@ -1,6 +1,6 @@
 package com.pilotapi.service;
 
-import com.pilotapi.config.OpenApiConfig;
+import com.pilotapi.config.ApplicationMetadataProperties;
 import com.pilotapi.config.OpenApiProperties;
 import com.pilotapi.dto.ApplicationConfigurationDto;
 import com.pilotapi.dto.DataConnectionConfigurationDto;
@@ -37,12 +37,15 @@ public class ApplicationConfigurationService {
     private final Environment environment;
     private final OpenApiProperties openApiProperties;
     private final SecurityProperties securityProperties;
+    private final ApplicationMetadataProperties metadata;
 
     public ApplicationConfigurationService(Environment environment, OpenApiProperties openApiProperties,
-                                           SecurityProperties securityProperties) {
+                                           SecurityProperties securityProperties,
+                                           ApplicationMetadataProperties metadata) {
         this.environment = environment;
         this.openApiProperties = openApiProperties;
         this.securityProperties = securityProperties;
+        this.metadata = metadata;
     }
 
     public ApplicationConfigurationDto describe() {
@@ -97,7 +100,7 @@ public class ApplicationConfigurationService {
         openApi.setLicense(openApiProperties.getLicense());
         openApi.setSummary(openApiProperties.getSummary());
         openApi.setTitle(openApiProperties.getTitle());
-        openApi.setVersion(OpenApiConfig.API_VERSION);
+        openApi.setVersion(metadata.getBuildVersion());
         return openApi;
     }
 

@@ -36,7 +36,7 @@ public class SystemController {
     public JsonNode healthcheck(
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
         @Parameter(hidden = true)
-        @RequestHeader(name = "X-Api-Version", required = false, defaultValue = "1.0.0") String apiVersion
+        @RequestHeader(name = "X-Api-Version", required = false, defaultValue = OpenApiConfig.API_VERSION_PLACEHOLDER) String apiVersion
     ) {
         return TextNode.valueOf(systemService.healthcheck());
     }
@@ -47,7 +47,7 @@ public class SystemController {
         @RequestParam(name = "show-details", defaultValue = "false") boolean showDetails,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
         @Parameter(hidden = true)
-        @RequestHeader(name = "X-Api-Version", required = false, defaultValue = "1.0.0") String apiVersion
+        @RequestHeader(name = "X-Api-Version", required = false, defaultValue = OpenApiConfig.API_VERSION_PLACEHOLDER) String apiVersion
     ) {
         return systemService.about(showDetails, apiVersion);
     }

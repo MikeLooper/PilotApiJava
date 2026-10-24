@@ -49,7 +49,7 @@ public class OrdersController {
         @RequestParam(name = "page", defaultValue = "0") int page,
         @RequestParam(name = "pageSize", defaultValue = "20") int pageSize,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
-        @RequestHeader(name = "X-Api-Version", required = false, defaultValue = "1.0.0") String apiVersion,
+        @RequestHeader(name = "X-Api-Version", required = false, defaultValue = OpenApiConfig.API_VERSION_PLACEHOLDER) String apiVersion,
         @RequestHeader(name = "X-Correlation-Id", required = false) UUID correlationId
     ) {
         return service.getAll(page, pageSize);
@@ -62,7 +62,7 @@ public class OrdersController {
             pattern = OpenApiConfig.INTEGER_PATTERN))
         @PathVariable Integer orderId,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
-        @RequestHeader(name = "X-Api-Version", required = false, defaultValue = "1.0.0") String apiVersion,
+        @RequestHeader(name = "X-Api-Version", required = false, defaultValue = OpenApiConfig.API_VERSION_PLACEHOLDER) String apiVersion,
         @RequestHeader(name = "X-Correlation-Id", required = false) UUID correlationId
     ) {
         return service.getById(orderId);
@@ -74,7 +74,7 @@ public class OrdersController {
     public ResponseEntity<AddResponseIntDto> add(
         @Valid @RequestBody OrdersDto request,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
-        @RequestHeader(name = "X-Api-Version", required = false, defaultValue = "1.0.0") String apiVersion,
+        @RequestHeader(name = "X-Api-Version", required = false, defaultValue = OpenApiConfig.API_VERSION_PLACEHOLDER) String apiVersion,
         @RequestHeader(name = "X-Correlation-Id", required = false) UUID correlationId
     ) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.add(request));
@@ -87,7 +87,7 @@ public class OrdersController {
     public ResponseEntity<Void> update(
         @Valid @RequestBody OrdersDto request,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
-        @RequestHeader(name = "X-Api-Version", required = false, defaultValue = "1.0.0") String apiVersion,
+        @RequestHeader(name = "X-Api-Version", required = false, defaultValue = OpenApiConfig.API_VERSION_PLACEHOLDER) String apiVersion,
         @RequestHeader(name = "X-Correlation-Id", required = false) UUID correlationId
     ) {
         return service.update(request)
@@ -104,7 +104,7 @@ public class OrdersController {
             pattern = OpenApiConfig.INTEGER_PATTERN))
         @PathVariable Integer orderId,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
-        @RequestHeader(name = "X-Api-Version", required = false, defaultValue = "1.0.0") String apiVersion,
+        @RequestHeader(name = "X-Api-Version", required = false, defaultValue = OpenApiConfig.API_VERSION_PLACEHOLDER) String apiVersion,
         @RequestHeader(name = "X-Correlation-Id", required = false) UUID correlationId
     ) {
         return service.delete(orderId)

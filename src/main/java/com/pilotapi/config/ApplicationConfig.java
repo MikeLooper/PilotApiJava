@@ -20,8 +20,6 @@ import java.util.Map;
 @EnableConfigurationProperties(ApplicationMetadataProperties.class)
 public class ApplicationConfig implements HibernatePropertiesCustomizer, WebMvcConfigurer {
 
-    private static final String DEFAULT_API_VERSION = "1.0.0";
-
     private final Environment environment;
 
     public ApplicationConfig(Environment environment) {
@@ -45,10 +43,16 @@ public class ApplicationConfig implements HibernatePropertiesCustomizer, WebMvcC
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new ApiHeaderInterceptor());
+        registry.addInterceptor(new ApiHeaderInterceptor(OpenApiConfig.API_VERSION_PLACEHOLDER));
     }
 
     private static class ApiHeaderInterceptor implements HandlerInterceptor {
+        private final String defaultApiVersion;
+
+        ApiHeaderInterceptor(String defaultApiVersion) {
+            this.defaultApiVersion = defaultApiVersion;
+        }
+
         @Override
         public void postHandle(
             HttpServletRequest request,
@@ -58,7 +62,7 @@ public class ApplicationConfig implements HibernatePropertiesCustomizer, WebMvcC
         ) {
             String apiVersion = request.getHeader("X-Api-Version");
             if (apiVersion == null || apiVersion.isBlank()) {
-                apiVersion = DEFAULT_API_VERSION;
+                apiVersion = defaultApiVersion;
             }
 
             response.setHeader("X-Api-Version", apiVersion);

@@ -36,7 +36,7 @@ public class SecurityProperties {
 
     /**
      * The externally-visible URL of the Security provider, i.e. the one clients use to
-     * obtain tokens (e.g. "http://localhost:55001"). Tokens carry this value as their
+     * obtain tokens (e.g. "http://localhost:11141"). Tokens carry this value as their
      * issuer, so it is what {@link #publicIssuerUri()} validates against. Falls back to
      * {@link #getProviderUrl()} when unset, which is correct whenever this API and its
      * clients reach the Security provider the same way (e.g. local development).

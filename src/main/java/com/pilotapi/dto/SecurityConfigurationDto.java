@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class SecurityConfigurationDto extends ConfigurationBaseDto {
 
     @Schema(types = {"null", "string"},
-        description = "Gets or sets the base URL of the Security server (e.g. \"http://localhost:55001\").")
+        description = "Gets or sets the base URL of the Security server (e.g. \"http://localhost:11141\").")
     private String baseUrl;
 
     @Schema(types = {"null", "string"}, description = "Gets or sets the Security realm (e.g. \"local-realm\").")

@@ -42,7 +42,7 @@ import java.util.Map;
  * operation.
  */
 @Configuration
-@EnableConfigurationProperties(OpenApiProperties.class)
+@EnableConfigurationProperties({OpenApiProperties.class, ApplicationMetadataProperties.class})
 public class OpenApiConfig {
 
     /**
@@ -51,8 +51,8 @@ public class OpenApiConfig {
      */
     public static final String BEARER_AUTH_SCHEME = "Bearer";
 
-    /** The API contract version, also the default {@code X-Api-Version} header value. */
-    public static final String API_VERSION = "1.0.0";
+    /** The API contract version and default {@code X-Api-Version} header value. */
+    public static final String API_VERSION_PLACEHOLDER = "1.0.0";
 
     /** Pattern the contract applies to integers that may also be sent as strings. */
     public static final String INTEGER_PATTERN = "^-?(?:0|[1-9]\\d*)$";
@@ -94,11 +94,11 @@ public class OpenApiConfig {
         "pageSize", "PageSizeQuery");
 
     @Bean
-    public OpenAPI customOpenApi(OpenApiProperties openApiProperties) {
+    public OpenAPI customOpenApi(OpenApiProperties openApiProperties, ApplicationMetadataProperties metadata) {
         return new OpenAPI()
             .info(new Info()
                 .title(openApiProperties.getTitle())
-                .version(API_VERSION)
+                .version(API_VERSION_PLACEHOLDER)
                 .description(openApiProperties.getDescription())
                 .summary(openApiProperties.getSummary())
                 .contact(new Contact()
