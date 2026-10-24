@@ -21,11 +21,9 @@ import java.util.Map;
 public class ApplicationConfig implements HibernatePropertiesCustomizer, WebMvcConfigurer {
 
     private final Environment environment;
-    private final ApplicationMetadataProperties metadata;
 
-    public ApplicationConfig(Environment environment, ApplicationMetadataProperties metadata) {
+    public ApplicationConfig(Environment environment) {
         this.environment = environment;
-        this.metadata = metadata;
     }
 
     @Override
@@ -45,7 +43,7 @@ public class ApplicationConfig implements HibernatePropertiesCustomizer, WebMvcC
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new ApiHeaderInterceptor(metadata.getBuildVersion()));
+        registry.addInterceptor(new ApiHeaderInterceptor(OpenApiConfig.API_VERSION_PLACEHOLDER));
     }
 
     private static class ApiHeaderInterceptor implements HandlerInterceptor {

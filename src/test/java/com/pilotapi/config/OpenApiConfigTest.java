@@ -57,7 +57,7 @@ class OpenApiConfigTest {
         OpenAPI openApi = openApiConfig.customOpenApi(properties, metadata);
 
         assertEquals("PilotApiJava", openApi.getInfo().getTitle());
-        assertEquals("1.2.3", openApi.getInfo().getVersion());
+        assertEquals("1.0.0", openApi.getInfo().getVersion());
         assertEquals("MIT", openApi.getInfo().getLicense().getName());
         assertEquals("Michael Looper", openApi.getInfo().getContact().getName());
     }

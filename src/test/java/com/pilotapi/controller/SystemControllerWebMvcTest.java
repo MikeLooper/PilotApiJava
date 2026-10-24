@@ -41,7 +41,7 @@ class SystemControllerWebMvcTest {
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(header().exists("Date"))
-            .andExpect(header().string("X-Api-Version", buildVersion))
+            .andExpect(header().string("X-Api-Version", "1.0.0"))
             .andExpect(header().string("Content-Type", "application/json"))
             .andExpect(content().json("\"OK\""));
     }
@@ -49,19 +49,20 @@ class SystemControllerWebMvcTest {
     @Test
     void SystemControllerWebMvcTest_about_returns_ok_response_Test() throws Exception {
         AboutResponseDto dto = new AboutResponseDto();
-        dto.setApiVersion(buildVersion);
+        dto.setApiVersion("1.0.0");
         dto.setName("PilotApiJava");
-        dto.setBuildVersion("0.0.1");
-        when(systemService.about(true, buildVersion)).thenReturn(dto);
+        dto.setBuildVersion(buildVersion);
+        when(systemService.about(true, "1.0.0")).thenReturn(dto);
 
         mockMvc.perform(get("/about")
                 .accept(MediaType.APPLICATION_JSON)
                 .param("show-details", "true"))
             .andExpect(status().isOk())
-            .andExpect(header().string("X-Api-Version", buildVersion))
+            .andExpect(header().string("X-Api-Version", "1.0.0"))
             .andExpect(header().string("Content-Type", "application/json"))
-            .andExpect(jsonPath("$.name").value("PilotApiJava"));
+            .andExpect(jsonPath("$.name").value("PilotApiJava"))
+            .andExpect(jsonPath("$.buildVersion").value(buildVersion));
 
-        verify(systemService).about(true, buildVersion);
+        verify(systemService).about(true, "1.0.0");
     }
 }
