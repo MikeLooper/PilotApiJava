@@ -37,7 +37,7 @@ class SystemControllerWebMvcTest {
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(header().exists("Date"))
-            .andExpect(header().string("ApiVersion", "1.0.0"))
+            .andExpect(header().string("X-Api-Version", "1.0.0"))
             .andExpect(header().string("Content-Type", "application/json"))
             .andExpect(content().json("\"OK\""));
     }
@@ -54,7 +54,7 @@ class SystemControllerWebMvcTest {
                 .accept(MediaType.APPLICATION_JSON)
                 .param("show-details", "true"))
             .andExpect(status().isOk())
-            .andExpect(header().string("ApiVersion", "1.0.0"))
+            .andExpect(header().string("X-Api-Version", "1.0.0"))
             .andExpect(header().string("Content-Type", "application/json"))
             .andExpect(jsonPath("$.name").value("PilotApiJava"));
 

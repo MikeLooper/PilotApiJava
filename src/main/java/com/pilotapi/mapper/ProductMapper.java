@@ -10,13 +10,13 @@ public class ProductMapper implements EntityDtoMapper<Product, ProductsDto> {
     @Override
     public ProductsDto toDto(Product entity) {
         ProductsDto dto = new ProductsDto();
-        dto.setCategoryID(entity.getCategoryID());
+        dto.setCategoryId(entity.getCategoryID());
         dto.setDiscontinued(entity.isDiscontinued());
-        dto.setProductID(entity.getProductID());
+        dto.setProductId(entity.getProductID());
         dto.setProductName(entity.getProductName());
         dto.setQuantityPerUnit(entity.getQuantityPerUnit());
         dto.setReorderLevel(entity.getReorderLevel());
-        dto.setSupplierID(entity.getSupplierID());
+        dto.setSupplierId(entity.getSupplierID());
         dto.setUnitPrice(entity.getUnitPrice());
         dto.setUnitsInStock(entity.getUnitsInStock());
         dto.setUnitsOnOrder(entity.getUnitsOnOrder());
@@ -27,20 +27,29 @@ public class ProductMapper implements EntityDtoMapper<Product, ProductsDto> {
     public Product toEntity(ProductsDto dto) {
         Product entity = new Product();
         updateEntityFromDto(dto, entity);
+        entity.setReorderLevel(dto.getReorderLevel());
+        entity.setUnitsInStock(dto.getUnitsInStock());
+        entity.setUnitsOnOrder(dto.getUnitsOnOrder());
         return entity;
     }
 
     @Override
     public void updateEntityFromDto(ProductsDto dto, Product entity) {
-        entity.setCategoryID(dto.getCategoryID());
+        entity.setCategoryID(dto.getCategoryId());
         entity.setDiscontinued(dto.isDiscontinued());
-        // entity.setProductID(dto.getProductID());
+        // entity.setProductID(dto.getProductId());
         entity.setProductName(dto.getProductName());
         entity.setQuantityPerUnit(dto.getQuantityPerUnit());
-        entity.setReorderLevel(dto.getReorderLevel());
-        entity.setSupplierID(dto.getSupplierID());
+        if (dto.wasReorderLevelProvided()) {
+            entity.setReorderLevel(dto.getReorderLevel());
+        }
+        entity.setSupplierID(dto.getSupplierId());
         entity.setUnitPrice(dto.getUnitPrice());
-        entity.setUnitsInStock(dto.getUnitsInStock());
-        entity.setUnitsOnOrder(dto.getUnitsOnOrder());
+        if (dto.wereUnitsInStockProvided()) {
+            entity.setUnitsInStock(dto.getUnitsInStock());
+        }
+        if (dto.wereUnitsOnOrderProvided()) {
+            entity.setUnitsOnOrder(dto.getUnitsOnOrder());
+        }
     }
 }

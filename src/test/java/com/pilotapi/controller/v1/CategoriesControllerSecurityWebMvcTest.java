@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -17,6 +18,9 @@ import java.util.List;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -41,9 +45,20 @@ class CategoriesControllerSecurityWebMvcTest {
     private JwtDecoder jwtDecoder;
 
     @Test
+    void CategoriesControllerSecurityWebMvcTest_getAll_withoutToken_returnsCorrelationAndRequestIdHeaders_Test() throws Exception {
+        mockMvc.perform(get("/v1/categories/get-all")
+                .header("X-Correlation-Id", "7ea2c7f7-8b46-475d-86f8-7aaaa9e4a35b"))
+            .andExpect(status().isUnauthorized())
+            .andExpect(header().string("X-Correlation-Id", "7ea2c7f7-8b46-475d-86f8-7aaaa9e4a35b"))
+            .andExpect(header().exists("X-Request-Id"));
+    }
+
+    @Test
     void CategoriesControllerSecurityWebMvcTest_getAll_withoutToken_returns401_Test() throws Exception {
         mockMvc.perform(get("/v1/categories/get-all"))
-            .andExpect(status().isUnauthorized());
+            .andExpect(status().isUnauthorized())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+            .andExpect(content().json("\"Missing or malformed Authorization header\""));
     }
 
     @Test
@@ -60,7 +75,9 @@ class CategoriesControllerSecurityWebMvcTest {
         when(jwtDecoder.decode("reader-token")).thenReturn(TestJwtSupport.jwtForUser("reader_user"));
 
         mockMvc.perform(delete("/v1/categories/delete/1").header("Authorization", "Bearer reader-token"))
-            .andExpect(status().isForbidden());
+            .andExpect(status().isForbidden())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$").isString());
     }
 
     @Test

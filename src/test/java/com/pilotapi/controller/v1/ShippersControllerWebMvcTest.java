@@ -40,37 +40,37 @@ class ShippersControllerWebMvcTest {
     @Test
     void ShippersControllerWebMvcTest_getAll_returns_ok_Test() throws Exception {
         ShippersDto dto = new ShippersDto();
-        dto.setShipperID(1);
+        dto.setShipperId(1);
         dto.setCompanyName("Speedy Express");
         when(shipperService.getAll(0, 20)).thenReturn(List.of(dto));
 
-        mockMvc.perform(get("/v1/shippers/get-all").header("ApiVersion", "1"))
+        mockMvc.perform(get("/v1/shippers/get-all").header("X-Api-Version", "1"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].shipperID").value(1));
+            .andExpect(jsonPath("$[0].shipperId").value(1));
     }
 
     @Test
     void ShippersControllerWebMvcTest_getAll_withPageParams_passesThemToService_Test() throws Exception {
         ShippersDto dto = new ShippersDto();
-        dto.setShipperID(1);
+        dto.setShipperId(1);
         dto.setCompanyName("Speedy Express");
         when(shipperService.getAll(2, 10)).thenReturn(List.of(dto));
 
-        mockMvc.perform(get("/v1/shippers/get-all?page=2&pageSize=10").header("ApiVersion", "1"))
+        mockMvc.perform(get("/v1/shippers/get-all?page=2&pageSize=10").header("X-Api-Version", "1"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$[0].shipperID").value(1));
+            .andExpect(jsonPath("$[0].shipperId").value(1));
     }
 
     @Test
     void ShippersControllerWebMvcTest_getById_returns_ok_Test() throws Exception {
         ShippersDto dto = new ShippersDto();
-        dto.setShipperID(1);
+        dto.setShipperId(1);
         dto.setCompanyName("Speedy Express");
         when(shipperService.getById(1)).thenReturn(dto);
 
-        mockMvc.perform(get("/v1/shippers/get/1").header("ApiVersion", "1"))
+        mockMvc.perform(get("/v1/shippers/get/1").header("X-Api-Version", "1"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.shipperID").value(1));
+            .andExpect(jsonPath("$.shipperId").value(1));
     }
 
     @Test
@@ -78,9 +78,9 @@ class ShippersControllerWebMvcTest {
         when(shipperService.add(any(ShippersDto.class))).thenReturn(new AddResponseIntDto(106L));
 
         mockMvc.perform(post("/v1/shippers/add")
-                .header("ApiVersion", "1")
+                .header("X-Api-Version", "1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"shipperID\":1,\"companyName\":\"Speedy Express\"}"))
+                .content("{\"shipperId\":1,\"companyName\":\"Speedy Express\"}"))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.id").value(106));
     }
@@ -90,9 +90,9 @@ class ShippersControllerWebMvcTest {
         when(shipperService.update(any(ShippersDto.class))).thenReturn(true);
 
         mockMvc.perform(put("/v1/shippers/update")
-                .header("ApiVersion", "1")
+                .header("X-Api-Version", "1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"shipperID\":1,\"companyName\":\"Speedy Express\"}"))
+                .content("{\"shipperId\":1,\"companyName\":\"Speedy Express\"}"))
             .andExpect(status().isNoContent());
     }
 
@@ -100,7 +100,19 @@ class ShippersControllerWebMvcTest {
     void ShippersControllerWebMvcTest_delete_returns_json_object_Test() throws Exception {
         when(shipperService.delete(1)).thenReturn(true);
 
-        mockMvc.perform(delete("/v1/shippers/delete/1").header("ApiVersion", "1"))
+        mockMvc.perform(delete("/v1/shippers/delete/1").header("X-Api-Version", "1"))
             .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void ShippersControllerWebMvcTest_add_accepts_payload_without_company_name_Test() throws Exception {
+        when(shipperService.add(any(ShippersDto.class))).thenReturn(new AddResponseIntDto(7L));
+
+        mockMvc.perform(post("/v1/shippers/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"phone\":\"(503) 555-9831\"}"))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.id").value(7));
     }
 }

@@ -1,31 +1,40 @@
 package com.pilotapi.dto;
 
+import com.pilotapi.config.OpenApiConfig;
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(name = "AddResponseOrderDetails")
 public class AddResponseOrderDetailsDto {
 
-    private Integer orderID;
-    private Integer productID;
+    @Schema(types = {"integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN,
+        requiredMode = Schema.RequiredMode.REQUIRED)
+    private Integer orderId;
+
+    @Schema(types = {"integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN,
+        requiredMode = Schema.RequiredMode.REQUIRED)
+    private Integer productId;
 
     public AddResponseOrderDetailsDto() {
     }
 
-    public AddResponseOrderDetailsDto(Integer orderID, Integer productID) {
-        this.orderID = orderID;
-        this.productID = productID;
+    public AddResponseOrderDetailsDto(Integer orderId, Integer productId) {
+        this.orderId = orderId;
+        this.productId = productId;
     }
 
-    public Integer getOrderID() {
-        return orderID;
+    public Integer getOrderId() {
+        return orderId;
     }
 
-    public void setOrderID(Integer orderID) {
-        this.orderID = orderID;
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
     }
 
-    public Integer getProductID() {
-        return productID;
+    public Integer getProductId() {
+        return productId;
     }
 
-    public void setProductID(Integer productID) {
-        this.productID = productID;
+    public void setProductId(Integer productId) {
+        this.productId = productId;
     }
 }

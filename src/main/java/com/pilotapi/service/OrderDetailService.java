@@ -45,7 +45,7 @@ public class OrderDetailService {
     }
 
     public boolean update(OrderDetailsDto dto) {
-        OrderDetailId id = new OrderDetailId(dto.getProductID(), dto.getOrderID());
+        OrderDetailId id = new OrderDetailId(dto.getProductId(), dto.getOrderId());
         OrderDetail entity = repository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Order detail not found"));
         mapper.updateEntityFromDto(dto, entity);

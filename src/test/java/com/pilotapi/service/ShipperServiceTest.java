@@ -44,7 +44,7 @@ class ShipperServiceTest {
         Shipper entity = new Shipper();
         entity.setShipperID(1);
         ShippersDto dto = new ShippersDto();
-        dto.setShipperID(1);
+        dto.setShipperId(1);
 
         when(repository.findAll()).thenReturn(List.of(entity));
         when(mapper.toDto(entity)).thenReturn(dto);
@@ -54,7 +54,7 @@ class ShipperServiceTest {
 
         // Assert
         assertEquals(1, result.size());
-        assertEquals(1, result.get(0).getShipperID());
+        assertEquals(1, result.get(0).getShipperId());
     }
 
     @Test
@@ -63,7 +63,7 @@ class ShipperServiceTest {
         Shipper entity = new Shipper();
         entity.setShipperID(1);
         ShippersDto dto = new ShippersDto();
-        dto.setShipperID(1);
+        dto.setShipperId(1);
 
         when(repository.findAll(PageRequest.of(1, 10))).thenReturn(new PageImpl<>(List.of(entity)));
         when(mapper.toDto(entity)).thenReturn(dto);
@@ -73,7 +73,7 @@ class ShipperServiceTest {
 
         // Assert
         assertEquals(1, result.size());
-        assertEquals(1, result.get(0).getShipperID());
+        assertEquals(1, result.get(0).getShipperId());
     }
 
     @Test
@@ -89,7 +89,7 @@ class ShipperServiceTest {
     void ShipperService_add_returns_generated_id_Test() {
         // Arrange
         ShippersDto input = new ShippersDto();
-        input.setShipperID(1);
+        input.setShipperId(1);
 
         Shipper mapped = new Shipper();
         Shipper saved = new Shipper();
@@ -109,7 +109,7 @@ class ShipperServiceTest {
     void ShipperService_update_persists_changes_when_found_Test() {
         // Arrange
         ShippersDto input = new ShippersDto();
-        input.setShipperID(1);
+        input.setShipperId(1);
 
         Shipper current = new Shipper();
         current.setShipperID(1);

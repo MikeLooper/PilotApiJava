@@ -44,7 +44,7 @@ class ProductServiceTest {
         Product entity = new Product();
         entity.setProductID(1);
         ProductsDto dto = new ProductsDto();
-        dto.setProductID(1);
+        dto.setProductId(1);
 
         when(repository.findAll()).thenReturn(List.of(entity));
         when(mapper.toDto(entity)).thenReturn(dto);
@@ -54,7 +54,7 @@ class ProductServiceTest {
 
         // Assert
         assertEquals(1, result.size());
-        assertEquals(1, result.get(0).getProductID());
+        assertEquals(1, result.get(0).getProductId());
     }
 
     @Test
@@ -63,7 +63,7 @@ class ProductServiceTest {
         Product entity = new Product();
         entity.setProductID(1);
         ProductsDto dto = new ProductsDto();
-        dto.setProductID(1);
+        dto.setProductId(1);
 
         when(repository.findAll(PageRequest.of(1, 10))).thenReturn(new PageImpl<>(List.of(entity)));
         when(mapper.toDto(entity)).thenReturn(dto);
@@ -73,7 +73,7 @@ class ProductServiceTest {
 
         // Assert
         assertEquals(1, result.size());
-        assertEquals(1, result.get(0).getProductID());
+        assertEquals(1, result.get(0).getProductId());
     }
 
     @Test
@@ -89,7 +89,7 @@ class ProductServiceTest {
     void ProductService_add_returns_generated_id_Test() {
         // Arrange
         ProductsDto input = new ProductsDto();
-        input.setProductID(1);
+        input.setProductId(1);
 
         Product mapped = new Product();
         Product saved = new Product();
@@ -109,7 +109,7 @@ class ProductServiceTest {
     void ProductService_update_persists_changes_when_found_Test() {
         // Arrange
         ProductsDto input = new ProductsDto();
-        input.setProductID(1);
+        input.setProductId(1);
 
         Product current = new Product();
         current.setProductID(1);

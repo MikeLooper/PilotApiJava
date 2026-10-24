@@ -44,7 +44,7 @@ class SupplierServiceTest {
         Supplier entity = new Supplier();
         entity.setSupplierID(1);
         SuppliersDto dto = new SuppliersDto();
-        dto.setSupplierID(1);
+        dto.setSupplierId(1);
 
         when(repository.findAll()).thenReturn(List.of(entity));
         when(mapper.toDto(entity)).thenReturn(dto);
@@ -54,7 +54,7 @@ class SupplierServiceTest {
 
         // Assert
         assertEquals(1, result.size());
-        assertEquals(1, result.get(0).getSupplierID());
+        assertEquals(1, result.get(0).getSupplierId());
     }
 
     @Test
@@ -63,7 +63,7 @@ class SupplierServiceTest {
         Supplier entity = new Supplier();
         entity.setSupplierID(1);
         SuppliersDto dto = new SuppliersDto();
-        dto.setSupplierID(1);
+        dto.setSupplierId(1);
 
         when(repository.findAll(PageRequest.of(1, 10))).thenReturn(new PageImpl<>(List.of(entity)));
         when(mapper.toDto(entity)).thenReturn(dto);
@@ -73,7 +73,7 @@ class SupplierServiceTest {
 
         // Assert
         assertEquals(1, result.size());
-        assertEquals(1, result.get(0).getSupplierID());
+        assertEquals(1, result.get(0).getSupplierId());
     }
 
     @Test
@@ -89,7 +89,7 @@ class SupplierServiceTest {
     void SupplierService_add_returns_generated_id_Test() {
         // Arrange
         SuppliersDto input = new SuppliersDto();
-        input.setSupplierID(1);
+        input.setSupplierId(1);
 
         Supplier mapped = new Supplier();
         Supplier saved = new Supplier();
@@ -109,7 +109,7 @@ class SupplierServiceTest {
     void SupplierService_update_persists_changes_when_found_Test() {
         // Arrange
         SuppliersDto input = new SuppliersDto();
-        input.setSupplierID(1);
+        input.setSupplierId(1);
 
         Supplier current = new Supplier();
         current.setSupplierID(1);

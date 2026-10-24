@@ -1,5 +1,8 @@
 package com.pilotapi.dto;
 
+import com.pilotapi.config.OpenApiConfig;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.math.BigDecimal;
 
 import jakarta.validation.constraints.NotBlank;
@@ -8,35 +11,51 @@ import io.micrometer.common.lang.Nullable;
 
 public class ProductsDto {
 
-    private Integer categoryID;
+    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN)
+    private Integer categoryId;
     private boolean discontinued;
 
+    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN)
     @Nullable
-    private Integer productID;
+    private Integer productId;
 
+    @Schema(types = {"null", "string"})
     @NotBlank
     private String productName;
 
+    @Schema(types = {"null", "string"})
     private String quantityPerUnit;
 
+    @Schema(types = {"integer", "string"}, format = "int16", pattern = OpenApiConfig.INTEGER_PATTERN,
+        requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     @NotNull
-    private Integer reorderLevel;
+    private Integer reorderLevel = 0;
+    private boolean reorderLevelProvided;
 
-    private Integer supplierID;
+    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN)
+    private Integer supplierId;
+
+    @Schema(types = {"null", "number", "string"}, format = "double", pattern = OpenApiConfig.DECIMAL_PATTERN)
     private BigDecimal unitPrice;
 
+    @Schema(types = {"integer", "string"}, format = "int16", pattern = OpenApiConfig.INTEGER_PATTERN,
+        requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     @NotNull
-    private Integer unitsInStock;
+    private Integer unitsInStock = 0;
+    private boolean unitsInStockProvided;
 
+    @Schema(types = {"integer", "string"}, format = "int16", pattern = OpenApiConfig.INTEGER_PATTERN,
+        requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     @NotNull
-    private Integer unitsOnOrder;
+    private Integer unitsOnOrder = 0;
+    private boolean unitsOnOrderProvided;
 
-    public Integer getCategoryID() {
-        return categoryID;
+    public Integer getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategoryID(Integer categoryID) {
-        this.categoryID = categoryID;
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
     }
 
     public boolean isDiscontinued() {
@@ -47,12 +66,12 @@ public class ProductsDto {
         this.discontinued = discontinued;
     }
 
-    public Integer getProductID() {
-        return productID;
+    public Integer getProductId() {
+        return productId;
     }
 
-    public void setProductID(Integer productID) {
-        this.productID = productID;
+    public void setProductId(Integer productId) {
+        this.productId = productId;
     }
 
     public String getProductName() {
@@ -77,14 +96,19 @@ public class ProductsDto {
 
     public void setReorderLevel(Integer reorderLevel) {
         this.reorderLevel = reorderLevel;
+        this.reorderLevelProvided = true;
     }
 
-    public Integer getSupplierID() {
-        return supplierID;
+    public boolean wasReorderLevelProvided() {
+        return reorderLevelProvided;
     }
 
-    public void setSupplierID(Integer supplierID) {
-        this.supplierID = supplierID;
+    public Integer getSupplierId() {
+        return supplierId;
+    }
+
+    public void setSupplierId(Integer supplierId) {
+        this.supplierId = supplierId;
     }
 
     public BigDecimal getUnitPrice() {
@@ -101,6 +125,11 @@ public class ProductsDto {
 
     public void setUnitsInStock(Integer unitsInStock) {
         this.unitsInStock = unitsInStock;
+        this.unitsInStockProvided = true;
+    }
+
+    public boolean wereUnitsInStockProvided() {
+        return unitsInStockProvided;
     }
 
     public Integer getUnitsOnOrder() {
@@ -109,5 +138,10 @@ public class ProductsDto {
 
     public void setUnitsOnOrder(Integer unitsOnOrder) {
         this.unitsOnOrder = unitsOnOrder;
+        this.unitsOnOrderProvided = true;
+    }
+
+    public boolean wereUnitsOnOrderProvided() {
+        return unitsOnOrderProvided;
     }
 }

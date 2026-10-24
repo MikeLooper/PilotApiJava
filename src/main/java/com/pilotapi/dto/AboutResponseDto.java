@@ -1,11 +1,23 @@
 package com.pilotapi.dto;
 
+import io.micrometer.common.lang.Nullable;
+import io.swagger.v3.oas.annotations.media.Schema;
+
+@Schema(name = "AboutResponse")
 public class AboutResponseDto {
 
+    @Schema(types = {"null", "string"})
     private String apiVersion;
-    private Object applicationConfiguration;
+    @Nullable
+    private ApplicationConfigurationDto applicationConfiguration;
+
+    @Schema(types = {"null", "string"})
     private String buildVersion;
+
+    @Schema(types = {"null", "string"})
     private String deployDate;
+
+    @Schema(types = {"null", "string"})
     private String name;
 
     public String getApiVersion() {
@@ -16,11 +28,11 @@ public class AboutResponseDto {
         this.apiVersion = apiVersion;
     }
 
-    public Object getApplicationConfiguration() {
+    public ApplicationConfigurationDto getApplicationConfiguration() {
         return applicationConfiguration;
     }
 
-    public void setApplicationConfiguration(Object applicationConfiguration) {
+    public void setApplicationConfiguration(ApplicationConfigurationDto applicationConfiguration) {
         this.applicationConfiguration = applicationConfiguration;
     }
 

@@ -1,23 +1,31 @@
 package com.pilotapi.dto;
 
+import com.pilotapi.config.OpenApiConfig;
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.math.BigDecimal;
 
 import jakarta.validation.constraints.NotNull;
 
 public class OrderDetailsDto {
 
+    @Schema(types = {"number", "string"}, format = "float", pattern = OpenApiConfig.FLOAT_PATTERN)
     @NotNull
     private Float discount;
 
+    @Schema(types = {"integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN)
     @NotNull
-    private Integer orderID;
+    private Integer orderId;
 
+    @Schema(types = {"integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN)
     @NotNull
-    private Integer productID;
+    private Integer productId;
 
+    @Schema(types = {"integer", "string"}, format = "int16", pattern = OpenApiConfig.INTEGER_PATTERN)
     @NotNull
     private Integer quantity;
 
+    @Schema(types = {"number", "string"}, format = "double", pattern = OpenApiConfig.DECIMAL_PATTERN)
     @NotNull
     private BigDecimal unitPrice;
 
@@ -29,20 +37,20 @@ public class OrderDetailsDto {
         this.discount = discount;
     }
 
-    public Integer getOrderID() {
-        return orderID;
+    public Integer getOrderId() {
+        return orderId;
     }
 
-    public void setOrderID(Integer orderID) {
-        this.orderID = orderID;
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
     }
 
-    public Integer getProductID() {
-        return productID;
+    public Integer getProductId() {
+        return productId;
     }
 
-    public void setProductID(Integer productID) {
-        this.productID = productID;
+    public void setProductId(Integer productId) {
+        this.productId = productId;
     }
 
     public Integer getQuantity() {

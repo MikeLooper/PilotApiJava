@@ -14,8 +14,8 @@ public class OrderDetailMapper implements EntityDtoMapper<OrderDetail, OrderDeta
         dto.setDiscount(entity.getDiscount());
         dto.setQuantity(entity.getQuantity());
         dto.setUnitPrice(entity.getUnitPrice());
-        dto.setOrderID(entity.getId().getOrderID());
-        dto.setProductID(entity.getId().getProductID());
+        dto.setOrderId(entity.getId().getOrderID());
+        dto.setProductId(entity.getId().getProductID());
         return dto;
     }
 
@@ -28,7 +28,7 @@ public class OrderDetailMapper implements EntityDtoMapper<OrderDetail, OrderDeta
 
     @Override
     public void updateEntityFromDto(OrderDetailsDto dto, OrderDetail entity) {
-        entity.setId(new OrderDetailId(dto.getProductID(), dto.getOrderID()));
+        entity.setId(new OrderDetailId(dto.getProductId(), dto.getOrderId()));
         entity.setDiscount(dto.getDiscount());
         entity.setQuantity(dto.getQuantity());
         entity.setUnitPrice(dto.getUnitPrice());

@@ -1,5 +1,7 @@
 package com.pilotapi.dto;
 
+import com.pilotapi.config.OpenApiConfig;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDateTime;
@@ -8,32 +10,61 @@ import io.micrometer.common.lang.Nullable;
 
 public class EmployeesDto {
 
+    @Schema(types = {"null", "string"})
     private String address;
+
+    @Schema(types = {"null", "string"}, format = "date-time")
     private LocalDateTime birthDate;
+
+    @Schema(types = {"null", "string"})
     private String city;
+
+    @Schema(types = {"null", "string"})
     private String country;
 
+    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN)
     @Nullable
-    private Integer employeeID;
+    private Integer employeeId;
 
+    @Schema(types = {"null", "string"})
     private String extension;
 
+    @Schema(types = {"null", "string"})
     @NotBlank
     private String firstName;
 
+    @Schema(types = {"null", "string"}, format = "date-time")
     private LocalDateTime hireDate;
+
+    @Schema(types = {"null", "string"})
     private String homePhone;
 
+    @Schema(types = {"null", "string"})
     @NotBlank
     private String lastName;
 
+    @Schema(types = {"null", "string"})
     private String notes;
+
+    @Schema(types = {"null", "string"}, format = "byte")
     private String photo;
+
+    @Schema(types = {"null", "string"})
     private String photoPath;
+
+    @Schema(types = {"null", "string"})
     private String postalCode;
+
+    @Schema(types = {"null", "string"})
     private String region;
+
+    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN)
     private Integer reportsTo;
+
+    @Schema(types = {"null", "string"})
     private String title;
+
+    @Schema(types = {"null", "string"})
     private String titleOfCourtesy;
 
     public String getAddress() {
@@ -68,12 +99,12 @@ public class EmployeesDto {
         this.country = country;
     }
 
-    public Integer getEmployeeID() {
-        return employeeID;
+    public Integer getEmployeeId() {
+        return employeeId;
     }
 
-    public void setEmployeeID(Integer employeeID) {
-        this.employeeID = employeeID;
+    public void setEmployeeId(Integer employeeId) {
+        this.employeeId = employeeId;
     }
 
     public String getExtension() {

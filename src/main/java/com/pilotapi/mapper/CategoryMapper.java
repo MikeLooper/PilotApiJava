@@ -13,7 +13,7 @@ public class CategoryMapper implements EntityDtoMapper<Category, CategoriesDto> 
     @Override
     public CategoriesDto toDto(Category entity) {
         CategoriesDto dto = new CategoriesDto();
-        dto.setCategoryID(entity.getCategoryID());
+        dto.setCategoryId(entity.getCategoryID());
         dto.setCategoryName(entity.getCategoryName());
         dto.setDescription(entity.getDescription());
         dto.setPicture(encodeBinary(entity.getPicture()));
@@ -29,7 +29,7 @@ public class CategoryMapper implements EntityDtoMapper<Category, CategoriesDto> 
 
     @Override
     public void updateEntityFromDto(CategoriesDto dto, Category entity) {
-        // entity.setCategoryID(dto.getCategoryID());
+        // entity.setCategoryID(dto.getCategoryId());
         entity.setCategoryName(dto.getCategoryName());
         entity.setDescription(dto.getDescription());
         entity.setPicture(decodeBinary(dto.getPicture()));

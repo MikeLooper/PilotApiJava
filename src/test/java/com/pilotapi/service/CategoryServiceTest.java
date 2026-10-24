@@ -44,7 +44,7 @@ class CategoryServiceTest {
         Category entity = new Category();
         entity.setCategoryID(1);
         CategoriesDto dto = new CategoriesDto();
-        dto.setCategoryID(1);
+        dto.setCategoryId(1);
 
         when(repository.findAll()).thenReturn(List.of(entity));
         when(mapper.toDto(entity)).thenReturn(dto);
@@ -54,7 +54,7 @@ class CategoryServiceTest {
 
         // Assert
         assertEquals(1, result.size());
-        assertEquals(1, result.get(0).getCategoryID());
+        assertEquals(1, result.get(0).getCategoryId());
     }
 
     @Test
@@ -63,7 +63,7 @@ class CategoryServiceTest {
         Category entity = new Category();
         entity.setCategoryID(1);
         CategoriesDto dto = new CategoriesDto();
-        dto.setCategoryID(1);
+        dto.setCategoryId(1);
 
         when(repository.findAll(PageRequest.of(1, 10))).thenReturn(new PageImpl<>(List.of(entity)));
         when(mapper.toDto(entity)).thenReturn(dto);
@@ -73,7 +73,7 @@ class CategoryServiceTest {
 
         // Assert
         assertEquals(1, result.size());
-        assertEquals(1, result.get(0).getCategoryID());
+        assertEquals(1, result.get(0).getCategoryId());
     }
 
     @Test
@@ -89,7 +89,7 @@ class CategoryServiceTest {
     void CategoryService_add_returns_generated_id_Test() {
         // Arrange
         CategoriesDto input = new CategoriesDto();
-        input.setCategoryID(1);
+        input.setCategoryId(1);
 
         Category mapped = new Category();
         Category saved = new Category();
@@ -109,7 +109,7 @@ class CategoryServiceTest {
     void CategoryService_update_persists_changes_when_found_Test() {
         // Arrange
         CategoriesDto input = new CategoriesDto();
-        input.setCategoryID(7);
+        input.setCategoryId(7);
 
         Category current = new Category();
         current.setCategoryID(7);

@@ -11,6 +11,6 @@ import org.springframework.stereotype.Service;
 public class CategoryService extends AbstractCrudService<Category, CategoriesDto, Integer, AddResponseIntDto> {
 
     public CategoryService(CategoryRepository repository, CategoryMapper mapper) {
-        super(repository, mapper, CategoriesDto::getCategoryID, intIdResponse(Category::getCategoryID), "Category");
+        super(repository, mapper, CategoriesDto::getCategoryId, intIdResponse(Category::getCategoryID), "Category");
     }
 }

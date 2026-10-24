@@ -1,11 +1,14 @@
 package com.pilotapi.config;
 
+import com.pilotapi.common.RequestSettings;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernatePropertiesCustomizer;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -31,6 +34,15 @@ public class ApplicationConfig implements HibernatePropertiesCustomizer, WebMvcC
                 new PropertyResolvingNamingStrategy(environment));
     }
 
+    /**
+     * Exposes the current request's {@link RequestSettings} for injection anywhere in the app.
+     */
+    @Bean
+    @RequestScope
+    public RequestSettings requestSettings(HttpServletRequest request) {
+        return RequestSettings.from(request);
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new ApiHeaderInterceptor());
@@ -44,12 +56,13 @@ public class ApplicationConfig implements HibernatePropertiesCustomizer, WebMvcC
             Object handler,
             ModelAndView modelAndView
         ) {
-            String apiVersion = request.getHeader("ApiVersion");
+            String apiVersion = request.getHeader("X-Api-Version");
             if (apiVersion == null || apiVersion.isBlank()) {
                 apiVersion = DEFAULT_API_VERSION;
             }
 
-            response.setHeader("ApiVersion", apiVersion);
+            response.setHeader("X-Api-Version", apiVersion);
+
             response.setHeader("Content-Type", "application/json");
             response.setDateHeader("Date", System.currentTimeMillis());
         }

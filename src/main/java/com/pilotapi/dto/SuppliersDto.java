@@ -1,27 +1,49 @@
 package com.pilotapi.dto;
 
+import com.pilotapi.config.OpenApiConfig;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import io.micrometer.common.lang.Nullable;
 
 public class SuppliersDto {
 
+    @Schema(types = {"null", "string"})
     private String address;
+
+    @Schema(types = {"null", "string"})
     private String city;
 
+    @Schema(types = {"null", "string"})
     @NotBlank
     private String companyName;
 
+    @Schema(types = {"null", "string"})
     private String contactName;
+
+    @Schema(types = {"null", "string"})
     private String contactTitle;
+
+    @Schema(types = {"null", "string"})
     private String country;
+
+    @Schema(types = {"null", "string"})
     private String fax;
+
+    @Schema(types = {"null", "string"})
     private String homePage;
+
+    @Schema(types = {"null", "string"})
     private String phone;
+
+    @Schema(types = {"null", "string"})
     private String postalCode;
+
+    @Schema(types = {"null", "string"})
     private String region;
 
+    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN)
     @Nullable
-    private Integer supplierID;
+    private Integer supplierId;
 
     public String getAddress() {
         return address;
@@ -111,11 +133,11 @@ public class SuppliersDto {
         this.region = region;
     }
 
-    public Integer getSupplierID() {
-        return supplierID;
+    public Integer getSupplierId() {
+        return supplierId;
     }
 
-    public void setSupplierID(Integer supplierID) {
-        this.supplierID = supplierID;
+    public void setSupplierId(Integer supplierId) {
+        this.supplierId = supplierId;
     }
 }
