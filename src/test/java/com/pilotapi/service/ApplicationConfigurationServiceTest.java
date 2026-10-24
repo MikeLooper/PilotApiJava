@@ -1,6 +1,6 @@
 package com.pilotapi.service;
 
-import com.pilotapi.config.OpenApiConfig;
+import com.pilotapi.config.ApplicationMetadataProperties;
 import com.pilotapi.config.OpenApiProperties;
 import com.pilotapi.dto.ApplicationConfigurationDto;
 import com.pilotapi.dto.DataConnectionConfigurationDto;
@@ -21,6 +21,7 @@ class ApplicationConfigurationServiceTest {
     private MockEnvironment environment;
     private OpenApiProperties openApiProperties;
     private SecurityProperties securityProperties;
+    private ApplicationMetadataProperties metadata;
     private ApplicationConfigurationService service;
 
     @BeforeEach
@@ -28,7 +29,8 @@ class ApplicationConfigurationServiceTest {
         environment = new MockEnvironment();
         openApiProperties = new OpenApiProperties();
         securityProperties = new SecurityProperties();
-        service = new ApplicationConfigurationService(environment, openApiProperties, securityProperties);
+        metadata = new ApplicationMetadataProperties();
+        service = new ApplicationConfigurationService(environment, openApiProperties, securityProperties, metadata);
     }
 
     @Test
@@ -119,6 +121,7 @@ class ApplicationConfigurationServiceTest {
         openApiProperties.setTitle("PilotApiJava");
         openApiProperties.setLicense("MIT");
         openApiProperties.getContact().setEmail("someone@example.com");
+        metadata.setBuildVersion("1.2.3");
 
         // Act
         ApplicationConfigurationDto result = service.describe();
@@ -126,7 +129,7 @@ class ApplicationConfigurationServiceTest {
         // Assert
         assertEquals("PilotApiJava", result.getOpenApi().getTitle());
         assertEquals("MIT", result.getOpenApi().getLicense());
-        assertEquals(OpenApiConfig.API_VERSION, result.getOpenApi().getVersion());
+        assertEquals("1.2.3", result.getOpenApi().getVersion());
         assertEquals("someone@example.com", result.getOpenApi().getContact().getEmail());
     }
 

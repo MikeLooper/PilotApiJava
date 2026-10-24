@@ -13,7 +13,7 @@ Use the standard security patterns and practices for Java/Spring Boot (Spring Se
 Use an OIDC-compatible IDP (Keycloak, self-hosted on local Docker), without ever naming the vendor in code/config.
 - URLs:
   - Production: `http://local-keycloak:8080`
-  - Development: `http://localhost:55001`
+  - Development: `http://localhost:11141`
 - Realm: `local-realm`
 - Client ID: `local-client`
 
@@ -114,7 +114,7 @@ New `@ConfigurationProperties(prefix = "app.security")` class `SecurityPropertie
 | Property key | Purpose | `application.yml` (base/dev default) | prod profile override |
 | --- | --- | --- | --- |
 | `app.security.active` | Enforce vs. warn-only | `${APP_SECURITY_ACTIVE:true}` | same, env-overridable |
-| `app.security.provider-url` | IDP base URL | `${APP_SECURITY_PROVIDER_URL:http://localhost:55001}` | `${APP_SECURITY_PROVIDER_URL:http://local-keycloak:8080}` |
+| `app.security.provider-url` | IDP base URL | `${APP_SECURITY_PROVIDER_URL:http://localhost:11141}` | `${APP_SECURITY_PROVIDER_URL:http://local-keycloak:8080}` |
 | `app.security.realm` | IDP realm | `${APP_SECURITY_REALM:local-realm}` | same |
 | `app.security.client-id` | Expected token audience/azp | `${APP_SECURITY_CLIENT_ID:local-client}` | same |
 | `app.security.resource-area` | Which `resource_access.<area>.roles` to read | `${APP_SECURITY_RESOURCE_AREA:account}` | same |
@@ -213,7 +213,7 @@ A request is authorized when `resolvedRole.rank >= requiredRole.rank`.
 ## 10. README Updates
 
 Add a new `## Security Usage` section after "Application Validation" (matching the existing PowerShell `Invoke-RestMethod` example style), covering:
-- Obtaining a token from the dev IDP (`http://localhost:55001`, realm `local-realm`, client `local-client`) — example token-request call.
+- Obtaining a token from the dev IDP (`http://localhost:11141`, realm `local-realm`, client `local-client`) — example token-request call.
 - Calling a secured domain endpoint with `Authorization: Bearer <token>`.
 - What a 401/403 `ProblemDetailsDto` body looks like.
 - What the `Warning` header looks like when `app.security.active=false`.
@@ -263,7 +263,7 @@ All new/changed tests are run via `mvn test` and must pass before the work is co
 
 - The mock `UserRoles` table is the **authoritative** source for the application role used in authorization decisions; token role claims (`realm_access.roles`, `resource_access.<area>.roles`) are captured onto `EnrichedUser` for visibility/logging/future use but are not the primary authorization gate. Flag if the intent was instead for token roles to directly drive access.
 - `resource_access.<area>.roles` area name defaults to `account` per the example in the spec, made configurable via `app.security.resource-area`.
-- No live IDP is assumed available in CI/unit tests; a test-only fake `JwtDecoder` is used instead of hitting a real Keycloak instance. Manual/integration verification against the real dev IDP (`http://localhost:55001`) is a separate manual step, not part of the automated test suite.
+- No live IDP is assumed available in CI/unit tests; a test-only fake `JwtDecoder` is used instead of hitting a real Keycloak instance. Manual/integration verification against the real dev IDP (`http://localhost:11141`) is a separate manual step, not part of the automated test suite.
 - OPTIONS/HEAD/TRACE/QUERY aren't explicitly implemented by any controller today; the role mapping still accounts for them defensively in case the servlet container/Spring MVC surfaces them.
 - Swagger UI (`springdoc`) and actuator endpoints are left unsecured (out of scope — only System endpoints are explicitly named as exempt, but actuator/Swagger are already scoped down separately and aren't domain endpoints).
 

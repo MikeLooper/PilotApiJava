@@ -35,7 +35,7 @@ class OpenApiConfigTest {
     void OpenApiConfigTest_customOpenApi_registersBearerSecurityScheme_Test() {
         OpenApiProperties properties = new OpenApiProperties();
 
-        OpenAPI openApi = openApiConfig.customOpenApi(properties);
+        OpenAPI openApi = openApiConfig.customOpenApi(properties, new ApplicationMetadataProperties());
         SecurityScheme scheme = openApi.getComponents().getSecuritySchemes().get(OpenApiConfig.BEARER_AUTH_SCHEME);
 
         assertEquals("Bearer", OpenApiConfig.BEARER_AUTH_SCHEME);
@@ -51,18 +51,20 @@ class OpenApiConfigTest {
         properties.setTitle("PilotApiJava");
         properties.setLicense("MIT");
         properties.getContact().setName("Michael Looper");
+        ApplicationMetadataProperties metadata = new ApplicationMetadataProperties();
+        metadata.setBuildVersion("1.2.3");
 
-        OpenAPI openApi = openApiConfig.customOpenApi(properties);
+        OpenAPI openApi = openApiConfig.customOpenApi(properties, metadata);
 
         assertEquals("PilotApiJava", openApi.getInfo().getTitle());
-        assertEquals(OpenApiConfig.API_VERSION, openApi.getInfo().getVersion());
+        assertEquals("1.2.3", openApi.getInfo().getVersion());
         assertEquals("MIT", openApi.getInfo().getLicense().getName());
         assertEquals("Michael Looper", openApi.getInfo().getContact().getName());
     }
 
     @Test
     void OpenApiConfigTest_customOpenApi_registersSharedComponents_Test() {
-        OpenAPI openApi = openApiConfig.customOpenApi(new OpenApiProperties());
+        OpenAPI openApi = openApiConfig.customOpenApi(new OpenApiProperties(), new ApplicationMetadataProperties());
         Components components = openApi.getComponents();
 
         assertEquals(Set.of("ApiVersionHeader", "CorrelationIdHeader", "PageQuery", "PageSizeQuery"),

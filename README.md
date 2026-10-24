@@ -84,7 +84,7 @@ All `/v1/**` domain endpoints require a bearer token (JWT/OAuth2) issued by the 
 | Property | Env override | Default (dev) |
 |---|---|---|
 | `app.security.active` | `APP_SECURITY_ACTIVE` | `true` |
-| `app.security.provider-url` | `APP_SECURITY_PROVIDER_URL` | `http://localhost:55001` |
+| `app.security.provider-url` | `APP_SECURITY_PROVIDER_URL` | `http://localhost:11141` |
 | `app.security.realm` | `APP_SECURITY_REALM` | `local-realm` |
 | `app.security.client-id` | `APP_SECURITY_CLIENT_ID` | `local-client` |
 | `app.security.resource-area` | `APP_SECURITY_RESOURCE_AREA` | `account` |
@@ -103,13 +103,13 @@ Role assignment is currently mocked (`UserRoles`), keyed by the token's `preferr
 
 ### Obtaining a Token
 
-Tokens are issued by the identity provider's OIDC token endpoint, at `{app.security.provider-url}/realms/{app.security.realm}/protocol/openid-connect/token` (dev default: `http://localhost:55001/realms/local-realm/protocol/openid-connect/token`).
+Tokens are issued by the identity provider's OIDC token endpoint, at `{app.security.provider-url}/realms/{app.security.realm}/protocol/openid-connect/token` (dev default: `http://localhost:11141/realms/local-realm/protocol/openid-connect/token`).
 
 For local/dev testing against the mocked users (`reader_user`, `working_user`, `working_admin_user`), request a token with the Resource Owner Password Credentials (direct access) grant — the client in the identity provider must have this grant type enabled:
 
 ```powershell
 $tokenResponse = Invoke-RestMethod -Method Post `
-    -Uri "http://localhost:55001/realms/local-realm/protocol/openid-connect/token" `
+    -Uri "http://localhost:11141/realms/local-realm/protocol/openid-connect/token" `
     -ContentType "application/x-www-form-urlencoded" `
     -Body @{
         grant_type    = "password"

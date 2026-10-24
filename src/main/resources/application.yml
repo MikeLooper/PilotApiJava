@@ -63,7 +63,7 @@ springdoc:
 app:
   metadata:
     name: PilotApiJava
-    build-version: ${APP_BUILD_VERSION:1.1.0}
+    build-version: ${APP_BUILD_VERSION:@project.version@}
     deploy-date: ${APP_DEPLOY_DATE:unknown}
   openapi:
     title: PilotApiJava
@@ -77,7 +77,7 @@ app:
   security:
     active: ${APP_SECURITY_ACTIVE:true}
     provider-url: ${APP_SECURITY_PROVIDER_URL:http://local-keycloak:8080}
-    public-provider-url: ${APP_SECURITY_PUBLIC_PROVIDER_URL:http://localhost:55001}
+    public-provider-url: ${APP_SECURITY_PUBLIC_PROVIDER_URL:http://localhost:11141}
     realm: ${APP_SECURITY_REALM:local-realm}
     client-id: ${APP_SECURITY_CLIENT_ID:local-client}
     resource-area: ${APP_SECURITY_RESOURCE_AREA:account}
