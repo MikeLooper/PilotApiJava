@@ -1,0 +1,40 @@
+info:
+  name: Add_UnitsInStockAboveMaximum
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: "{{Host}}v{{version}}/{{controller}}/add"
+  body:
+    type: json
+    data: |-
+      {
+        "categoryId": 1,
+        "productName": "Test Product",
+        "supplierId": 1,
+        "unitsInStock": 32768
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("should return bad request", function () {
+          expect(res.getStatus()).to.equal(400);
+        });
+
+        test("should explain the unitsInStock range violation", function () {
+          const resBody = res.getBody();
+
+          expect(resBody).to.have.property("status", 400);
+          expect(resBody).to.have.property("detail");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

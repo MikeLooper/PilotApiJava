@@ -1,0 +1,39 @@
+info:
+  name: Add_InvalidCustomerIdLength
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: "{{Host}}v{{version}}/{{controller}}/add"
+  body:
+    type: json
+    data: |-
+      {
+        "customerId": "VIN",
+        "employeeId": 5,
+        "shipVia": 3
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("should return bad request", function () {
+          expect(res.getStatus()).to.equal(400);
+        });
+
+        test("should explain the customerId length violation", function () {
+          const resBody = res.getBody();
+
+          expect(resBody).to.have.property("status", 400);
+          expect(resBody).to.have.property("detail");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

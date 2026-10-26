@@ -200,4 +200,33 @@ class CategoriesControllerWebMvcTest {
             .andExpect(status().isOk())
             .andExpect(header().exists("Warning"));
     }
+
+    @Test
+    void CategoriesControllerWebMvcTest_add_withCategoryNameTooLong_returns_badRequest_Test() throws Exception {
+        mockMvc.perform(post("/v1/categories/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"categoryName\":\"Sixteen chars!!!\"}"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400))
+            .andExpect(jsonPath("$.detail").value("categoryName: size must be between 1 and 15"));
+    }
+
+    @Test
+    void CategoriesControllerWebMvcTest_add_withEmptyCategoryName_returns_badRequest_Test() throws Exception {
+        mockMvc.perform(post("/v1/categories/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"categoryName\":\"\"}"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400));
+    }
+
+    @Test
+    void CategoriesControllerWebMvcTest_getById_withIdBelowMinimum_returns_badRequest_Test() throws Exception {
+        mockMvc.perform(get("/v1/categories/get/0").header("X-Api-Version", "1"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400))
+            .andExpect(jsonPath("$.detail").value("categoryId: must be greater than or equal to 1"));
+    }
 }

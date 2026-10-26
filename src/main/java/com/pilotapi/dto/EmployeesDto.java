@@ -1,8 +1,12 @@
 package com.pilotapi.dto;
 
 import com.pilotapi.config.OpenApiConfig;
+import com.pilotapi.validation.SqlServerDateTime;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
 
@@ -11,36 +15,50 @@ import io.micrometer.common.lang.Nullable;
 public class EmployeesDto {
 
     @Schema(types = {"null", "string"})
+    @Size(max = 60)
     private String address;
 
-    @Schema(types = {"null", "string"}, format = "date-time")
+    @Schema(types = {"null", "string"}, format = "date-time",
+        description = "Must be earlier than the current date. " + OpenApiConfig.DATETIME_RANGE_DESCRIPTION)
+    @SqlServerDateTime
+    @Past
     private LocalDateTime birthDate;
 
     @Schema(types = {"null", "string"})
+    @Size(max = 15)
     private String city;
 
     @Schema(types = {"null", "string"})
+    @Size(max = 15)
     private String country;
 
-    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN)
+    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN,
+        minimum = OpenApiConfig.ID_MINIMUM, maximum = OpenApiConfig.INT32_MAXIMUM,
+        minLength = 1, maxLength = OpenApiConfig.INT32_MAX_LENGTH)
+    @Min(1)
     @Nullable
     private Integer employeeId;
 
     @Schema(types = {"null", "string"})
+    @Size(max = 4)
     private String extension;
 
-    @Schema(types = {"null", "string"})
+    @Schema(types = {"string"})
     @NotBlank
+    @Size(min = 1, max = 10)
     private String firstName;
 
-    @Schema(types = {"null", "string"}, format = "date-time")
+    @Schema(types = {"null", "string"}, format = "date-time", description = OpenApiConfig.DATETIME_RANGE_DESCRIPTION)
+    @SqlServerDateTime
     private LocalDateTime hireDate;
 
     @Schema(types = {"null", "string"})
+    @Size(max = 24)
     private String homePhone;
 
-    @Schema(types = {"null", "string"})
+    @Schema(types = {"string"})
     @NotBlank
+    @Size(min = 1, max = 20)
     private String lastName;
 
     @Schema(types = {"null", "string"})
@@ -50,21 +68,30 @@ public class EmployeesDto {
     private String photo;
 
     @Schema(types = {"null", "string"})
+    @Size(max = 255)
     private String photoPath;
 
     @Schema(types = {"null", "string"})
+    @Size(max = 10)
     private String postalCode;
 
     @Schema(types = {"null", "string"})
+    @Size(max = 15)
     private String region;
 
-    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN)
+    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN,
+        minimum = OpenApiConfig.ID_MINIMUM, maximum = OpenApiConfig.INT32_MAXIMUM,
+        minLength = 1, maxLength = OpenApiConfig.INT32_MAX_LENGTH,
+        description = "The employeeId of this employee's manager.")
+    @Min(1)
     private Integer reportsTo;
 
     @Schema(types = {"null", "string"})
+    @Size(max = 30)
     private String title;
 
     @Schema(types = {"null", "string"})
+    @Size(max = 25)
     private String titleOfCourtesy;
 
     public String getAddress() {

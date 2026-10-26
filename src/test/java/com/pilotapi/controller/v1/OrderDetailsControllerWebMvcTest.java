@@ -43,7 +43,7 @@ class OrderDetailsControllerWebMvcTest {
         OrderDetailsDto dto = new OrderDetailsDto();
         dto.setProductId(1);
         dto.setOrderId(10);
-        dto.setDiscount(0.1f);
+        dto.setDiscount(BigDecimal.valueOf(0.1));
         dto.setQuantity(3);
         dto.setUnitPrice(BigDecimal.valueOf(5.25));
         when(orderDetailService.getAll(0, 20)).thenReturn(List.of(dto));
@@ -58,7 +58,7 @@ class OrderDetailsControllerWebMvcTest {
         OrderDetailsDto dto = new OrderDetailsDto();
         dto.setProductId(1);
         dto.setOrderId(10);
-        dto.setDiscount(0.1f);
+        dto.setDiscount(BigDecimal.valueOf(0.1));
         dto.setQuantity(3);
         dto.setUnitPrice(BigDecimal.valueOf(5.25));
         when(orderDetailService.getAll(2, 10)).thenReturn(List.of(dto));
@@ -73,7 +73,7 @@ class OrderDetailsControllerWebMvcTest {
         OrderDetailsDto dto = new OrderDetailsDto();
         dto.setProductId(1);
         dto.setOrderId(10);
-        dto.setDiscount(0.1f);
+        dto.setDiscount(BigDecimal.valueOf(0.1));
         dto.setQuantity(3);
         dto.setUnitPrice(BigDecimal.valueOf(5.25));
         when(orderDetailService.getById(1, 10)).thenReturn(dto);
@@ -113,5 +113,33 @@ class OrderDetailsControllerWebMvcTest {
 
         mockMvc.perform(delete("/v1/order-details/delete/product/1/order/10").header("X-Api-Version", "1"))
             .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void OrderDetailsControllerWebMvcTest_add_withDiscountAboveOne_returns_badRequest_Test() throws Exception {
+        mockMvc.perform(post("/v1/order-details/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"productId\":1,\"orderId\":10,\"discount\":1.5,\"quantity\":3,\"unitPrice\":5.25}"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400))
+            .andExpect(jsonPath("$.detail").value("discount: must be less than or equal to 1"));
+    }
+
+    @Test
+    void OrderDetailsControllerWebMvcTest_add_withZeroQuantity_returns_badRequest_Test() throws Exception {
+        mockMvc.perform(post("/v1/order-details/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"productId\":1,\"orderId\":10,\"discount\":0,\"quantity\":0,\"unitPrice\":5.25}"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400));
+    }
+
+    @Test
+    void OrderDetailsControllerWebMvcTest_getById_withOrderIdBelowMinimum_returns_badRequest_Test() throws Exception {
+        mockMvc.perform(get("/v1/order-details/get/product/1/order/0").header("X-Api-Version", "1"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400));
     }
 }

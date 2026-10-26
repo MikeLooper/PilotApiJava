@@ -4,6 +4,8 @@ import com.pilotapi.dto.AddResponseIntDto;
 import com.pilotapi.dto.OrdersDto;
 import com.pilotapi.service.OrderService;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
@@ -99,5 +101,46 @@ class OrdersControllerWebMvcTest {
 
         mockMvc.perform(delete("/v1/orders/delete/10").header("X-Api-Version", "1"))
             .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void OrdersControllerWebMvcTest_add_withCustomerIdOfWrongLength_returns_badRequest_Test() throws Exception {
+        mockMvc.perform(post("/v1/orders/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"customerId\":\"VIN\"}"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400));
+    }
+
+    @Test
+    void OrdersControllerWebMvcTest_add_withShipViaBelowMinimum_returns_badRequest_Test() throws Exception {
+        mockMvc.perform(post("/v1/orders/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"shipVia\":0}"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400));
+    }
+
+    @Test
+    void OrdersControllerWebMvcTest_add_withFreightWithMoreThanFourDecimals_returns_badRequest_Test() throws Exception {
+        mockMvc.perform(post("/v1/orders/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"freight\":32.38001}"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"orderDate", "requiredDate", "shippedDate"})
+    void OrdersControllerWebMvcTest_add_withDateBeforeSqlServerMinimum_returns_badRequest_Test(String field) throws Exception {
+        mockMvc.perform(post("/v1/orders/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"" + field + "\":\"0001-01-01T00:00:00\"}"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400));
     }
 }

@@ -3,16 +3,22 @@ package com.pilotapi.dto;
 import com.pilotapi.config.OpenApiConfig;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.micrometer.common.lang.Nullable;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public class CategoriesDto {
 
-    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN)
+    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN,
+        minimum = OpenApiConfig.ID_MINIMUM, maximum = OpenApiConfig.INT32_MAXIMUM,
+        minLength = 1, maxLength = OpenApiConfig.INT32_MAX_LENGTH)
+    @Min(1)
     @Nullable
     private Integer categoryId;
 
-    @Schema(types = {"null", "string"})
+    @Schema(types = {"string"})
     @NotNull
+    @Size(min = 1, max = 15)
     private String categoryName;
 
     @Schema(types = {"null", "string"})

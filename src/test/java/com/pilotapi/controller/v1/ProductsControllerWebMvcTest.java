@@ -141,11 +141,64 @@ class ProductsControllerWebMvcTest {
     }
 
     @Test
-    void ProductsControllerWebMvcTest_add_returns_bad_request_for_null_stock_level_Test() throws Exception {
+    void ProductsControllerWebMvcTest_add_accepts_null_stock_levels_Test() throws Exception {
+        when(productService.add(any(ProductsDto.class))).thenReturn(new AddResponseIntDto(107L));
+
         mockMvc.perform(post("/v1/products/add")
                 .header("X-Api-Version", "1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"productName\":\"Chai\",\"unitsInStock\":null}"))
+                .content("{\"productName\":\"Chai\",\"reorderLevel\":null,\"unitsInStock\":null,\"unitsOnOrder\":null}"))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.id").value(107));
+
+        verify(productService).add(argThat(dto -> dto.getReorderLevel() == null
+            && dto.getUnitsInStock() == null
+            && dto.getUnitsOnOrder() == null));
+    }
+
+    @Test
+    void ProductsControllerWebMvcTest_add_returns_bad_request_for_stock_level_above_int16_Test() throws Exception {
+        mockMvc.perform(post("/v1/products/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"productName\":\"Chai\",\"unitsInStock\":32768}"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.detail").value("unitsInStock: must be less than or equal to 32767"));
+    }
+
+    @Test
+    void ProductsControllerWebMvcTest_add_returns_bad_request_for_negative_unit_price_Test() throws Exception {
+        mockMvc.perform(post("/v1/products/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"productName\":\"Chai\",\"unitPrice\":-1}"))
             .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void ProductsControllerWebMvcTest_add_returns_bad_request_for_unit_price_with_more_than_four_decimals_Test()
+        throws Exception {
+        mockMvc.perform(post("/v1/products/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"productName\":\"Chai\",\"unitPrice\":1.23456}"))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void ProductsControllerWebMvcTest_add_returns_bad_request_for_product_name_too_long_Test() throws Exception {
+        mockMvc.perform(post("/v1/products/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"productName\":\"" + "x".repeat(41) + "\"}"))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void ProductsControllerWebMvcTest_getById_returns_bad_request_for_id_below_minimum_Test() throws Exception {
+        mockMvc.perform(get("/v1/products/get/0").header("X-Api-Version", "1"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400))
+            .andExpect(jsonPath("$.detail").value("productId: must be greater than or equal to 1"));
     }
 }

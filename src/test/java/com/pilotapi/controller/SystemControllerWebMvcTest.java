@@ -47,6 +47,15 @@ class SystemControllerWebMvcTest {
     }
 
     @Test
+    void SystemControllerWebMvcTest_healthcheck_rejectsApiVersionHeaderLongerThan15Characters_Test() throws Exception {
+        mockMvc.perform(get("/healthcheck")
+                .header("X-Api-Version", "1234567890123456"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.title").value("Bad Request"))
+            .andExpect(jsonPath("$.status").value(400));
+    }
+
+    @Test
     void SystemControllerWebMvcTest_about_returns_ok_response_Test() throws Exception {
         AboutResponseDto dto = new AboutResponseDto();
         dto.setApiVersion("1.0.0");

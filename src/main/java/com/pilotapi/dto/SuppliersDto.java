@@ -2,46 +2,61 @@ package com.pilotapi.dto;
 
 import com.pilotapi.config.OpenApiConfig;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import io.micrometer.common.lang.Nullable;
 
 public class SuppliersDto {
 
     @Schema(types = {"null", "string"})
+    @Size(max = 60)
     private String address;
 
     @Schema(types = {"null", "string"})
+    @Size(max = 15)
     private String city;
 
-    @Schema(types = {"null", "string"})
+    @Schema(types = {"string"})
     @NotBlank
+    @Size(min = 1, max = 40)
     private String companyName;
 
     @Schema(types = {"null", "string"})
+    @Size(max = 30)
     private String contactName;
 
     @Schema(types = {"null", "string"})
+    @Size(max = 30)
     private String contactTitle;
 
     @Schema(types = {"null", "string"})
+    @Size(max = 15)
     private String country;
 
     @Schema(types = {"null", "string"})
+    @Size(max = 24)
     private String fax;
 
     @Schema(types = {"null", "string"})
     private String homePage;
 
     @Schema(types = {"null", "string"})
+    @Size(max = 24)
     private String phone;
 
     @Schema(types = {"null", "string"})
+    @Size(max = 10)
     private String postalCode;
 
     @Schema(types = {"null", "string"})
+    @Size(max = 15)
     private String region;
 
-    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN)
+    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN,
+        minimum = OpenApiConfig.ID_MINIMUM, maximum = OpenApiConfig.INT32_MAXIMUM,
+        minLength = 1, maxLength = OpenApiConfig.INT32_MAX_LENGTH)
+    @Min(1)
     @Nullable
     private Integer supplierId;
 

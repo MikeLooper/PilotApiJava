@@ -56,10 +56,32 @@ public class OpenApiConfig {
 
     /** Pattern the contract applies to integers that may also be sent as strings. */
     public static final String INTEGER_PATTERN = "^-?(?:0|[1-9]\\d*)$";
-    /** Pattern the contract applies to decimals that may also be sent as strings. */
-    public static final String DECIMAL_PATTERN = "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$";
+    /** Pattern the contract applies to money decimals (up to 4 fraction digits) that may also be sent as strings. */
+    public static final String DECIMAL_PATTERN = "^-?(?:0|[1-9]\\d*)(?:\\.\\d{1,4})?$";
     /** Pattern the contract applies to floats (exponent allowed) that may also be sent as strings. */
     public static final String FLOAT_PATTERN = "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$";
+
+    /** Smallest identifier value the contract allows. */
+    public static final String ID_MINIMUM = "1";
+    /** Largest int32 value, the contract's upper bound for int32 values. */
+    public static final String INT32_MAXIMUM = "2147483647";
+    /** Most characters an int32 value can have when sent as a string. */
+    public static final int INT32_MAX_LENGTH = 10;
+    /** Largest int16 value, the contract's upper bound for int16 values. */
+    public static final String INT16_MAXIMUM = "32767";
+    /** Most characters an int16 value can have when sent as a string. */
+    public static final int INT16_MAX_LENGTH = 5;
+    /** Smallest value of the SQL Server MONEY type. */
+    public static final String MONEY_MINIMUM = "-922337203685477.5808";
+    /** Largest value of the SQL Server MONEY type. */
+    public static final String MONEY_MAXIMUM = "922337203685477.5807";
+    /** Length of a customer identifier. */
+    public static final int CUSTOMER_ID_LENGTH = 5;
+    /** Range the contract documents for date-time values stored in a SQL Server DATETIME column. */
+    public static final String DATETIME_RANGE_DESCRIPTION =
+        "Valid range is 1753-01-01 through 9999-12-31 (SQL Server DATETIME).";
+    /** Contract description of a column whose database default is 0. */
+    public static final String DEFAULT_ZERO_DESCRIPTION = "Database default is 0.";
 
     public static final String TAG_SYSTEM = "System";
     public static final String TAG_CATEGORIES = "Categories";
@@ -81,6 +103,8 @@ public class OpenApiConfig {
     private static final String API_VERSION_HEADER = "X-Api-Version";
     private static final String CORRELATION_ID_HEADER = "X-Correlation-Id";
     private static final String ACCEPT_HEADER = "Accept";
+    static final int API_VERSION_MAX_LENGTH = 15;
+    private static final int CORRELATION_ID_MAX_LENGTH = 40;
 
     private static final String PARAMETERS_REF = "#/components/parameters/";
     private static final String RESPONSES_REF = "#/components/responses/";
@@ -233,13 +257,14 @@ public class OpenApiConfig {
             .description("The version of the API that should be used for the current call.  "
                 + "If missing, the application default version will be used.")
             .required(false)
-            .schema(schema("string").example("1.2.3")));
+            .schema(schema("string").maxLength(API_VERSION_MAX_LENGTH).example("1.2.3")));
         parameters.put("CorrelationIdHeader", new Parameter()
             .name(CORRELATION_ID_HEADER)
             .in("header")
             .description("Unique identifier used for tracing a transaction across microservices.")
             .required(false)
-            .schema(schema("string").format("uuid").example("7ea2c7f7-8b46-475d-86f8-7aaaa9e4a35b")));
+            .schema(schema("string").format("uuid").maxLength(CORRELATION_ID_MAX_LENGTH)
+                .example("7ea2c7f7-8b46-475d-86f8-7aaaa9e4a35b")));
         parameters.put("PageQuery", new Parameter()
             .name("page")
             .in("query")

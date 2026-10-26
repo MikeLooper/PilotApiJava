@@ -13,6 +13,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.Instant;
@@ -34,6 +35,17 @@ public class ApiExceptionHandler {
             .getFieldErrors()
             .stream()
             .map(this::fieldErrorMessage)
+            .collect(Collectors.joining("; "));
+        return buildProblem(HttpStatus.BAD_REQUEST, details, request);
+    }
+
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ResponseEntity<ProblemDetailsDto> handleParameterValidation(HandlerMethodValidationException ex,
+                                                                       HttpServletRequest request) {
+        String details = ex.getParameterValidationResults()
+            .stream()
+            .flatMap(result -> result.getResolvableErrors().stream()
+                .map(error -> result.getMethodParameter().getParameterName() + ": " + error.getDefaultMessage()))
             .collect(Collectors.joining("; "));
         return buildProblem(HttpStatus.BAD_REQUEST, details, request);
     }

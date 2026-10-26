@@ -1,6 +1,7 @@
 package com.pilotapi.integration.openapi;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.IntNode;
 import com.fasterxml.jackson.databind.node.MissingNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.pilotapi.integration.openapi.ComplianceFinding.Category;
@@ -438,6 +439,11 @@ public class OpenApiComparator {
         for (String field : List.of("pattern", "default")) {
             compareValue(ERROR, SCHEMAS, schemaLocation, "Schema " + field, specNode.path(field), appNode.path(field));
         }
+        for (String field : List.of("minLength", "maxLength", "minimum", "maximum",
+            "exclusiveMinimum", "exclusiveMaximum", "minItems", "maxItems")) {
+            compareNumber(ERROR, SCHEMAS, schemaLocation, "Schema " + field,
+                withZeroDefault(field, specNode.path(field)), withZeroDefault(field, appNode.path(field)));
+        }
         for (String field : List.of("example", "examples", "description")) {
             compareValue(INFO, SCHEMAS, schemaLocation, "Schema " + field, specNode.path(field), appNode.path(field));
         }
@@ -630,6 +636,23 @@ public class OpenApiComparator {
         if (!expectedText.equals(actualText)) {
             add(severity, category, location, what + " differs", expectedText, actualText);
         }
+    }
+
+    /** JSON Schema treats an absent {@code minLength}/{@code minItems} as 0, so both spellings compare equal. */
+    private static JsonNode withZeroDefault(String field, JsonNode value) {
+        return value.isMissingNode() && ("minLength".equals(field) || "minItems".equals(field))
+            ? IntNode.valueOf(0)
+            : value;
+    }
+
+    /** Compares numeric keywords by value, so {@code 1} and {@code 1.0} are treated as equal. */
+    private void compareNumber(Severity severity, Category category, String location, String what,
+                               JsonNode expected, JsonNode actual) {
+        if (expected.isNumber() && actual.isNumber()
+            && expected.decimalValue().compareTo(actual.decimalValue()) == 0) {
+            return;
+        }
+        compareValue(severity, category, location, what, expected, actual);
     }
 
     private static String display(JsonNode node) {
