@@ -43,7 +43,7 @@ class OrderDetailsControllerWebMvcTest {
         OrderDetailsDto dto = new OrderDetailsDto();
         dto.setProductId(1);
         dto.setOrderId(10);
-        dto.setDiscount(0.1f);
+        dto.setDiscount(BigDecimal.valueOf(0.1));
         dto.setQuantity(3);
         dto.setUnitPrice(BigDecimal.valueOf(5.25));
         when(orderDetailService.getAll(0, 20)).thenReturn(List.of(dto));
@@ -58,7 +58,7 @@ class OrderDetailsControllerWebMvcTest {
         OrderDetailsDto dto = new OrderDetailsDto();
         dto.setProductId(1);
         dto.setOrderId(10);
-        dto.setDiscount(0.1f);
+        dto.setDiscount(BigDecimal.valueOf(0.1));
         dto.setQuantity(3);
         dto.setUnitPrice(BigDecimal.valueOf(5.25));
         when(orderDetailService.getAll(2, 10)).thenReturn(List.of(dto));
@@ -73,7 +73,7 @@ class OrderDetailsControllerWebMvcTest {
         OrderDetailsDto dto = new OrderDetailsDto();
         dto.setProductId(1);
         dto.setOrderId(10);
-        dto.setDiscount(0.1f);
+        dto.setDiscount(BigDecimal.valueOf(0.1));
         dto.setQuantity(3);
         dto.setUnitPrice(BigDecimal.valueOf(5.25));
         when(orderDetailService.getById(1, 10)).thenReturn(dto);

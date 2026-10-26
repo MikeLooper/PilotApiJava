@@ -20,7 +20,7 @@ public class OrderDetailsDto {
     @NotNull
     @DecimalMin("0")
     @DecimalMax("1")
-    private Float discount;
+    private BigDecimal discount;
 
     @Schema(types = {"integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN,
         minimum = OpenApiConfig.ID_MINIMUM, maximum = OpenApiConfig.INT32_MAXIMUM,
@@ -52,11 +52,11 @@ public class OrderDetailsDto {
     @Digits(integer = 15, fraction = 4)
     private BigDecimal unitPrice;
 
-    public Float getDiscount() {
+    public BigDecimal getDiscount() {
         return discount;
     }
 
-    public void setDiscount(Float discount) {
+    public void setDiscount(BigDecimal discount) {
         this.discount = discount;
     }
 

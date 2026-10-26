@@ -5,13 +5,15 @@ import com.pilotapi.model.OrderDetail;
 import com.pilotapi.model.OrderDetailId;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+
 @Component
 public class OrderDetailMapper implements EntityDtoMapper<OrderDetail, OrderDetailsDto> {
 
     @Override
     public OrderDetailsDto toDto(OrderDetail entity) {
         OrderDetailsDto dto = new OrderDetailsDto();
-        dto.setDiscount(entity.getDiscount());
+        dto.setDiscount(entity.getDiscount() == null ? null : new BigDecimal(entity.getDiscount().toString()));
         dto.setQuantity(entity.getQuantity());
         dto.setUnitPrice(entity.getUnitPrice());
         dto.setOrderId(entity.getId().getOrderID());
@@ -29,7 +31,7 @@ public class OrderDetailMapper implements EntityDtoMapper<OrderDetail, OrderDeta
     @Override
     public void updateEntityFromDto(OrderDetailsDto dto, OrderDetail entity) {
         entity.setId(new OrderDetailId(dto.getProductId(), dto.getOrderId()));
-        entity.setDiscount(dto.getDiscount());
+        entity.setDiscount(dto.getDiscount() == null ? null : dto.getDiscount().floatValue());
         entity.setQuantity(dto.getQuantity());
         entity.setUnitPrice(dto.getUnitPrice());
     }
