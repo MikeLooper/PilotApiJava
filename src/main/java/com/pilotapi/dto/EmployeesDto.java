@@ -1,6 +1,7 @@
 package com.pilotapi.dto;
 
 import com.pilotapi.config.OpenApiConfig;
+import com.pilotapi.validation.SqlServerDateTime;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -19,6 +20,7 @@ public class EmployeesDto {
 
     @Schema(types = {"null", "string"}, format = "date-time",
         description = "Must be earlier than the current date. " + OpenApiConfig.DATETIME_RANGE_DESCRIPTION)
+    @SqlServerDateTime
     @Past
     private LocalDateTime birthDate;
 
@@ -47,6 +49,7 @@ public class EmployeesDto {
     private String firstName;
 
     @Schema(types = {"null", "string"}, format = "date-time", description = OpenApiConfig.DATETIME_RANGE_DESCRIPTION)
+    @SqlServerDateTime
     private LocalDateTime hireDate;
 
     @Schema(types = {"null", "string"})

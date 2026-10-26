@@ -4,6 +4,8 @@ import com.pilotapi.dto.AddResponseIntDto;
 import com.pilotapi.dto.EmployeesDto;
 import com.pilotapi.service.EmployeeService;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
@@ -113,6 +115,18 @@ class EmployeesControllerWebMvcTest {
                 .header("X-Api-Version", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"firstName\":\"Nancy\",\"lastName\":\"Davolio\",\"birthDate\":\"9999-01-01T00:00:00\"}"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"birthDate", "hireDate"})
+    void EmployeesControllerWebMvcTest_add_withDateBeforeSqlServerMinimum_returns_badRequest_Test(String field) throws Exception {
+        mockMvc.perform(post("/v1/employees/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"firstName\":\"Nancy\",\"lastName\":\"Davolio\",\"" + field
+                    + "\":\"0001-01-01T00:00:00\"}"))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.status").value(400));
     }

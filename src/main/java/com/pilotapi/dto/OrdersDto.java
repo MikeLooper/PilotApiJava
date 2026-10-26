@@ -1,6 +1,7 @@
 package com.pilotapi.dto;
 
 import com.pilotapi.config.OpenApiConfig;
+import com.pilotapi.validation.SqlServerDateTime;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
@@ -34,6 +35,7 @@ public class OrdersDto {
     private BigDecimal freight;
 
     @Schema(types = {"null", "string"}, format = "date-time", description = OpenApiConfig.DATETIME_RANGE_DESCRIPTION)
+    @SqlServerDateTime
     private LocalDateTime orderDate;
 
     @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN,
@@ -44,6 +46,7 @@ public class OrdersDto {
     private Integer orderId;
 
     @Schema(types = {"null", "string"}, format = "date-time", description = OpenApiConfig.DATETIME_RANGE_DESCRIPTION)
+    @SqlServerDateTime
     private LocalDateTime requiredDate;
 
     @Schema(types = {"null", "string"})
@@ -63,6 +66,7 @@ public class OrdersDto {
     private String shipName;
 
     @Schema(types = {"null", "string"}, format = "date-time", description = OpenApiConfig.DATETIME_RANGE_DESCRIPTION)
+    @SqlServerDateTime
     private LocalDateTime shippedDate;
 
     @Schema(types = {"null", "string"})
