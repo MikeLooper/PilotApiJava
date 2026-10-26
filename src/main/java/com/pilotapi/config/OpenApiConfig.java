@@ -103,7 +103,7 @@ public class OpenApiConfig {
     private static final String API_VERSION_HEADER = "X-Api-Version";
     private static final String CORRELATION_ID_HEADER = "X-Correlation-Id";
     private static final String ACCEPT_HEADER = "Accept";
-    private static final int API_VERSION_MAX_LENGTH = 15;
+    static final int API_VERSION_MAX_LENGTH = 15;
     private static final int CORRELATION_ID_MAX_LENGTH = 40;
 
     private static final String PARAMETERS_REF = "#/components/parameters/";
