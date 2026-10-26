@@ -105,14 +105,21 @@ class ShippersControllerWebMvcTest {
     }
 
     @Test
-    void ShippersControllerWebMvcTest_add_accepts_payload_without_company_name_Test() throws Exception {
-        when(shipperService.add(any(ShippersDto.class))).thenReturn(new AddResponseIntDto(7L));
-
+    void ShippersControllerWebMvcTest_add_returns_bad_request_without_company_name_Test() throws Exception {
         mockMvc.perform(post("/v1/shippers/add")
                 .header("X-Api-Version", "1")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"phone\":\"(503) 555-9831\"}"))
-            .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.id").value(7));
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400));
+    }
+
+    @Test
+    void ShippersControllerWebMvcTest_add_returns_bad_request_for_phone_too_long_Test() throws Exception {
+        mockMvc.perform(post("/v1/shippers/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"companyName\":\"Speedy Express\",\"phone\":\"" + "5".repeat(25) + "\"}"))
+            .andExpect(status().isBadRequest());
     }
 }

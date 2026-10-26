@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -59,8 +60,9 @@ public class ProductsController {
     @GetMapping("/get/{productId}")
     public ProductsDto getById(
         @Parameter(schema = @Schema(types = {"integer", "string"}, format = "int32",
-            pattern = OpenApiConfig.INTEGER_PATTERN))
-        @PathVariable Integer productId,
+            pattern = OpenApiConfig.INTEGER_PATTERN, minimum = OpenApiConfig.ID_MINIMUM,
+            maximum = OpenApiConfig.INT32_MAXIMUM, minLength = 1, maxLength = OpenApiConfig.INT32_MAX_LENGTH))
+        @Min(1) @PathVariable Integer productId,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
         @RequestHeader(name = "X-Api-Version", required = false, defaultValue = OpenApiConfig.API_VERSION_PLACEHOLDER) String apiVersion,
         @RequestHeader(name = "X-Correlation-Id", required = false) UUID correlationId
@@ -101,8 +103,9 @@ public class ProductsController {
     @DeleteMapping("/delete/{productId}")
     public ResponseEntity<Void> delete(
         @Parameter(schema = @Schema(types = {"integer", "string"}, format = "int32",
-            pattern = OpenApiConfig.INTEGER_PATTERN))
-        @PathVariable Integer productId,
+            pattern = OpenApiConfig.INTEGER_PATTERN, minimum = OpenApiConfig.ID_MINIMUM,
+            maximum = OpenApiConfig.INT32_MAXIMUM, minLength = 1, maxLength = OpenApiConfig.INT32_MAX_LENGTH))
+        @Min(1) @PathVariable Integer productId,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
         @RequestHeader(name = "X-Api-Version", required = false, defaultValue = OpenApiConfig.API_VERSION_PLACEHOLDER) String apiVersion,
         @RequestHeader(name = "X-Correlation-Id", required = false) UUID correlationId

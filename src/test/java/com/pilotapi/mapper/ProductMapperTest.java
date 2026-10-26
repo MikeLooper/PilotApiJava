@@ -6,6 +6,7 @@ import com.pilotapi.model.Product;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class ProductMapperTest {
 
@@ -36,5 +37,22 @@ class ProductMapperTest {
         assertEquals(0, product.getReorderLevel());
         assertEquals(0, product.getUnitsInStock());
         assertEquals(0, product.getUnitsOnOrder());
+    }
+
+    @Test
+    void ProductMapper_updateEntityFromDto_applies_explicit_null_stock_levels_Test() throws Exception {
+        ProductsDto dto = objectMapper.readValue(
+            "{\"productName\":\"Updated\",\"reorderLevel\":null,\"unitsInStock\":null,\"unitsOnOrder\":null}",
+            ProductsDto.class);
+        Product product = new Product();
+        product.setReorderLevel(3);
+        product.setUnitsInStock(12);
+        product.setUnitsOnOrder(5);
+
+        mapper.updateEntityFromDto(dto, product);
+
+        assertNull(product.getReorderLevel());
+        assertNull(product.getUnitsInStock());
+        assertNull(product.getUnitsOnOrder());
     }
 }

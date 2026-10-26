@@ -106,4 +106,34 @@ class EmployeesControllerWebMvcTest {
         mockMvc.perform(delete("/v1/employees/delete/1").header("X-Api-Version", "1"))
             .andExpect(status().isNoContent());
     }
+
+    @Test
+    void EmployeesControllerWebMvcTest_add_withFutureBirthDate_returns_badRequest_Test() throws Exception {
+        mockMvc.perform(post("/v1/employees/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"firstName\":\"Nancy\",\"lastName\":\"Davolio\",\"birthDate\":\"9999-01-01T00:00:00\"}"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400));
+    }
+
+    @Test
+    void EmployeesControllerWebMvcTest_add_withFirstNameTooLong_returns_badRequest_Test() throws Exception {
+        mockMvc.perform(post("/v1/employees/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"firstName\":\"Elevenchars\",\"lastName\":\"Davolio\"}"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400));
+    }
+
+    @Test
+    void EmployeesControllerWebMvcTest_add_withReportsToBelowMinimum_returns_badRequest_Test() throws Exception {
+        mockMvc.perform(post("/v1/employees/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"firstName\":\"Nancy\",\"lastName\":\"Davolio\",\"reportsTo\":0}"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400));
+    }
 }

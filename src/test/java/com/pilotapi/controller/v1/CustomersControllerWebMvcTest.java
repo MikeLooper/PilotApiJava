@@ -103,4 +103,32 @@ class CustomersControllerWebMvcTest {
         mockMvc.perform(delete("/v1/customers/delete/ALFKI").header("X-Api-Version", "1"))
             .andExpect(status().isNoContent());
     }
+
+    @Test
+    void CustomersControllerWebMvcTest_getById_withIdOfWrongLength_returns_badRequest_Test() throws Exception {
+        mockMvc.perform(get("/v1/customers/get/ALFKIX").header("X-Api-Version", "1"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400))
+            .andExpect(jsonPath("$.detail").value("customerId: size must be between 5 and 5"));
+    }
+
+    @Test
+    void CustomersControllerWebMvcTest_add_withCustomerIdOfWrongLength_returns_badRequest_Test() throws Exception {
+        mockMvc.perform(post("/v1/customers/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"customerId\":\"ALF\",\"companyName\":\"Alfreds\"}"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400));
+    }
+
+    @Test
+    void CustomersControllerWebMvcTest_add_withCompanyNameTooLong_returns_badRequest_Test() throws Exception {
+        mockMvc.perform(post("/v1/customers/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"customerId\":\"ALFKI\",\"companyName\":\"" + "x".repeat(41) + "\"}"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400));
+    }
 }

@@ -5,48 +5,76 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.math.BigDecimal;
 
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import io.micrometer.common.lang.Nullable;
 
 public class ProductsDto {
 
-    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN)
+    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN,
+        minimum = OpenApiConfig.ID_MINIMUM, maximum = OpenApiConfig.INT32_MAXIMUM,
+        minLength = 1, maxLength = OpenApiConfig.INT32_MAX_LENGTH)
+    @Min(1)
     private Integer categoryId;
+
+    @Schema(description = "Database default is false.")
     private boolean discontinued;
 
-    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN)
+    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN,
+        minimum = OpenApiConfig.ID_MINIMUM, maximum = OpenApiConfig.INT32_MAXIMUM,
+        minLength = 1, maxLength = OpenApiConfig.INT32_MAX_LENGTH)
+    @Min(1)
     @Nullable
     private Integer productId;
 
-    @Schema(types = {"null", "string"})
+    @Schema(types = {"string"})
     @NotBlank
+    @Size(min = 1, max = 40)
     private String productName;
 
     @Schema(types = {"null", "string"})
+    @Size(max = 20)
     private String quantityPerUnit;
 
-    @Schema(types = {"integer", "string"}, format = "int16", pattern = OpenApiConfig.INTEGER_PATTERN,
-        requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    @NotNull
+    @Schema(types = {"null", "integer", "string"}, format = "int16", pattern = OpenApiConfig.INTEGER_PATTERN,
+        minimum = "0", maximum = OpenApiConfig.INT16_MAXIMUM, minLength = 1, maxLength = OpenApiConfig.INT16_MAX_LENGTH,
+        description = OpenApiConfig.DEFAULT_ZERO_DESCRIPTION)
+    @Min(0)
+    @Max(Short.MAX_VALUE)
     private Integer reorderLevel = 0;
     private boolean reorderLevelProvided;
 
-    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN)
+    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN,
+        minimum = OpenApiConfig.ID_MINIMUM, maximum = OpenApiConfig.INT32_MAXIMUM,
+        minLength = 1, maxLength = OpenApiConfig.INT32_MAX_LENGTH)
+    @Min(1)
     private Integer supplierId;
 
-    @Schema(types = {"null", "number", "string"}, format = "double", pattern = OpenApiConfig.DECIMAL_PATTERN)
+    @Schema(types = {"null", "number", "string"}, format = "double", pattern = OpenApiConfig.DECIMAL_PATTERN,
+        minimum = "0", maximum = OpenApiConfig.MONEY_MAXIMUM, description = OpenApiConfig.DEFAULT_ZERO_DESCRIPTION)
+    @DecimalMin("0")
+    @DecimalMax(OpenApiConfig.MONEY_MAXIMUM)
+    @Digits(integer = 15, fraction = 4)
     private BigDecimal unitPrice;
 
-    @Schema(types = {"integer", "string"}, format = "int16", pattern = OpenApiConfig.INTEGER_PATTERN,
-        requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    @NotNull
+    @Schema(types = {"null", "integer", "string"}, format = "int16", pattern = OpenApiConfig.INTEGER_PATTERN,
+        minimum = "0", maximum = OpenApiConfig.INT16_MAXIMUM, minLength = 1, maxLength = OpenApiConfig.INT16_MAX_LENGTH,
+        description = OpenApiConfig.DEFAULT_ZERO_DESCRIPTION)
+    @Min(0)
+    @Max(Short.MAX_VALUE)
     private Integer unitsInStock = 0;
     private boolean unitsInStockProvided;
 
-    @Schema(types = {"integer", "string"}, format = "int16", pattern = OpenApiConfig.INTEGER_PATTERN,
-        requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    @NotNull
+    @Schema(types = {"null", "integer", "string"}, format = "int16", pattern = OpenApiConfig.INTEGER_PATTERN,
+        minimum = "0", maximum = OpenApiConfig.INT16_MAXIMUM, minLength = 1, maxLength = OpenApiConfig.INT16_MAX_LENGTH,
+        description = OpenApiConfig.DEFAULT_ZERO_DESCRIPTION)
+    @Min(0)
+    @Max(Short.MAX_VALUE)
     private Integer unitsOnOrder = 0;
     private boolean unitsOnOrderProvided;
 

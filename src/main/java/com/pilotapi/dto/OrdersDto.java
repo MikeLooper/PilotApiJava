@@ -2,6 +2,11 @@ package com.pilotapi.dto;
 
 import com.pilotapi.config.OpenApiConfig;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -11,46 +16,68 @@ import io.micrometer.common.lang.Nullable;
 public class OrdersDto {
 
     @Schema(types = {"null", "string"})
+    @Size(min = OpenApiConfig.CUSTOMER_ID_LENGTH, max = OpenApiConfig.CUSTOMER_ID_LENGTH)
     private String customerId;
 
-    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN)
+    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN,
+        minimum = OpenApiConfig.ID_MINIMUM, maximum = OpenApiConfig.INT32_MAXIMUM,
+        minLength = 1, maxLength = OpenApiConfig.INT32_MAX_LENGTH)
+    @Min(1)
     private Integer employeeId;
 
-    @Schema(types = {"null", "number", "string"}, format = "double", pattern = OpenApiConfig.DECIMAL_PATTERN)
+    @Schema(types = {"null", "number", "string"}, format = "double", pattern = OpenApiConfig.DECIMAL_PATTERN,
+        minimum = OpenApiConfig.MONEY_MINIMUM, maximum = OpenApiConfig.MONEY_MAXIMUM,
+        description = OpenApiConfig.DEFAULT_ZERO_DESCRIPTION)
+    @DecimalMin(OpenApiConfig.MONEY_MINIMUM)
+    @DecimalMax(OpenApiConfig.MONEY_MAXIMUM)
+    @Digits(integer = 15, fraction = 4)
     private BigDecimal freight;
 
-    @Schema(types = {"null", "string"}, format = "date-time")
+    @Schema(types = {"null", "string"}, format = "date-time", description = OpenApiConfig.DATETIME_RANGE_DESCRIPTION)
     private LocalDateTime orderDate;
 
-    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN)
+    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN,
+        minimum = OpenApiConfig.ID_MINIMUM, maximum = OpenApiConfig.INT32_MAXIMUM,
+        minLength = 1, maxLength = OpenApiConfig.INT32_MAX_LENGTH)
+    @Min(1)
     @Nullable
     private Integer orderId;
 
-    @Schema(types = {"null", "string"}, format = "date-time")
+    @Schema(types = {"null", "string"}, format = "date-time", description = OpenApiConfig.DATETIME_RANGE_DESCRIPTION)
     private LocalDateTime requiredDate;
 
     @Schema(types = {"null", "string"})
+    @Size(max = 60)
     private String shipAddress;
 
     @Schema(types = {"null", "string"})
+    @Size(max = 15)
     private String shipCity;
 
     @Schema(types = {"null", "string"})
+    @Size(max = 15)
     private String shipCountry;
 
     @Schema(types = {"null", "string"})
+    @Size(max = 40)
     private String shipName;
 
-    @Schema(types = {"null", "string"}, format = "date-time")
+    @Schema(types = {"null", "string"}, format = "date-time", description = OpenApiConfig.DATETIME_RANGE_DESCRIPTION)
     private LocalDateTime shippedDate;
 
     @Schema(types = {"null", "string"})
+    @Size(max = 10)
     private String shipPostalCode;
 
     @Schema(types = {"null", "string"})
+    @Size(max = 15)
     private String shipRegion;
 
-    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN)
+    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN,
+        minimum = OpenApiConfig.ID_MINIMUM, maximum = OpenApiConfig.INT32_MAXIMUM,
+        minLength = 1, maxLength = OpenApiConfig.INT32_MAX_LENGTH,
+        description = "The shipperId of the shipper used for this order.")
+    @Min(1)
     private Integer shipVia;
 
     public String getCustomerId() {

@@ -6,7 +6,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(name = "AddResponseInt")
 public class AddResponseIntDto {
 
-    @Schema(types = {"integer"}, format = "int64", pattern = OpenApiConfig.INTEGER_PATTERN)
+    @Schema(types = {"integer"}, format = "int64", pattern = OpenApiConfig.INTEGER_PATTERN,
+        minimum = OpenApiConfig.ID_MINIMUM, maximum = OpenApiConfig.INT32_MAXIMUM)
     private Long id;
 
     public AddResponseIntDto() {

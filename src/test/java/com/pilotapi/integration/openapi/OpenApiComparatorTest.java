@@ -67,8 +67,9 @@ class OpenApiComparatorTest {
                 "type": "object",
                 "required": ["name"],
                 "properties": {
-                  "name": {"type": ["null", "string"], "description": "The name.", "example": "Chai"},
-                  "count": {"type": ["integer", "string"], "format": "int32", "pattern": "^\\\\d+$", "default": 0},
+                  "name": {"type": ["null", "string"], "maxLength": 40, "description": "The name.", "example": "Chai"},
+                  "count": {"type": ["integer", "string"], "format": "int32", "pattern": "^\\\\d+$", "default": 0,
+                            "minimum": 0, "maximum": 32767},
                   "kind": {"type": "string", "enum": ["a", "b"]},
                   "child": {"oneOf": [{"type": "null"}, {"$ref": "#/components/schemas/Child"}]}
                 }
@@ -118,6 +119,11 @@ class OpenApiComparatorTest {
             severity(ERROR, "Format differs", app -> obj(app, ITEM + "/properties/count").put("format", "int64")),
             severity(ERROR, "Schema pattern differs", app -> obj(app, ITEM + "/properties/count").put("pattern", "^.*$")),
             severity(ERROR, "Schema default differs", app -> obj(app, ITEM + "/properties/count").put("default", 1)),
+            severity(ERROR, "Schema maxLength differs", app -> obj(app, ITEM + "/properties/name").put("maxLength", 30)),
+            severity(ERROR, "Schema maxLength differs", app -> obj(app, ITEM + "/properties/name").remove("maxLength")),
+            severity(ERROR, "Schema minLength differs", app -> obj(app, ITEM + "/properties/name").put("minLength", 1)),
+            severity(ERROR, "Schema minimum differs", app -> obj(app, ITEM + "/properties/count").put("minimum", 1)),
+            severity(ERROR, "Schema maximum differs", app -> obj(app, ITEM + "/properties/count").remove("maximum")),
             severity(ERROR, "Enum values differ",
                 app -> obj(app, ITEM + "/properties/kind").putArray("enum").add("a")),
             severity(ERROR, "Composition (anyOf) differs", app -> {
@@ -199,6 +205,16 @@ class OpenApiComparatorTest {
             finding.severity() == ERROR
                 && finding.location().equals("components.schemas.Child.oneOf[0]")
                 && finding.message().equals("Base type is incompatible")), findings::toString);
+    }
+
+    @Test
+    void OpenApiComparatorTest_zeroMinLength_matchesAbsentMinLength_Test() throws Exception {
+        JsonNode app = baseline();
+        obj(app, ITEM + "/properties/name").put("minLength", 0);
+
+        List<ComplianceFinding> findings = new OpenApiComparator(baseline(), app).compare();
+
+        assertTrue(findings.isEmpty(), findings::toString);
     }
 
     @Test

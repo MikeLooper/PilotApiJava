@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Size;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -56,6 +57,7 @@ public class CustomersController {
     @Operation(summary = "Gets a customer record by its ID.")
     @GetMapping("/get/{customerId}")
     public CustomersDto getById(
+        @Size(min = OpenApiConfig.CUSTOMER_ID_LENGTH, max = OpenApiConfig.CUSTOMER_ID_LENGTH)
         @PathVariable String customerId,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
         @RequestHeader(name = "X-Api-Version", required = false, defaultValue = OpenApiConfig.API_VERSION_PLACEHOLDER) String apiVersion,
@@ -96,6 +98,7 @@ public class CustomersController {
         content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
     @DeleteMapping("/delete/{customerId}")
     public ResponseEntity<Void> delete(
+        @Size(min = OpenApiConfig.CUSTOMER_ID_LENGTH, max = OpenApiConfig.CUSTOMER_ID_LENGTH)
         @PathVariable String customerId,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
         @RequestHeader(name = "X-Api-Version", required = false, defaultValue = OpenApiConfig.API_VERSION_PLACEHOLDER) String apiVersion,

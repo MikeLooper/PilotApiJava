@@ -100,4 +100,34 @@ class OrdersControllerWebMvcTest {
         mockMvc.perform(delete("/v1/orders/delete/10").header("X-Api-Version", "1"))
             .andExpect(status().isNoContent());
     }
+
+    @Test
+    void OrdersControllerWebMvcTest_add_withCustomerIdOfWrongLength_returns_badRequest_Test() throws Exception {
+        mockMvc.perform(post("/v1/orders/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"customerId\":\"VIN\"}"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400));
+    }
+
+    @Test
+    void OrdersControllerWebMvcTest_add_withShipViaBelowMinimum_returns_badRequest_Test() throws Exception {
+        mockMvc.perform(post("/v1/orders/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"shipVia\":0}"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400));
+    }
+
+    @Test
+    void OrdersControllerWebMvcTest_add_withFreightWithMoreThanFourDecimals_returns_badRequest_Test() throws Exception {
+        mockMvc.perform(post("/v1/orders/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"freight\":32.38001}"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400));
+    }
 }
