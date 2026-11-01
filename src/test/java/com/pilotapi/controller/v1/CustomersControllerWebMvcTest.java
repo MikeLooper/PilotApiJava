@@ -131,4 +131,31 @@ class CustomersControllerWebMvcTest {
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.status").value(400));
     }
+
+    @Test
+    void CustomersControllerWebMvcTest_getAll_whenServiceReturnsNull_returns_noContent_Test() throws Exception {
+        when(customerService.getAll(0, 20)).thenReturn(null);
+
+        mockMvc.perform(get("/v1/customers/get-all").header("X-Api-Version", "1"))
+            .andExpect(status().isNoContent())
+            .andExpect(content().string(""));
+    }
+
+    @Test
+    void CustomersControllerWebMvcTest_getAll_whenServiceReturnsEmptyList_returns_ok_Test() throws Exception {
+        when(customerService.getAll(0, 20)).thenReturn(List.of());
+
+        mockMvc.perform(get("/v1/customers/get-all").header("X-Api-Version", "1"))
+            .andExpect(status().isOk())
+            .andExpect(content().json("[]"));
+    }
+
+    @Test
+    void CustomersControllerWebMvcTest_getById_whenServiceReturnsNull_returns_noContent_Test() throws Exception {
+        when(customerService.getById("ZZZZZ")).thenReturn(null);
+
+        mockMvc.perform(get("/v1/customers/get/ZZZZZ").header("X-Api-Version", "1"))
+            .andExpect(status().isNoContent())
+            .andExpect(content().string(""));
+    }
 }

@@ -6,7 +6,6 @@ import com.pilotapi.service.ShipperService;
 import com.pilotapi.config.OpenApiConfig;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -46,28 +45,29 @@ public class ShippersController {
 
     @Operation(summary = "Gets all DTO objects from the shipper table.")
     @GetMapping("/get-all")
-    public List<ShippersDto> getAll(
+    public ResponseEntity<List<ShippersDto>> getAll(
         @RequestParam(name = "page", defaultValue = "0") int page,
         @RequestParam(name = "pageSize", defaultValue = "20") int pageSize,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
         @RequestHeader(name = "X-Api-Version", required = false, defaultValue = OpenApiConfig.API_VERSION_PLACEHOLDER) String apiVersion,
         @RequestHeader(name = "X-Correlation-Id", required = false) UUID correlationId
     ) {
-        return service.getAll(page, pageSize);
+        List<ShippersDto> results = service.getAll(page, pageSize);
+        return results == null ? ResponseEntity.noContent().build() : ResponseEntity.ok(results);
     }
 
     @Operation(summary = "Gets a DTO object of a shipper record by its ID.")
     @GetMapping("/get/{shipperId}")
-    public ShippersDto getById(
-        @Parameter(schema = @Schema(types = {"integer", "string"}, format = "int32",
-            pattern = OpenApiConfig.INTEGER_PATTERN, minimum = OpenApiConfig.ID_MINIMUM,
-            maximum = OpenApiConfig.INT32_MAXIMUM, minLength = 1, maxLength = OpenApiConfig.INT32_MAX_LENGTH))
+    public ResponseEntity<ShippersDto> getById(
+        @Parameter(schema = @Schema(types = {"integer"}, format = "int32", minimum = OpenApiConfig.ID_MINIMUM,
+            maximum = OpenApiConfig.INT32_MAXIMUM))
         @Min(1) @PathVariable Integer shipperId,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
         @RequestHeader(name = "X-Api-Version", required = false, defaultValue = OpenApiConfig.API_VERSION_PLACEHOLDER) String apiVersion,
         @RequestHeader(name = "X-Correlation-Id", required = false) UUID correlationId
     ) {
-        return service.getById(shipperId);
+        ShippersDto result = service.getById(shipperId);
+        return result == null ? ResponseEntity.noContent().build() : ResponseEntity.ok(result);
     }
 
     @Operation(summary = "Adds a new shipper record.")
@@ -83,8 +83,7 @@ public class ShippersController {
     }
 
     @Operation(summary = "Updates an existing shipper record.")
-    @ApiResponse(responseCode = "204", description = "No Content",
-        content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
+    @ApiResponse(responseCode = "204", description = "No Content")
     @PutMapping(path = "/update", consumes = {MediaType.APPLICATION_JSON_VALUE, "application/*+json"})
     public ResponseEntity<Void> update(
         @Valid @RequestBody ShippersDto request,
@@ -98,13 +97,11 @@ public class ShippersController {
     }
 
     @Operation(summary = "Deletes a shipper record by its ID.")
-    @ApiResponse(responseCode = "204", description = "No Content",
-        content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
+    @ApiResponse(responseCode = "204", description = "No Content")
     @DeleteMapping("/delete/{shipperId}")
     public ResponseEntity<Void> delete(
-        @Parameter(schema = @Schema(types = {"integer", "string"}, format = "int32",
-            pattern = OpenApiConfig.INTEGER_PATTERN, minimum = OpenApiConfig.ID_MINIMUM,
-            maximum = OpenApiConfig.INT32_MAXIMUM, minLength = 1, maxLength = OpenApiConfig.INT32_MAX_LENGTH))
+        @Parameter(schema = @Schema(types = {"integer"}, format = "int32", minimum = OpenApiConfig.ID_MINIMUM,
+            maximum = OpenApiConfig.INT32_MAXIMUM))
         @Min(1) @PathVariable Integer shipperId,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
         @RequestHeader(name = "X-Api-Version", required = false, defaultValue = OpenApiConfig.API_VERSION_PLACEHOLDER) String apiVersion,

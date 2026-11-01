@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(name = "OpenTelemetryConfiguration", description = ConfigurationBaseDto.BASE_DESCRIPTION)
 public class OpenTelemetryConfigurationDto extends ConfigurationBaseDto {
 
-    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN,
+    @Schema(types = {"null", "integer"}, format = "int32",
         description = "Gets or sets the OpenTelemetry Port.")
     private Integer port;
 

@@ -32,9 +32,8 @@ public class EmployeesDto {
     @Size(max = 15)
     private String country;
 
-    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN,
-        minimum = OpenApiConfig.ID_MINIMUM, maximum = OpenApiConfig.INT32_MAXIMUM,
-        minLength = 1, maxLength = OpenApiConfig.INT32_MAX_LENGTH)
+    @Schema(types = {"null", "integer"}, format = "int32",
+        minimum = OpenApiConfig.ID_MINIMUM, maximum = OpenApiConfig.INT32_MAXIMUM)
     @Min(1)
     @Nullable
     private Integer employeeId;
@@ -79,9 +78,8 @@ public class EmployeesDto {
     @Size(max = 15)
     private String region;
 
-    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN,
+    @Schema(types = {"null", "integer"}, format = "int32",
         minimum = OpenApiConfig.ID_MINIMUM, maximum = OpenApiConfig.INT32_MAXIMUM,
-        minLength = 1, maxLength = OpenApiConfig.INT32_MAX_LENGTH,
         description = "The employeeId of this employee's manager.")
     @Min(1)
     private Integer reportsTo;

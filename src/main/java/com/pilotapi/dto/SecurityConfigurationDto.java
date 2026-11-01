@@ -23,7 +23,7 @@ public class SecurityConfigurationDto extends ConfigurationBaseDto {
         + "metadata endpoint.")
     private boolean requireHttpsMetadata;
 
-    @Schema(types = {"integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN,
+    @Schema(types = {"integer"}, format = "int32",
         description = "Gets or sets the clock skew tolerance, in seconds, applied to token expiry validation.")
     private int clockSkewSeconds;
 

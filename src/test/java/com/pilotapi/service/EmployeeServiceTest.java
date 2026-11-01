@@ -2,7 +2,6 @@ package com.pilotapi.service;
 
 import com.pilotapi.dto.AddResponseIntDto;
 import com.pilotapi.dto.EmployeesDto;
-import com.pilotapi.exception.ResourceNotFoundException;
 import com.pilotapi.mapper.EmployeeMapper;
 import com.pilotapi.model.Employee;
 import com.pilotapi.repository.EmployeeRepository;
@@ -18,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -77,12 +76,12 @@ class EmployeeServiceTest {
     }
 
     @Test
-    void EmployeeService_getById_throws_resource_not_found_when_missing_Test() {
+    void EmployeeService_getById_returns_null_when_missing_Test() {
         // Arrange
         when(repository.findById(1)).thenReturn(Optional.empty());
 
         // Act + Assert
-        assertThrows(ResourceNotFoundException.class, () -> service.getById(1));
+        assertNull(service.getById(1));
     }
 
     @Test
@@ -102,7 +101,7 @@ class EmployeeServiceTest {
         AddResponseIntDto result = service.add(input);
 
         // Assert
-        assertEquals(99L, result.getId());
+        assertEquals(99, result.getId());
     }
 
     @Test

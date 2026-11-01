@@ -1,0 +1,45 @@
+info:
+  name: Add_NumericString
+  type: http
+  seq: 8
+
+http:
+  method: POST
+  url: "{{Host}}v{{version}}/{{controller}}/add"
+  body:
+    type: json
+    data: |-
+      {
+        "categoryId": 1,
+        "discontinued": true,
+        "productName": "Test Product",
+        "quantityPerUnit": "lots",
+        "reorderLevel": 11,
+        "supplierId": 1,
+        "unitPrice": "23.45",
+        "unitsInStock": 12,
+        "unitsOnOrder": 34
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("should return bad request", function () {
+          expect(res.getStatus()).to.equal(400);
+        });
+
+        test("should report unitPrice sent as a string", function () {
+          const resBody = res.getBody();
+
+          expect(resBody).to.have.property("status", 400);
+          expect(resBody.detail).to.include("Cannot coerce String value");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

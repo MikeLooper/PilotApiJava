@@ -53,10 +53,8 @@ public abstract class AbstractCrudService<E, D, ID, R> implements CrudService<D,
 
     @Override
     public D getById(ID id) {
-        E entity = repository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException(resourceName + " not found"));
-        D result = mapper.toDto(entity);
-        LOGGER.info("Retrieved {} record with id {}", resourceName, id);
+        D result = repository.findById(id).map(mapper::toDto).orElse(null);
+        LOGGER.info("{} {} record with id {}", result == null ? "Did not find" : "Retrieved", resourceName, id);
         return result;
     }
 
@@ -89,21 +87,7 @@ public abstract class AbstractCrudService<E, D, ID, R> implements CrudService<D,
         return true;
     }
 
-    protected static <E> Function<E, AddResponseIntDto> intIdResponse(Function<E, Object> entityIdExtractor) {
-        return saved -> new AddResponseIntDto(toLong(entityIdExtractor.apply(saved)));
-    }
-
-    private static long toLong(Object value) {
-        if (value == null) {
-            return 0L;
-        }
-        if (value instanceof Number number) {
-            return number.longValue();
-        }
-        try {
-            return Long.parseLong(value.toString());
-        } catch (NumberFormatException ex) {
-            return 0L;
-        }
+    protected static <E> Function<E, AddResponseIntDto> intIdResponse(Function<E, Integer> entityIdExtractor) {
+        return saved -> new AddResponseIntDto(entityIdExtractor.apply(saved));
     }
 }

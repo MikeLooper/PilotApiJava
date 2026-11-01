@@ -15,10 +15,12 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -86,7 +88,7 @@ class ProductsControllerWebMvcTest {
 
     @Test
     void ProductsControllerWebMvcTest_add_returns_created_Test() throws Exception {
-        when(productService.add(any(ProductsDto.class))).thenReturn(new AddResponseIntDto(105L));
+        when(productService.add(any(ProductsDto.class))).thenReturn(new AddResponseIntDto(105));
 
         mockMvc.perform(post("/v1/products/add")
                 .header("X-Api-Version", "1")
@@ -126,7 +128,7 @@ class ProductsControllerWebMvcTest {
 
     @Test
     void ProductsControllerWebMvcTest_add_defaults_omitted_stock_levels_to_zero_Test() throws Exception {
-        when(productService.add(any(ProductsDto.class))).thenReturn(new AddResponseIntDto(106L));
+        when(productService.add(any(ProductsDto.class))).thenReturn(new AddResponseIntDto(106));
 
         mockMvc.perform(post("/v1/products/add")
                 .header("X-Api-Version", "1")
@@ -142,7 +144,7 @@ class ProductsControllerWebMvcTest {
 
     @Test
     void ProductsControllerWebMvcTest_add_accepts_null_stock_levels_Test() throws Exception {
-        when(productService.add(any(ProductsDto.class))).thenReturn(new AddResponseIntDto(107L));
+        when(productService.add(any(ProductsDto.class))).thenReturn(new AddResponseIntDto(107));
 
         mockMvc.perform(post("/v1/products/add")
                 .header("X-Api-Version", "1")
@@ -200,5 +202,45 @@ class ProductsControllerWebMvcTest {
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.status").value(400))
             .andExpect(jsonPath("$.detail").value("productId: must be greater than or equal to 1"));
+    }
+
+    @Test
+    void ProductsControllerWebMvcTest_getAll_whenServiceReturnsNull_returns_noContent_Test() throws Exception {
+        when(productService.getAll(0, 20)).thenReturn(null);
+
+        mockMvc.perform(get("/v1/products/get-all").header("X-Api-Version", "1"))
+            .andExpect(status().isNoContent())
+            .andExpect(content().string(""));
+    }
+
+    @Test
+    void ProductsControllerWebMvcTest_getAll_whenServiceReturnsEmptyList_returns_ok_Test() throws Exception {
+        when(productService.getAll(0, 20)).thenReturn(List.of());
+
+        mockMvc.perform(get("/v1/products/get-all").header("X-Api-Version", "1"))
+            .andExpect(status().isOk())
+            .andExpect(content().json("[]"));
+    }
+
+    @Test
+    void ProductsControllerWebMvcTest_getById_whenServiceReturnsNull_returns_noContent_Test() throws Exception {
+        when(productService.getById(1)).thenReturn(null);
+
+        mockMvc.perform(get("/v1/products/get/1").header("X-Api-Version", "1"))
+            .andExpect(status().isNoContent())
+            .andExpect(content().string(""));
+    }
+
+    @Test
+    void ProductsControllerWebMvcTest_add_withNumericFieldSentAsString_returns_badRequest_Test() throws Exception {
+        mockMvc.perform(post("/v1/products/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"productName\":\"Chai\",\"unitPrice\":\"18.00\"}"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400))
+            .andExpect(jsonPath("$.detail").value(containsString("Cannot coerce String value")));
+
+        verifyNoInteractions(productService);
     }
 }

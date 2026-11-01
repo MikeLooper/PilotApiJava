@@ -16,8 +16,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -141,5 +143,45 @@ class OrderDetailsControllerWebMvcTest {
         mockMvc.perform(get("/v1/order-details/get/product/1/order/0").header("X-Api-Version", "1"))
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.status").value(400));
+    }
+
+    @Test
+    void OrderDetailsControllerWebMvcTest_getAll_whenServiceReturnsNull_returns_noContent_Test() throws Exception {
+        when(orderDetailService.getAll(0, 20)).thenReturn(null);
+
+        mockMvc.perform(get("/v1/order-details/get-all").header("X-Api-Version", "1"))
+            .andExpect(status().isNoContent())
+            .andExpect(content().string(""));
+    }
+
+    @Test
+    void OrderDetailsControllerWebMvcTest_getAll_whenServiceReturnsEmptyList_returns_ok_Test() throws Exception {
+        when(orderDetailService.getAll(0, 20)).thenReturn(List.of());
+
+        mockMvc.perform(get("/v1/order-details/get-all").header("X-Api-Version", "1"))
+            .andExpect(status().isOk())
+            .andExpect(content().json("[]"));
+    }
+
+    @Test
+    void OrderDetailsControllerWebMvcTest_getById_whenServiceReturnsNull_returns_noContent_Test() throws Exception {
+        when(orderDetailService.getById(1, 2)).thenReturn(null);
+
+        mockMvc.perform(get("/v1/order-details/get/product/1/order/2").header("X-Api-Version", "1"))
+            .andExpect(status().isNoContent())
+            .andExpect(content().string(""));
+    }
+
+    @Test
+    void OrderDetailsControllerWebMvcTest_add_withNumericFieldSentAsString_returns_badRequest_Test() throws Exception {
+        mockMvc.perform(post("/v1/order-details/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"discount\":0,\"orderId\":1,\"productId\":2,\"quantity\":\"3\",\"unitPrice\":1.5}"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400))
+            .andExpect(jsonPath("$.detail").value(containsString("Cannot coerce String value")));
+
+        verifyNoInteractions(orderDetailService);
     }
 }

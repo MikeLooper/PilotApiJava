@@ -2,7 +2,6 @@ package com.pilotapi.service;
 
 import com.pilotapi.dto.AddResponseStringDto;
 import com.pilotapi.dto.CustomersDto;
-import com.pilotapi.exception.ResourceNotFoundException;
 import com.pilotapi.mapper.CustomerMapper;
 import com.pilotapi.model.Customer;
 import com.pilotapi.repository.CustomerRepository;
@@ -18,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -77,12 +76,12 @@ class CustomerServiceTest {
     }
 
     @Test
-    void CustomerService_getById_throws_resource_not_found_when_missing_Test() {
+    void CustomerService_getById_returns_null_when_missing_Test() {
         // Arrange
         when(repository.findById("ALFKI")).thenReturn(Optional.empty());
 
         // Act + Assert
-        assertThrows(ResourceNotFoundException.class, () -> service.getById("ALFKI"));
+        assertNull(service.getById("ALFKI"));
     }
 
     @Test

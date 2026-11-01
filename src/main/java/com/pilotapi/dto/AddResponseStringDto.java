@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public class AddResponseStringDto {
 
     @Schema(types = {"string"}, minLength = OpenApiConfig.CUSTOMER_ID_LENGTH,
-        maxLength = OpenApiConfig.CUSTOMER_ID_LENGTH)
+        maxLength = OpenApiConfig.CUSTOMER_ID_LENGTH, requiredMode = Schema.RequiredMode.REQUIRED)
     private String id;
 
     public AddResponseStringDto() {

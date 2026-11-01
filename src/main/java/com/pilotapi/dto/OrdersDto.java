@@ -20,13 +20,12 @@ public class OrdersDto {
     @Size(min = OpenApiConfig.CUSTOMER_ID_LENGTH, max = OpenApiConfig.CUSTOMER_ID_LENGTH)
     private String customerId;
 
-    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN,
-        minimum = OpenApiConfig.ID_MINIMUM, maximum = OpenApiConfig.INT32_MAXIMUM,
-        minLength = 1, maxLength = OpenApiConfig.INT32_MAX_LENGTH)
+    @Schema(types = {"null", "integer"}, format = "int32",
+        minimum = OpenApiConfig.ID_MINIMUM, maximum = OpenApiConfig.INT32_MAXIMUM)
     @Min(1)
     private Integer employeeId;
 
-    @Schema(types = {"null", "number", "string"}, format = "double", pattern = OpenApiConfig.DECIMAL_PATTERN,
+    @Schema(types = {"null", "number"}, format = "double",
         minimum = OpenApiConfig.MONEY_MINIMUM, maximum = OpenApiConfig.MONEY_MAXIMUM,
         description = OpenApiConfig.DEFAULT_ZERO_DESCRIPTION)
     @DecimalMin(OpenApiConfig.MONEY_MINIMUM)
@@ -38,9 +37,8 @@ public class OrdersDto {
     @SqlServerDateTime
     private LocalDateTime orderDate;
 
-    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN,
-        minimum = OpenApiConfig.ID_MINIMUM, maximum = OpenApiConfig.INT32_MAXIMUM,
-        minLength = 1, maxLength = OpenApiConfig.INT32_MAX_LENGTH)
+    @Schema(types = {"null", "integer"}, format = "int32",
+        minimum = OpenApiConfig.ID_MINIMUM, maximum = OpenApiConfig.INT32_MAXIMUM)
     @Min(1)
     @Nullable
     private Integer orderId;
@@ -77,9 +75,8 @@ public class OrdersDto {
     @Size(max = 15)
     private String shipRegion;
 
-    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN,
+    @Schema(types = {"null", "integer"}, format = "int32",
         minimum = OpenApiConfig.ID_MINIMUM, maximum = OpenApiConfig.INT32_MAXIMUM,
-        minLength = 1, maxLength = OpenApiConfig.INT32_MAX_LENGTH,
         description = "The shipperId of the shipper used for this order.")
     @Min(1)
     private Integer shipVia;

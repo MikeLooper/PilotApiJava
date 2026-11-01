@@ -24,6 +24,7 @@ import org.springdoc.core.customizers.PropertyCustomizer;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.method.HandlerMethod;
 
@@ -54,23 +55,12 @@ public class OpenApiConfig {
     /** The API contract version and default {@code X-Api-Version} header value. */
     public static final String API_VERSION_PLACEHOLDER = "1.0.0";
 
-    /** Pattern the contract applies to integers that may also be sent as strings. */
-    public static final String INTEGER_PATTERN = "^-?(?:0|[1-9]\\d*)$";
-    /** Pattern the contract applies to money decimals (up to 4 fraction digits) that may also be sent as strings. */
-    public static final String DECIMAL_PATTERN = "^-?(?:0|[1-9]\\d*)(?:\\.\\d{1,4})?$";
-    /** Pattern the contract applies to floats (exponent allowed) that may also be sent as strings. */
-    public static final String FLOAT_PATTERN = "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?(?:[eE][+-]?\\d+)?$";
-
     /** Smallest identifier value the contract allows. */
     public static final String ID_MINIMUM = "1";
     /** Largest int32 value, the contract's upper bound for int32 values. */
     public static final String INT32_MAXIMUM = "2147483647";
-    /** Most characters an int32 value can have when sent as a string. */
-    public static final int INT32_MAX_LENGTH = 10;
     /** Largest int16 value, the contract's upper bound for int16 values. */
     public static final String INT16_MAXIMUM = "32767";
-    /** Most characters an int16 value can have when sent as a string. */
-    public static final int INT16_MAX_LENGTH = 5;
     /** Smallest value of the SQL Server MONEY type. */
     public static final String MONEY_MINIMUM = "-922337203685477.5808";
     /** Largest value of the SQL Server MONEY type. */
@@ -149,6 +139,7 @@ public class OpenApiConfig {
      * <ul>
      *   <li>drops the generated operationId and the {@code Accept} header (which OpenAPI says to ignore);</li>
      *   <li>replaces the shared header/paging parameters with references to their components;</li>
+     *   <li>adds the shared 204 response to {@code /v1/**} operations other than Add, which returns 201;</li>
      *   <li>adds the standard error responses, and for {@code /v1/**} operations the
      *       {@value #BEARER_AUTH_SCHEME} security requirement, matching what
      *       {@link com.pilotapi.security.AuthEnforcementFilter} enforces. System endpoints
@@ -164,6 +155,9 @@ public class OpenApiConfig {
             boolean secured = isSecuredPath(handlerMethod);
             ApiResponses responses = operation.getResponses() == null ? new ApiResponses() : operation.getResponses();
             if (secured) {
+                if (!handlerMethod.hasMethodAnnotation(PostMapping.class)) {
+                    responses.addApiResponse("204", responseRef("NoContent"));
+                }
                 responses.addApiResponse("400", responseRef("BadRequest"));
                 responses.addApiResponse("401", responseRef("Unauthorized"));
                 responses.addApiResponse("403", responseRef("Forbidden"));
@@ -270,13 +264,13 @@ public class OpenApiConfig {
             .in("query")
             .description("The number of the page (within a dataset) to start with during data retrieval.")
             .required(false)
-            .schema(schema("integer", "string").pattern(INTEGER_PATTERN).format("int32")._default(0)));
+            .schema(schema("integer").format("int32")._default(0)));
         parameters.put("PageSizeQuery", new Parameter()
             .name("pageSize")
             .in("query")
             .description("The number of items to return during data retrieval.")
             .required(false)
-            .schema(schema("integer", "string").pattern(INTEGER_PATTERN).format("int32")._default(20)));
+            .schema(schema("integer").format("int32")._default(20)));
         return parameters;
     }
 
@@ -285,15 +279,18 @@ public class OpenApiConfig {
         responses.put("BadRequest", jsonResponse(
             "Bad Request — The server could not understand the request due to invalid syntax or parameters.",
             new JsonSchema().$ref(SCHEMAS_REF + "ProblemDetailsBadRequest")));
-        responses.put("Unauthorized", jsonResponse(
-            "Unauthorized — Authentication is required or the provided credentials are invalid or expired.",
-            schema("string")));
         responses.put("Forbidden", jsonResponse(
             "Forbidden — The authenticated user does not have permission to access the requested resource.",
             schema("string")));
         responses.put("InternalServerError", jsonResponse(
             "Internal Server Error — An unexpected error occurred on the server.",
             new JsonSchema().$ref(SCHEMAS_REF + "ProblemDetails")));
+        responses.put("NoContent", new ApiResponse().description(
+            "No Content - No content was returned; either by design for an Update or Delete, "
+                + "or due to a Null return on a Get."));
+        responses.put("Unauthorized", jsonResponse(
+            "Unauthorized — Authentication is required or the provided credentials are invalid or expired.",
+            schema("string")));
         return responses;
     }
 
@@ -326,9 +323,8 @@ public class OpenApiConfig {
             .description("A short, human-readable summary of the problem type. "
                 + "It should not change between occurrences of the same error.")
             .example(title));
-        properties.put("status", schema("null", "integer", "string")
+        properties.put("status", schema("null", "integer")
             .description("The HTTP status code generated by the origin server for this occurrence of the problem.")
-            .pattern(INTEGER_PATTERN)
             .format("int32")
             .example(status));
         properties.put("detail", schema("null", "string")
