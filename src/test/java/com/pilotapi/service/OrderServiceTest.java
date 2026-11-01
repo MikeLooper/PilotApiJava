@@ -2,7 +2,6 @@ package com.pilotapi.service;
 
 import com.pilotapi.dto.AddResponseIntDto;
 import com.pilotapi.dto.OrdersDto;
-import com.pilotapi.exception.ResourceNotFoundException;
 import com.pilotapi.mapper.OrderMapper;
 import com.pilotapi.model.Order;
 import com.pilotapi.repository.OrderRepository;
@@ -18,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -77,12 +76,12 @@ class OrderServiceTest {
     }
 
     @Test
-    void OrderService_getById_throws_resource_not_found_when_missing_Test() {
+    void OrderService_getById_returns_null_when_missing_Test() {
         // Arrange
         when(repository.findById(10)).thenReturn(Optional.empty());
 
         // Act + Assert
-        assertThrows(ResourceNotFoundException.class, () -> service.getById(10));
+        assertNull(service.getById(10));
     }
 
     @Test
@@ -102,7 +101,7 @@ class OrderServiceTest {
         AddResponseIntDto result = service.add(input);
 
         // Assert
-        assertEquals(77L, result.getId());
+        assertEquals(77, result.getId());
     }
 
     @Test

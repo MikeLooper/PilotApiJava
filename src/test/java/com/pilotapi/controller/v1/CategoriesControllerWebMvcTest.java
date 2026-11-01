@@ -16,8 +16,10 @@ import com.pilotapi.security.SecurityConfig;
 import java.util.List;
 
 import static org.hamcrest.Matchers.matchesPattern;
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -85,7 +87,7 @@ class CategoriesControllerWebMvcTest {
 
     @Test
     void CategoriesControllerWebMvcTest_add_returns_created_Test() throws Exception {
-        when(categoryService.add(any(CategoriesDto.class))).thenReturn(new AddResponseIntDto(100L));
+        when(categoryService.add(any(CategoriesDto.class))).thenReturn(new AddResponseIntDto(100));
 
         mockMvc.perform(post("/v1/categories/add")
                 .header("X-Api-Version", "1")
@@ -228,5 +230,45 @@ class CategoriesControllerWebMvcTest {
             .andExpect(status().isBadRequest())
             .andExpect(jsonPath("$.status").value(400))
             .andExpect(jsonPath("$.detail").value("categoryId: must be greater than or equal to 1"));
+    }
+
+    @Test
+    void CategoriesControllerWebMvcTest_getAll_whenServiceReturnsNull_returns_noContent_Test() throws Exception {
+        when(categoryService.getAll(0, 20)).thenReturn(null);
+
+        mockMvc.perform(get("/v1/categories/get-all").header("X-Api-Version", "1"))
+            .andExpect(status().isNoContent())
+            .andExpect(content().string(""));
+    }
+
+    @Test
+    void CategoriesControllerWebMvcTest_getAll_whenServiceReturnsEmptyList_returns_ok_Test() throws Exception {
+        when(categoryService.getAll(0, 20)).thenReturn(List.of());
+
+        mockMvc.perform(get("/v1/categories/get-all").header("X-Api-Version", "1"))
+            .andExpect(status().isOk())
+            .andExpect(content().json("[]"));
+    }
+
+    @Test
+    void CategoriesControllerWebMvcTest_getById_whenServiceReturnsNull_returns_noContent_Test() throws Exception {
+        when(categoryService.getById(1)).thenReturn(null);
+
+        mockMvc.perform(get("/v1/categories/get/1").header("X-Api-Version", "1"))
+            .andExpect(status().isNoContent())
+            .andExpect(content().string(""));
+    }
+
+    @Test
+    void CategoriesControllerWebMvcTest_add_withNumericFieldSentAsString_returns_badRequest_Test() throws Exception {
+        mockMvc.perform(post("/v1/categories/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"categoryId\":\"1\",\"categoryName\":\"Beverages\"}"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400))
+            .andExpect(jsonPath("$.detail").value(containsString("Cannot coerce String value")));
+
+        verifyNoInteractions(categoryService);
     }
 }

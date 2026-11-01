@@ -15,8 +15,10 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -75,7 +77,7 @@ class ShippersControllerWebMvcTest {
 
     @Test
     void ShippersControllerWebMvcTest_add_returns_created_Test() throws Exception {
-        when(shipperService.add(any(ShippersDto.class))).thenReturn(new AddResponseIntDto(106L));
+        when(shipperService.add(any(ShippersDto.class))).thenReturn(new AddResponseIntDto(106));
 
         mockMvc.perform(post("/v1/shippers/add")
                 .header("X-Api-Version", "1")
@@ -121,5 +123,45 @@ class ShippersControllerWebMvcTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"companyName\":\"Speedy Express\",\"phone\":\"" + "5".repeat(25) + "\"}"))
             .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void ShippersControllerWebMvcTest_getAll_whenServiceReturnsNull_returns_noContent_Test() throws Exception {
+        when(shipperService.getAll(0, 20)).thenReturn(null);
+
+        mockMvc.perform(get("/v1/shippers/get-all").header("X-Api-Version", "1"))
+            .andExpect(status().isNoContent())
+            .andExpect(content().string(""));
+    }
+
+    @Test
+    void ShippersControllerWebMvcTest_getAll_whenServiceReturnsEmptyList_returns_ok_Test() throws Exception {
+        when(shipperService.getAll(0, 20)).thenReturn(List.of());
+
+        mockMvc.perform(get("/v1/shippers/get-all").header("X-Api-Version", "1"))
+            .andExpect(status().isOk())
+            .andExpect(content().json("[]"));
+    }
+
+    @Test
+    void ShippersControllerWebMvcTest_getById_whenServiceReturnsNull_returns_noContent_Test() throws Exception {
+        when(shipperService.getById(1)).thenReturn(null);
+
+        mockMvc.perform(get("/v1/shippers/get/1").header("X-Api-Version", "1"))
+            .andExpect(status().isNoContent())
+            .andExpect(content().string(""));
+    }
+
+    @Test
+    void ShippersControllerWebMvcTest_add_withNumericFieldSentAsString_returns_badRequest_Test() throws Exception {
+        mockMvc.perform(post("/v1/shippers/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"shipperId\":\"1\",\"companyName\":\"Speedy\"}"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400))
+            .andExpect(jsonPath("$.detail").value(containsString("Cannot coerce String value")));
+
+        verifyNoInteractions(shipperService);
     }
 }

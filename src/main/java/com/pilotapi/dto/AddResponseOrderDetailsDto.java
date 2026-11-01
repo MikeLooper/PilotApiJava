@@ -6,14 +6,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(name = "AddResponseOrderDetails")
 public class AddResponseOrderDetailsDto {
 
-    @Schema(types = {"integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN,
-        minimum = OpenApiConfig.ID_MINIMUM, maximum = OpenApiConfig.INT32_MAXIMUM,
-        minLength = 1, maxLength = OpenApiConfig.INT32_MAX_LENGTH, requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(types = {"integer"}, format = "int32",
+        minimum = OpenApiConfig.ID_MINIMUM, maximum = OpenApiConfig.INT32_MAXIMUM, requiredMode = Schema.RequiredMode.REQUIRED)
     private Integer orderId;
 
-    @Schema(types = {"integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN,
-        minimum = OpenApiConfig.ID_MINIMUM, maximum = OpenApiConfig.INT32_MAXIMUM,
-        minLength = 1, maxLength = OpenApiConfig.INT32_MAX_LENGTH, requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(types = {"integer"}, format = "int32",
+        minimum = OpenApiConfig.ID_MINIMUM, maximum = OpenApiConfig.INT32_MAXIMUM, requiredMode = Schema.RequiredMode.REQUIRED)
     private Integer productId;
 
     public AddResponseOrderDetailsDto() {

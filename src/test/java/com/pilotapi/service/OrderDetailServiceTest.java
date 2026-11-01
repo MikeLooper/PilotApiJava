@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -94,12 +95,12 @@ class OrderDetailServiceTest {
     }
 
     @Test
-    void OrderDetailService_getById_throws_resource_not_found_when_missing_Test() {
+    void OrderDetailService_getById_returns_null_when_missing_Test() {
         // Arrange
         when(repository.findById(new OrderDetailId(1, 10))).thenReturn(Optional.empty());
 
         // Act + Assert
-        assertThrows(ResourceNotFoundException.class, () -> service.getById(1, 10));
+        assertNull(service.getById(1, 10));
     }
 
     @Test

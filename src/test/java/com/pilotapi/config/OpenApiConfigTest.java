@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springdoc.core.customizers.OperationCustomizer;
 import org.springdoc.core.customizers.PropertyCustomizer;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.method.HandlerMethod;
 
@@ -69,7 +70,7 @@ class OpenApiConfigTest {
 
         assertEquals(Set.of("ApiVersionHeader", "CorrelationIdHeader", "PageQuery", "PageSizeQuery"),
             components.getParameters().keySet());
-        assertEquals(Set.of("BadRequest", "Unauthorized", "Forbidden", "InternalServerError"),
+        assertEquals(Set.of("BadRequest", "Unauthorized", "Forbidden", "InternalServerError", "NoContent"),
             components.getResponses().keySet());
         assertEquals(Set.of("DataSourceTypes", "ProblemDetails", "ProblemDetailsBadRequest"),
             components.getSchemas().keySet());
@@ -87,9 +88,39 @@ class OpenApiConfigTest {
 
         assertEquals(1, operation.getSecurity().size());
         assertTrue(operation.getSecurity().get(0).containsKey(OpenApiConfig.BEARER_AUTH_SCHEME));
-        assertEquals(Set.of("400", "401", "403", "500"), operation.getResponses().keySet());
+        assertEquals(Set.of("204", "400", "401", "403", "500"), operation.getResponses().keySet());
+        assertEquals("#/components/responses/NoContent", operation.getResponses().get("204").get$ref());
         assertEquals("#/components/responses/BadRequest", operation.getResponses().get("400").get$ref());
         assertNull(operation.getOperationId());
+    }
+
+    @Test
+    void OpenApiConfigTest_operationCustomizer_doesNotAddNoContentToPostOperation_Test() throws NoSuchMethodException {
+        OperationCustomizer customizer = openApiConfig.contractOperationCustomizer();
+        HandlerMethod handlerMethod = new HandlerMethod(new SecuredDummyController(),
+            SecuredDummyController.class.getMethod("post"));
+
+        Operation operation = customizer.customize(new Operation(), handlerMethod);
+
+        assertEquals(Set.of("400", "401", "403", "500"), operation.getResponses().keySet());
+    }
+
+    @Test
+    void OpenApiConfigTest_customOpenApi_noContentResponseHasNoBody_Test() {
+        OpenAPI openApi = openApiConfig.customOpenApi(new OpenApiProperties(), new ApplicationMetadataProperties());
+
+        assertNull(openApi.getComponents().getResponses().get("NoContent").getContent());
+    }
+
+    @Test
+    void OpenApiConfigTest_customOpenApi_pagingParametersAreIntegerOnly_Test() {
+        OpenAPI openApi = openApiConfig.customOpenApi(new OpenApiProperties(), new ApplicationMetadataProperties());
+
+        for (String name : List.of("PageQuery", "PageSizeQuery")) {
+            Schema<?> schema = openApi.getComponents().getParameters().get(name).getSchema();
+            assertEquals(Set.of("integer"), schema.getTypes());
+            assertNull(schema.getPattern());
+        }
     }
 
     @Test
@@ -188,6 +219,10 @@ class OpenApiConfigTest {
     private static class SecuredDummyController {
         @GetMapping
         public void get() {
+        }
+
+        @PostMapping
+        public void post() {
         }
     }
 

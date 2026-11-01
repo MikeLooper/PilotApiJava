@@ -9,9 +9,8 @@ import jakarta.validation.constraints.Size;
 
 public class CategoriesDto {
 
-    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN,
-        minimum = OpenApiConfig.ID_MINIMUM, maximum = OpenApiConfig.INT32_MAXIMUM,
-        minLength = 1, maxLength = OpenApiConfig.INT32_MAX_LENGTH)
+    @Schema(types = {"null", "integer"}, format = "int32",
+        minimum = OpenApiConfig.ID_MINIMUM, maximum = OpenApiConfig.INT32_MAXIMUM)
     @Min(1)
     @Nullable
     private Integer categoryId;

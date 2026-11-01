@@ -1,0 +1,39 @@
+info:
+  name: Add_NumericString
+  type: http
+  seq: 8
+
+http:
+  method: POST
+  url: "{{Host}}v{{version}}/{{controller}}/add"
+  body:
+    type: json
+    data: |-
+      {
+        "shipperId": "1",
+        "companyName": "Test Shipper",
+        "phone": "(503) 555-9831"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("should return bad request", function () {
+          expect(res.getStatus()).to.equal(400);
+        });
+
+        test("should report shipperId sent as a string", function () {
+          const resBody = res.getBody();
+
+          expect(resBody).to.have.property("status", 400);
+          expect(resBody.detail).to.include("Cannot coerce String value");
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

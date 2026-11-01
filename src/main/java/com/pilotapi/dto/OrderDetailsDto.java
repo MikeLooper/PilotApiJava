@@ -14,7 +14,7 @@ import jakarta.validation.constraints.NotNull;
 
 public class OrderDetailsDto {
 
-    @Schema(types = {"number", "string"}, format = "float", pattern = OpenApiConfig.FLOAT_PATTERN,
+    @Schema(types = {"number"}, format = "float",
         minimum = "0", maximum = "1",
         description = "Discount as a fraction of the unit price (0 to 1). Database default is 0.")
     @NotNull
@@ -22,29 +22,27 @@ public class OrderDetailsDto {
     @DecimalMax("1")
     private BigDecimal discount;
 
-    @Schema(types = {"integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN,
-        minimum = OpenApiConfig.ID_MINIMUM, maximum = OpenApiConfig.INT32_MAXIMUM,
-        minLength = 1, maxLength = OpenApiConfig.INT32_MAX_LENGTH)
+    @Schema(types = {"integer"}, format = "int32",
+        minimum = OpenApiConfig.ID_MINIMUM, maximum = OpenApiConfig.INT32_MAXIMUM)
     @NotNull
     @Min(1)
     private Integer orderId;
 
-    @Schema(types = {"integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN,
-        minimum = OpenApiConfig.ID_MINIMUM, maximum = OpenApiConfig.INT32_MAXIMUM,
-        minLength = 1, maxLength = OpenApiConfig.INT32_MAX_LENGTH)
+    @Schema(types = {"integer"}, format = "int32",
+        minimum = OpenApiConfig.ID_MINIMUM, maximum = OpenApiConfig.INT32_MAXIMUM)
     @NotNull
     @Min(1)
     private Integer productId;
 
-    @Schema(types = {"integer", "string"}, format = "int16", pattern = OpenApiConfig.INTEGER_PATTERN,
-        minimum = "1", maximum = OpenApiConfig.INT16_MAXIMUM, minLength = 1, maxLength = OpenApiConfig.INT16_MAX_LENGTH,
+    @Schema(types = {"integer"}, format = "int16",
+        minimum = "1", maximum = OpenApiConfig.INT16_MAXIMUM,
         description = "Database default is 1.")
     @NotNull
     @Min(1)
     @Max(Short.MAX_VALUE)
     private Integer quantity;
 
-    @Schema(types = {"number", "string"}, format = "double", pattern = OpenApiConfig.DECIMAL_PATTERN,
+    @Schema(types = {"number"}, format = "double",
         minimum = "0", maximum = OpenApiConfig.MONEY_MAXIMUM, description = OpenApiConfig.DEFAULT_ZERO_DESCRIPTION)
     @NotNull
     @DecimalMin("0")

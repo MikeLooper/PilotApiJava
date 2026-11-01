@@ -9,7 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 @Schema(name = "DataConnectionConfiguration", description = "Configuration for a data source connection.")
 public class DataConnectionConfigurationDto extends ConfigurationBaseDto {
 
-    @Schema(types = {"integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN,
+    @Schema(types = {"integer"}, format = "int32",
         description = "Gets or sets the connection timeout in seconds. A value of 0 indicates no timeout.")
     private int connectTimeout;
 
@@ -20,7 +20,7 @@ public class DataConnectionConfigurationDto extends ConfigurationBaseDto {
     @Schema(types = {"null", "string"}, description = "Gets or sets the data source host (e.g., \"localhost\")")
     private String host;
 
-    @Schema(types = {"null", "integer", "string"}, format = "int32", pattern = OpenApiConfig.INTEGER_PATTERN,
+    @Schema(types = {"null", "integer"}, format = "int32",
         description = "Gets or sets the data source port number. A value of null indicates the default port for "
             + "the specified data source type.")
     private Integer port;

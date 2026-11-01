@@ -35,8 +35,7 @@ public class OrderDetailService {
     }
 
     public OrderDetailsDto getById(Integer productId, Integer orderId) {
-        return mapper.toDto(repository.findById(new OrderDetailId(productId, orderId))
-            .orElseThrow(() -> new ResourceNotFoundException("Order detail not found")));
+        return repository.findById(new OrderDetailId(productId, orderId)).map(mapper::toDto).orElse(null);
     }
 
     public AddResponseOrderDetailsDto add(OrderDetailsDto dto) {

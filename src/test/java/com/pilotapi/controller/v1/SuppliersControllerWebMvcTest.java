@@ -15,8 +15,10 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -75,7 +77,7 @@ class SuppliersControllerWebMvcTest {
 
     @Test
     void SuppliersControllerWebMvcTest_add_returns_created_Test() throws Exception {
-        when(supplierService.add(any(SuppliersDto.class))).thenReturn(new AddResponseIntDto(107L));
+        when(supplierService.add(any(SuppliersDto.class))).thenReturn(new AddResponseIntDto(107));
 
         mockMvc.perform(post("/v1/suppliers/add")
                 .header("X-Api-Version", "1")
@@ -102,5 +104,45 @@ class SuppliersControllerWebMvcTest {
 
         mockMvc.perform(delete("/v1/suppliers/delete/1").header("X-Api-Version", "1"))
             .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void SuppliersControllerWebMvcTest_getAll_whenServiceReturnsNull_returns_noContent_Test() throws Exception {
+        when(supplierService.getAll(0, 20)).thenReturn(null);
+
+        mockMvc.perform(get("/v1/suppliers/get-all").header("X-Api-Version", "1"))
+            .andExpect(status().isNoContent())
+            .andExpect(content().string(""));
+    }
+
+    @Test
+    void SuppliersControllerWebMvcTest_getAll_whenServiceReturnsEmptyList_returns_ok_Test() throws Exception {
+        when(supplierService.getAll(0, 20)).thenReturn(List.of());
+
+        mockMvc.perform(get("/v1/suppliers/get-all").header("X-Api-Version", "1"))
+            .andExpect(status().isOk())
+            .andExpect(content().json("[]"));
+    }
+
+    @Test
+    void SuppliersControllerWebMvcTest_getById_whenServiceReturnsNull_returns_noContent_Test() throws Exception {
+        when(supplierService.getById(1)).thenReturn(null);
+
+        mockMvc.perform(get("/v1/suppliers/get/1").header("X-Api-Version", "1"))
+            .andExpect(status().isNoContent())
+            .andExpect(content().string(""));
+    }
+
+    @Test
+    void SuppliersControllerWebMvcTest_add_withNumericFieldSentAsString_returns_badRequest_Test() throws Exception {
+        mockMvc.perform(post("/v1/suppliers/add")
+                .header("X-Api-Version", "1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"supplierId\":\"1\",\"companyName\":\"Exotic\"}"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400))
+            .andExpect(jsonPath("$.detail").value(containsString("Cannot coerce String value")));
+
+        verifyNoInteractions(supplierService);
     }
 }

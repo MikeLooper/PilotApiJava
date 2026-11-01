@@ -5,7 +5,6 @@ import com.pilotapi.dto.CustomersDto;
 import com.pilotapi.service.CustomerService;
 import com.pilotapi.config.OpenApiConfig;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -44,26 +43,28 @@ public class CustomersController {
 
     @Operation(summary = "Gets all DTO objects of the customer table.")
     @GetMapping("/get-all")
-    public List<CustomersDto> getAll(
+    public ResponseEntity<List<CustomersDto>> getAll(
         @RequestParam(name = "page", defaultValue = "0") int page,
         @RequestParam(name = "pageSize", defaultValue = "20") int pageSize,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
         @RequestHeader(name = "X-Api-Version", required = false, defaultValue = OpenApiConfig.API_VERSION_PLACEHOLDER) String apiVersion,
         @RequestHeader(name = "X-Correlation-Id", required = false) UUID correlationId
     ) {
-        return service.getAll(page, pageSize);
+        List<CustomersDto> results = service.getAll(page, pageSize);
+        return results == null ? ResponseEntity.noContent().build() : ResponseEntity.ok(results);
     }
 
     @Operation(summary = "Gets a customer record by its ID.")
     @GetMapping("/get/{customerId}")
-    public CustomersDto getById(
+    public ResponseEntity<CustomersDto> getById(
         @Size(min = OpenApiConfig.CUSTOMER_ID_LENGTH, max = OpenApiConfig.CUSTOMER_ID_LENGTH)
         @PathVariable String customerId,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
         @RequestHeader(name = "X-Api-Version", required = false, defaultValue = OpenApiConfig.API_VERSION_PLACEHOLDER) String apiVersion,
         @RequestHeader(name = "X-Correlation-Id", required = false) UUID correlationId
     ) {
-        return service.getById(customerId);
+        CustomersDto result = service.getById(customerId);
+        return result == null ? ResponseEntity.noContent().build() : ResponseEntity.ok(result);
     }
 
     @Operation(summary = "Adds a new customer record.")
@@ -79,8 +80,7 @@ public class CustomersController {
     }
 
     @Operation(summary = "Updates an existing customer record.")
-    @ApiResponse(responseCode = "204", description = "No Content",
-        content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
+    @ApiResponse(responseCode = "204", description = "No Content")
     @PutMapping(path = "/update", consumes = {MediaType.APPLICATION_JSON_VALUE, "application/*+json"})
     public ResponseEntity<Void> update(
         @Valid @RequestBody CustomersDto request,
@@ -94,8 +94,7 @@ public class CustomersController {
     }
 
     @Operation(summary = "Deletes a customer record by its ID.")
-    @ApiResponse(responseCode = "204", description = "No Content",
-        content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
+    @ApiResponse(responseCode = "204", description = "No Content")
     @DeleteMapping("/delete/{customerId}")
     public ResponseEntity<Void> delete(
         @Size(min = OpenApiConfig.CUSTOMER_ID_LENGTH, max = OpenApiConfig.CUSTOMER_ID_LENGTH)
