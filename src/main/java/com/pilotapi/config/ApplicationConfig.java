@@ -1,5 +1,6 @@
 package com.pilotapi.config;
 
+import com.pilotapi.common.EndpointLoggingInterceptor;
 import com.pilotapi.common.RequestSettings;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -43,6 +44,7 @@ public class ApplicationConfig implements HibernatePropertiesCustomizer, WebMvcC
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new EndpointLoggingInterceptor());
         registry.addInterceptor(new ApiHeaderInterceptor(OpenApiConfig.API_VERSION_PLACEHOLDER));
     }
 
@@ -55,13 +57,16 @@ public class ApplicationConfig implements HibernatePropertiesCustomizer, WebMvcC
 
         @Override
         public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-            String apiVersion = request.getHeader("X-Api-Version");
-            if (apiVersion != null
-                && apiVersion.codePointCount(0, apiVersion.length()) > OpenApiConfig.API_VERSION_MAX_LENGTH) {
-                throw new IllegalArgumentException("X-Api-Version must be at most "
-                    + OpenApiConfig.API_VERSION_MAX_LENGTH + " characters");
-            }
+            rejectIfLongerThan(request, "X-Api-Version", OpenApiConfig.API_VERSION_MAX_LENGTH);
+            rejectIfLongerThan(request, RequestSettings.CALLER_NAME_HEADER, OpenApiConfig.CALLER_NAME_MAX_LENGTH);
             return true;
+        }
+
+        private static void rejectIfLongerThan(HttpServletRequest request, String headerName, int maxLength) {
+            String value = request.getHeader(headerName);
+            if (value != null && value.codePointCount(0, value.length()) > maxLength) {
+                throw new IllegalArgumentException(headerName + " must be at most " + maxLength + " characters");
+            }
         }
 
         @Override

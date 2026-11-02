@@ -68,7 +68,7 @@ class OpenApiConfigTest {
         OpenAPI openApi = openApiConfig.customOpenApi(new OpenApiProperties(), new ApplicationMetadataProperties());
         Components components = openApi.getComponents();
 
-        assertEquals(Set.of("ApiVersionHeader", "CorrelationIdHeader", "PageQuery", "PageSizeQuery"),
+        assertEquals(Set.of("ApiVersionHeader", "CallerNameHeader", "CorrelationIdHeader", "PageQuery", "PageSizeQuery"),
             components.getParameters().keySet());
         assertEquals(Set.of("BadRequest", "Unauthorized", "Forbidden", "InternalServerError", "NoContent"),
             components.getResponses().keySet());
@@ -146,15 +146,29 @@ class OpenApiConfigTest {
             pathParameter,
             new Parameter().name("Accept").in("header"),
             new Parameter().name("X-Api-Version").in("header"),
+            new Parameter().name("X-Caller-Name").in("header"),
             new Parameter().name("X-Correlation-Id").in("header"))));
 
         List<Parameter> parameters = customizer.customize(operation, handlerMethod).getParameters();
 
-        assertEquals(4, parameters.size());
+        assertEquals(5, parameters.size());
         assertEquals("#/components/parameters/PageQuery", parameters.get(0).get$ref());
         assertSame(pathParameter, parameters.get(1));
         assertEquals("#/components/parameters/ApiVersionHeader", parameters.get(2).get$ref());
-        assertEquals("#/components/parameters/CorrelationIdHeader", parameters.get(3).get$ref());
+        assertEquals("#/components/parameters/CallerNameHeader", parameters.get(3).get$ref());
+        assertEquals("#/components/parameters/CorrelationIdHeader", parameters.get(4).get$ref());
+    }
+
+    @Test
+    void OpenApiConfigTest_customOpenApi_callerNameHeaderMatchesContract_Test() {
+        OpenAPI openApi = openApiConfig.customOpenApi(new OpenApiProperties(), new ApplicationMetadataProperties());
+
+        Parameter callerName = openApi.getComponents().getParameters().get("CallerNameHeader");
+
+        assertEquals("X-Caller-Name", callerName.getName());
+        assertEquals("header", callerName.getIn());
+        assertEquals(Boolean.FALSE, callerName.getRequired());
+        assertEquals(100, callerName.getSchema().getMaxLength());
     }
 
     @Test

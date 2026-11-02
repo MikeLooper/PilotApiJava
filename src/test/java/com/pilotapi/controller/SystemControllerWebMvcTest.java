@@ -56,6 +56,63 @@ class SystemControllerWebMvcTest {
     }
 
     @Test
+    void SystemControllerWebMvcTest_healthcheck_acceptsCallerNameAndEchoesCorrelationId_Test() throws Exception {
+        when(systemService.healthcheck()).thenReturn("OK");
+
+        mockMvc.perform(get("/healthcheck")
+                .header("X-Api-Version", "1.2.3")
+                .header("X-Caller-Name", "PilotAngularUi")
+                .header("X-Correlation-Id", "7ea2c7f7-8b46-475d-86f8-7aaaa9e4a35b"))
+            .andExpect(status().isOk())
+            .andExpect(header().string("X-Api-Version", "1.2.3"))
+            .andExpect(header().string("X-Correlation-Id", "7ea2c7f7-8b46-475d-86f8-7aaaa9e4a35b"))
+            .andExpect(header().exists("X-Request-Id"));
+    }
+
+    @Test
+    void SystemControllerWebMvcTest_healthcheck_rejectsCallerNameHeaderLongerThan100Characters_Test() throws Exception {
+        mockMvc.perform(get("/healthcheck")
+                .header("X-Caller-Name", "a".repeat(101)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.title").value("Bad Request"))
+            .andExpect(jsonPath("$.status").value(400));
+    }
+
+    @Test
+    void SystemControllerWebMvcTest_healthcheck_acceptsCallerNameHeaderOf100Characters_Test() throws Exception {
+        when(systemService.healthcheck()).thenReturn("OK");
+
+        mockMvc.perform(get("/healthcheck")
+                .header("X-Caller-Name", "a".repeat(100)))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    void SystemControllerWebMvcTest_about_withInvalidCorrelationId_returns_badRequest_Test() throws Exception {
+        mockMvc.perform(get("/about")
+                .header("X-Correlation-Id", "not-a-uuid"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400));
+    }
+
+    @Test
+    void SystemControllerWebMvcTest_about_passesApiVersionHeaderToService_Test() throws Exception {
+        AboutResponseDto dto = new AboutResponseDto();
+        dto.setApiVersion("1.2.3");
+        when(systemService.about(false, "1.2.3")).thenReturn(dto);
+
+        mockMvc.perform(get("/about")
+                .header("X-Api-Version", "1.2.3")
+                .header("X-Caller-Name", "PilotAngularUi")
+                .header("X-Correlation-Id", "7ea2c7f7-8b46-475d-86f8-7aaaa9e4a35b"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.apiVersion").value("1.2.3"))
+            .andExpect(header().string("X-Correlation-Id", "7ea2c7f7-8b46-475d-86f8-7aaaa9e4a35b"));
+
+        verify(systemService).about(false, "1.2.3");
+    }
+
+    @Test
     void SystemControllerWebMvcTest_about_returns_ok_response_Test() throws Exception {
         AboutResponseDto dto = new AboutResponseDto();
         dto.setApiVersion("1.0.0");

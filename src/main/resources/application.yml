@@ -27,6 +27,11 @@ spring:
       # The contract's numeric fields are numbers only, so "1" must not be coerced to 1.
       allow-coercion-of-scalars: false
 
+logging:
+  pattern:
+    # Prefixes each console line with the request's settings, which RequestSettingsFilter puts in the MDC.
+    correlation: "[correlationId=%X{correlationId:-} requestId=%X{requestId:-} callerName=%X{callerName:-}] "
+
 management:
   endpoints:
     web:

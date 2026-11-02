@@ -21,6 +21,8 @@ request:
       value: application/json
     - name: X-Api-Version
       value: "1"
+    - name: X-Caller-Name
+      value: PilotApiJava-Bruno
   auth:
     type: oauth2
     flow: resource_owner_password_credentials
