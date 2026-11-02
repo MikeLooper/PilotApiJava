@@ -51,6 +51,8 @@ otel:
       protocol: ${OTEL_EXPORTER_OTLP_PROTOCOL:grpc}
   traces:
     exporter: otlp
+    # Record every request, whatever sampling decision the caller's traceparent carries.
+    sampler: ${OTEL_TRACES_SAMPLER:always_on}
   metrics:
     exporter: otlp
   logs:
