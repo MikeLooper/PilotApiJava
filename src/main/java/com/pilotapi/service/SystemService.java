@@ -84,14 +84,14 @@ public class SystemService {
         String productName;
         try (Connection connection = dataSource.getConnection()) {
             productName = connection.getMetaData().getDatabaseProductName();
-            LOGGER.info("Database call completed: SystemService.resolveDatabaseName in {} ms",
-                (System.nanoTime() - startTime) / 1_000_000);
         } catch (SQLException e) {
             LOGGER.warn("Database call failed: SystemService.resolveDatabaseName after {} ms",
                 (System.nanoTime() - startTime) / 1_000_000, e);
             return null;
         }
 
+        LOGGER.info("Database call completed: SystemService.resolveDatabaseName in {} ms",
+            (System.nanoTime() - startTime) / 1_000_000);
         if (productName == null) {
             return null;
         }
