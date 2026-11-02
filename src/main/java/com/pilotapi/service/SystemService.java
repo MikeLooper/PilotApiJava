@@ -3,6 +3,8 @@ package com.pilotapi.service;
 import com.pilotapi.config.ApplicationMetadataProperties;
 import com.pilotapi.dto.AboutResponseDto;
 import com.pilotapi.dto.ApplicationConfigurationDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,8 @@ import java.util.Locale;
 
 @Service
 public class SystemService {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SystemService.class);
 
     private final ApplicationMetadataProperties metadata;
     private final DataSource dataSource;
@@ -75,22 +79,30 @@ public class SystemService {
     }
 
     private String resolveDatabaseName() {
+        LOGGER.info("Database call started: SystemService.resolveDatabaseName");
+        long startTime = System.nanoTime();
+        String productName;
         try (Connection connection = dataSource.getConnection()) {
-            String productName = connection.getMetaData().getDatabaseProductName();
-            if (productName == null) {
-                return null;
-            }
-
-            String normalized = productName.toLowerCase(Locale.ROOT);
-            if (normalized.contains("sql server")) {
-                return "SQL Server";
-            }
-            if (normalized.contains("postgresql")) {
-                return "PostgreSQL";
-            }
-            return productName;
+            productName = connection.getMetaData().getDatabaseProductName();
         } catch (SQLException e) {
+            LOGGER.warn("Database call failed: SystemService.resolveDatabaseName after {} ms",
+                (System.nanoTime() - startTime) / 1_000_000, e);
             return null;
         }
+
+        LOGGER.info("Database call completed: SystemService.resolveDatabaseName in {} ms",
+            (System.nanoTime() - startTime) / 1_000_000);
+        if (productName == null) {
+            return null;
+        }
+
+        String normalized = productName.toLowerCase(Locale.ROOT);
+        if (normalized.contains("sql server")) {
+            return "SQL Server";
+        }
+        if (normalized.contains("postgresql")) {
+            return "PostgreSQL";
+        }
+        return productName;
     }
 }

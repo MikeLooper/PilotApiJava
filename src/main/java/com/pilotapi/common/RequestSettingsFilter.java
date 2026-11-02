@@ -5,6 +5,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.MDC;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -24,6 +25,9 @@ import java.io.IOException;
  * The settings are made current in the OpenTelemetry context for the rest of the chain, so the
  * spans and log records produced while handling the request carry its IDs. Running before the
  * OpenTelemetry Web MVC filter means the server span is started inside that context too.
+ * <p>
+ * The correlation ID, request ID and caller name are also put in the SLF4J {@link MDC} for the
+ * rest of the chain, so console log lines written while handling the request show them.
  */
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -37,7 +41,13 @@ public class RequestSettingsFilter extends OncePerRequestFilter {
         response.setHeader(RequestSettings.CORRELATION_ID_HEADER, settings.getCorrelationId());
         response.setHeader(RequestSettings.REQUEST_ID_HEADER, settings.getRequestId());
 
-        try (Scope ignored = settings.makeCurrent()) {
+        try (Scope ignored = settings.makeCurrent();
+             MDC.MDCCloseable correlationId = MDC.putCloseable(
+                 RequestSettings.CORRELATION_ID_MDC_KEY, settings.getCorrelationId());
+             MDC.MDCCloseable requestId = MDC.putCloseable(
+                 RequestSettings.REQUEST_ID_MDC_KEY, settings.getRequestId());
+             MDC.MDCCloseable callerName = MDC.putCloseable(
+                 RequestSettings.CALLER_NAME_MDC_KEY, settings.getCallerName())) {
             filterChain.doFilter(request, response);
         }
     }

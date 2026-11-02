@@ -15,6 +15,11 @@ runtime:
           expect(res.getStatus()).to.equal(200);
         });
 
+        test("should return correlation and request id headers", function () {
+          expect(res.getHeader("x-correlation-id")).to.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
+          expect(res.getHeader("x-request-id")).to.be.a("string").and.not.be.empty;
+        });
+
 settings:
   encodeUrl: true
   timeout: 0

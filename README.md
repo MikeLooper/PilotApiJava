@@ -75,6 +75,25 @@ View the Swagger UI:
 Invoke-RestMethod -Uri "http://localhost:59999/swagger-ui/index.html"
 ```
 
+## Request Headers
+
+Every endpoint, including the System endpoints (`/healthcheck`, `/about`), accepts these optional headers, as defined by the shared OpenAPI specification:
+
+| Header | Format | Purpose |
+|---|---|---|
+| `X-Api-Version` | string, at most 15 characters | API version to use for the call. Defaults to `1.0.0` and is echoed back on the response. |
+| `X-Caller-Name` | string, at most 100 characters | Name of the calling application (e.g. `PilotAngularUi`). Recorded on every log line and span for the request. |
+| `X-Correlation-Id` | UUID | Identifier for tracing a transaction across services. A new GUID is generated when it is missing, and it is echoed back on the response. |
+
+A header that is too long, or an `X-Correlation-Id` that is not a UUID, is rejected with `400 Bad Request`. Every response also carries an `X-Request-Id` header identifying the individual request.
+
+Example:
+
+```
+Invoke-RestMethod -Uri "http://localhost:59999/healthcheck" `
+    -Headers @{ "X-Caller-Name" = "PilotAngularUi"; "X-Correlation-Id" = "7ea2c7f7-8b46-475d-86f8-7aaaa9e4a35b" }
+```
+
 ## Security Usage
 
 All `/v1/**` domain endpoints require a bearer token (JWT/OAuth2) issued by the configured identity provider. The System endpoints (`/healthcheck`, `/about`) are never secured.
@@ -206,6 +225,41 @@ Example queries:
 ```
 
 Each log entry also carries `trace_id`/`span_id` (when logged within a traced request), so you can jump from a log line directly to its trace in Tempo.
+
+### Request Logging
+
+Each request is logged at its beginning and end, as is each database call made while handling it:
+
+| Log message | Logged by |
+|---|---|
+| `Endpoint started: GET /v1/categories/get/1 (CategoriesController.getById)` | `EndpointLoggingInterceptor`, before the endpoint runs |
+| `Endpoint completed: ... with status 200 in 12 ms` (or `Endpoint failed: ...` at `WARN`) | `EndpointLoggingInterceptor`, after the response is complete |
+| `Database call started: CategoryRepository.findById` | `RepositoryLoggingInterceptor`, added to every Spring Data repository |
+| `Database call completed: CategoryRepository.findById in 3 ms` (or `Database call failed: ...` at `WARN`) | `RepositoryLoggingInterceptor` |
+
+Every log line, span and log record written within a request carries the request's settings:
+
+| Setting | Source | Console (MDC key) | OTEL log attribute | OTEL span attribute |
+|---|---|---|---|---|
+| Correlation ID | `X-Correlation-Id` header, or a new GUID | `correlationId` | `CorrelationId` | `correlationId` |
+| Request ID | The servlet container's request ID, or a new GUID | `requestId` | `Request.Id` | `request.Id` |
+| Caller name | `X-Caller-Name` header (omitted when not sent) | `callerName` | `CallerName` | `callerName` |
+
+On the console they appear as a prefix on each line, configured by `logging.pattern.correlation` in `application.yml`:
+
+```text
+INFO ... [correlationId=7ea2c7f7-8b46-475d-86f8-7aaaa9e4a35b requestId=1884fd47-... callerName=PilotAngularUi] c.p.common.EndpointLoggingInterceptor : Endpoint started: GET /v1/shippers/get/1 (ShippersController.getById)
+```
+
+In Loki, the OTEL log attributes can be used as filters:
+
+```logql
+# Every log line for one transaction
+{service_name="PilotApiJava"} | CorrelationId="7ea2c7f7-8b46-475d-86f8-7aaaa9e4a35b"
+
+# Database calls made on behalf of a specific caller
+{service_name="PilotApiJava"} | CallerName="PilotAngularUi" |= "Database call"
+```
 
 ## Port Configuration
 

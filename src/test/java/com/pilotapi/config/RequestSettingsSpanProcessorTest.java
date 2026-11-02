@@ -26,7 +26,7 @@ class RequestSettingsSpanProcessorTest {
 
     @Test
     void RequestSettingsSpanProcessorTest_onStart_withinRequest_tagsCorrelationAndRequestId_Test() {
-        RequestSettings settings = new RequestSettings("request-1", "correlation-1");
+        RequestSettings settings = new RequestSettings("request-1", "correlation-1", "caller-1");
 
         Span span;
         try (Scope ignored = settings.makeCurrent()) {
@@ -37,6 +37,22 @@ class RequestSettingsSpanProcessorTest {
         ReadableSpan readable = (ReadableSpan) span;
         assertEquals("correlation-1", readable.getAttribute(RequestSettingsSpanProcessor.CORRELATION_ID));
         assertEquals("request-1", readable.getAttribute(RequestSettingsSpanProcessor.REQUEST_ID));
+        assertEquals("caller-1", readable.getAttribute(RequestSettingsSpanProcessor.CALLER_NAME));
+    }
+
+    @Test
+    void RequestSettingsSpanProcessorTest_onStart_withoutCallerName_addsNoCallerNameTag_Test() {
+        RequestSettings settings = new RequestSettings("request-1", "correlation-1", null);
+
+        Span span;
+        try (Scope ignored = settings.makeCurrent()) {
+            span = tracer.spanBuilder("test").startSpan();
+        }
+        span.end();
+
+        ReadableSpan readable = (ReadableSpan) span;
+        assertEquals("correlation-1", readable.getAttribute(RequestSettingsSpanProcessor.CORRELATION_ID));
+        assertNull(readable.getAttribute(RequestSettingsSpanProcessor.CALLER_NAME));
     }
 
     @Test
@@ -47,5 +63,6 @@ class RequestSettingsSpanProcessorTest {
         ReadableSpan readable = (ReadableSpan) span;
         assertNull(readable.getAttribute(RequestSettingsSpanProcessor.CORRELATION_ID));
         assertNull(readable.getAttribute(RequestSettingsSpanProcessor.REQUEST_ID));
+        assertNull(readable.getAttribute(RequestSettingsSpanProcessor.CALLER_NAME));
     }
 }

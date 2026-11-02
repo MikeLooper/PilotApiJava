@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.UUID;
 
 /**
- * Per-request values (request ID, correlation ID, ...) shared across the life of a request.
+ * Per-request values (request ID, correlation ID, caller name, ...) shared across the life of a request.
  * Created once at the start of each request by {@link RequestSettingsFilter} and stored as a
  * request attribute. Read it with {@link #from(HttpServletRequest)}, or inject the
  * request-scoped {@code RequestSettings} bean.
@@ -21,6 +21,12 @@ public class RequestSettings implements ImplicitContextKeyed {
 
     public static final String CORRELATION_ID_HEADER = "X-Correlation-Id";
     public static final String REQUEST_ID_HEADER = "X-Request-Id";
+    public static final String CALLER_NAME_HEADER = "X-Caller-Name";
+
+    /** SLF4J MDC keys under which {@link RequestSettingsFilter} exposes the settings to log patterns. */
+    public static final String CORRELATION_ID_MDC_KEY = "correlationId";
+    public static final String REQUEST_ID_MDC_KEY = "requestId";
+    public static final String CALLER_NAME_MDC_KEY = "callerName";
 
     static final String ATTRIBUTE_NAME = RequestSettings.class.getName();
 
@@ -28,25 +34,33 @@ public class RequestSettings implements ImplicitContextKeyed {
 
     private final String requestId;
     private final String correlationId;
+    private final String callerName;
 
-    public RequestSettings(String requestId, String correlationId) {
+    public RequestSettings(String requestId, String correlationId, String callerName) {
         this.requestId = requestId;
         this.correlationId = correlationId;
+        this.callerName = callerName;
     }
 
     /**
      * Builds the settings for an incoming request: the active request's ID as assigned by the
-     * servlet container, and the caller's {@code X-Correlation-Id} header. Either value falls
-     * back to a new GUID when the container or caller does not supply one.
+     * servlet container, the caller's {@code X-Correlation-Id} header, and the caller's
+     * {@code X-Caller-Name} header. The request and correlation IDs fall back to a new GUID when
+     * the container or caller does not supply one; the caller name is {@code null} when absent.
      */
     public static RequestSettings initialize(HttpServletRequest request) {
         return new RequestSettings(
             valueOrNewGuid(request.getRequestId()),
-            valueOrNewGuid(request.getHeader(CORRELATION_ID_HEADER)));
+            valueOrNewGuid(request.getHeader(CORRELATION_ID_HEADER)),
+            valueOrNull(request.getHeader(CALLER_NAME_HEADER)));
     }
 
     private static String valueOrNewGuid(String value) {
         return value == null || value.isBlank() ? UUID.randomUUID().toString() : value.trim();
+    }
+
+    private static String valueOrNull(String value) {
+        return value == null || value.isBlank() ? null : value.trim();
     }
 
     /**
@@ -81,5 +95,10 @@ public class RequestSettings implements ImplicitContextKeyed {
 
     public String getCorrelationId() {
         return correlationId;
+    }
+
+    /** The caller's {@code X-Caller-Name} header, or {@code null} when the caller did not send one. */
+    public String getCallerName() {
+        return callerName;
     }
 }

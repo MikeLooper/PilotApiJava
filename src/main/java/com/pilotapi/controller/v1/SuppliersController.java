@@ -50,6 +50,7 @@ public class SuppliersController {
         @RequestParam(name = "pageSize", defaultValue = "20") int pageSize,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
         @RequestHeader(name = "X-Api-Version", required = false, defaultValue = OpenApiConfig.API_VERSION_PLACEHOLDER) String apiVersion,
+        @RequestHeader(name = "X-Caller-Name", required = false) String callerName,
         @RequestHeader(name = "X-Correlation-Id", required = false) UUID correlationId
     ) {
         List<SuppliersDto> results = service.getAll(page, pageSize);
@@ -64,6 +65,7 @@ public class SuppliersController {
         @Min(1) @PathVariable Integer supplierId,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
         @RequestHeader(name = "X-Api-Version", required = false, defaultValue = OpenApiConfig.API_VERSION_PLACEHOLDER) String apiVersion,
+        @RequestHeader(name = "X-Caller-Name", required = false) String callerName,
         @RequestHeader(name = "X-Correlation-Id", required = false) UUID correlationId
     ) {
         SuppliersDto result = service.getById(supplierId);
@@ -77,6 +79,7 @@ public class SuppliersController {
         @Valid @RequestBody SuppliersDto request,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
         @RequestHeader(name = "X-Api-Version", required = false, defaultValue = OpenApiConfig.API_VERSION_PLACEHOLDER) String apiVersion,
+        @RequestHeader(name = "X-Caller-Name", required = false) String callerName,
         @RequestHeader(name = "X-Correlation-Id", required = false) UUID correlationId
     ) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.add(request));
@@ -89,6 +92,7 @@ public class SuppliersController {
         @Valid @RequestBody SuppliersDto request,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
         @RequestHeader(name = "X-Api-Version", required = false, defaultValue = OpenApiConfig.API_VERSION_PLACEHOLDER) String apiVersion,
+        @RequestHeader(name = "X-Caller-Name", required = false) String callerName,
         @RequestHeader(name = "X-Correlation-Id", required = false) UUID correlationId
     ) {
         return service.update(request)
@@ -105,6 +109,7 @@ public class SuppliersController {
         @Min(1) @PathVariable Integer supplierId,
         @RequestHeader(name = "Accept", required = false, defaultValue = "application/json") String accept,
         @RequestHeader(name = "X-Api-Version", required = false, defaultValue = OpenApiConfig.API_VERSION_PLACEHOLDER) String apiVersion,
+        @RequestHeader(name = "X-Caller-Name", required = false) String callerName,
         @RequestHeader(name = "X-Correlation-Id", required = false) UUID correlationId
     ) {
         return service.delete(supplierId)

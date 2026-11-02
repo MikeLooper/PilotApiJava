@@ -37,13 +37,25 @@ class RequestSettingsLogRecordProcessorTest {
 
     @Test
     void RequestSettingsLogRecordProcessorTest_onEmit_withinRequest_addsCorrelationAndRequestId_Test() {
-        try (Scope ignored = new RequestSettings("request-1", "correlation-1").makeCurrent()) {
+        try (Scope ignored = new RequestSettings("request-1", "correlation-1", "caller-1").makeCurrent()) {
             logger.logRecordBuilder().setBody("message").emit();
         }
 
         LogRecordData record = exported.getFirst();
         assertEquals("correlation-1", record.getAttributes().get(RequestSettingsLogRecordProcessor.CORRELATION_ID));
         assertEquals("request-1", record.getAttributes().get(RequestSettingsLogRecordProcessor.REQUEST_ID));
+        assertEquals("caller-1", record.getAttributes().get(RequestSettingsLogRecordProcessor.CALLER_NAME));
+    }
+
+    @Test
+    void RequestSettingsLogRecordProcessorTest_onEmit_withoutCallerName_addsNoCallerNameAttribute_Test() {
+        try (Scope ignored = new RequestSettings("request-1", "correlation-1", null).makeCurrent()) {
+            logger.logRecordBuilder().setBody("message").emit();
+        }
+
+        LogRecordData record = exported.getFirst();
+        assertEquals("correlation-1", record.getAttributes().get(RequestSettingsLogRecordProcessor.CORRELATION_ID));
+        assertNull(record.getAttributes().get(RequestSettingsLogRecordProcessor.CALLER_NAME));
     }
 
     @Test
@@ -53,5 +65,6 @@ class RequestSettingsLogRecordProcessorTest {
         LogRecordData record = exported.getFirst();
         assertNull(record.getAttributes().get(RequestSettingsLogRecordProcessor.CORRELATION_ID));
         assertNull(record.getAttributes().get(RequestSettingsLogRecordProcessor.REQUEST_ID));
+        assertNull(record.getAttributes().get(RequestSettingsLogRecordProcessor.CALLER_NAME));
     }
 }

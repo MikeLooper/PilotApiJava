@@ -8,6 +8,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
 class RequestSettingsTest {
@@ -65,6 +66,35 @@ class RequestSettingsTest {
         assertDoesNotThrow(() -> UUID.fromString(first.getRequestId()));
         assertNotEquals(first.getRequestId(), second.getRequestId());
         assertNotEquals(first.getRequestId(), first.getCorrelationId());
+    }
+
+    @Test
+    void RequestSettingsTest_initialize_withCallerNameHeader_usesTrimmedHeaderValue_Test() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addHeader("X-Caller-Name", "  PilotAngularUi  ");
+
+        RequestSettings settings = RequestSettings.initialize(request);
+
+        assertEquals("PilotAngularUi", settings.getCallerName());
+    }
+
+    @Test
+    void RequestSettingsTest_initialize_withoutCallerNameHeader_leavesCallerNameNull_Test() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+
+        RequestSettings settings = RequestSettings.initialize(request);
+
+        assertNull(settings.getCallerName());
+    }
+
+    @Test
+    void RequestSettingsTest_initialize_withBlankCallerNameHeader_leavesCallerNameNull_Test() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addHeader("X-Caller-Name", "   ");
+
+        RequestSettings settings = RequestSettings.initialize(request);
+
+        assertNull(settings.getCallerName());
     }
 
     @Test

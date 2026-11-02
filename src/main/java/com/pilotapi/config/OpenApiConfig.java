@@ -91,9 +91,11 @@ public class OpenApiConfig {
     private static final String JSON = org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
     private static final String API_VERSION_HEADER = "X-Api-Version";
+    private static final String CALLER_NAME_HEADER = "X-Caller-Name";
     private static final String CORRELATION_ID_HEADER = "X-Correlation-Id";
     private static final String ACCEPT_HEADER = "Accept";
     static final int API_VERSION_MAX_LENGTH = 15;
+    static final int CALLER_NAME_MAX_LENGTH = 100;
     private static final int CORRELATION_ID_MAX_LENGTH = 40;
 
     private static final String PARAMETERS_REF = "#/components/parameters/";
@@ -103,6 +105,7 @@ public class OpenApiConfig {
     /** Shared parameter components, keyed by the parameter name they replace. */
     private static final Map<String, String> PARAMETER_COMPONENTS = Map.of(
         API_VERSION_HEADER, "ApiVersionHeader",
+        CALLER_NAME_HEADER, "CallerNameHeader",
         CORRELATION_ID_HEADER, "CorrelationIdHeader",
         "page", "PageQuery",
         "pageSize", "PageSizeQuery");
@@ -252,6 +255,12 @@ public class OpenApiConfig {
                 + "If missing, the application default version will be used.")
             .required(false)
             .schema(schema("string").maxLength(API_VERSION_MAX_LENGTH).example("1.2.3")));
+        parameters.put("CallerNameHeader", new Parameter()
+            .name(CALLER_NAME_HEADER)
+            .in("header")
+            .description("Name of the caller.")
+            .required(false)
+            .schema(schema("string").maxLength(CALLER_NAME_MAX_LENGTH).example("PilotAngularUi")));
         parameters.put("CorrelationIdHeader", new Parameter()
             .name(CORRELATION_ID_HEADER)
             .in("header")

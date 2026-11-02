@@ -131,6 +131,30 @@ class CategoriesControllerWebMvcTest {
     }
 
     @Test
+    void CategoriesControllerWebMvcTest_getById_withCallerNameHeader_returns_ok_Test() throws Exception {
+        CategoriesDto dto = new CategoriesDto();
+        dto.setCategoryId(1);
+        when(categoryService.getById(1)).thenReturn(dto);
+
+        mockMvc.perform(get("/v1/categories/get/1")
+                .header("X-Api-Version", "1")
+                .header("X-Caller-Name", "PilotAngularUi"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.categoryId").value(1));
+    }
+
+    @Test
+    void CategoriesControllerWebMvcTest_getById_withCallerNameLongerThan100Characters_returns_badRequest_Test() throws Exception {
+        mockMvc.perform(get("/v1/categories/get/1")
+                .header("X-Api-Version", "1")
+                .header("X-Caller-Name", "a".repeat(101)))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400));
+
+        verifyNoInteractions(categoryService);
+    }
+
+    @Test
     void CategoriesControllerWebMvcTest_getById_withoutCorrelationId_returnsGeneratedCorrelationAndRequestIdHeaders_Test() throws Exception {
         CategoriesDto dto = new CategoriesDto();
         dto.setCategoryId(1);
